@@ -1,0 +1,8 @@
+type Query {
+    list: [Image]
+}
+
+type Image  {
+    id: ID
+    name: String
+}
