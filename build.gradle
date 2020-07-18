@@ -42,3 +42,7 @@ test {
         includeEngines "junit-jupiter"
     }
 }
+
+jar {
+    enabled = true
+}
