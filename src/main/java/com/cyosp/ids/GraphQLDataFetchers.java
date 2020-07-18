@@ -1,5 +1,6 @@
 package com.cyosp.ids;
 
+import com.cyosp.ids.configuration.Configuration;
 import com.cyosp.ids.model.Image;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
@@ -14,10 +15,16 @@ import static java.nio.file.Paths.get;
 @Component
 public class GraphQLDataFetchers {
 
+    private final Configuration configuration;
+
+    public GraphQLDataFetchers(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
     public DataFetcher<List<Image>> getImagesDataFetcher() {
         return dataFetchingEnvironment -> {
             final List<Image> images = new ArrayList<>();
-            newDirectoryStream(get("."), path -> lowerCaseExtension(path).endsWith(".jpg"))
+            newDirectoryStream(get(configuration.get("images.directory")), path -> lowerCaseExtension(path).endsWith(".jpg"))
                     .forEach(path -> {
                         String fileName = path.getFileName().toString();
                         images.add(new Image(fileName, fileName));

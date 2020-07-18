@@ -29,6 +29,7 @@ dependencies {
     compileOnly "com.google.guava:guava:29.0-jre"
     compileOnly "org.springframework.boot:spring-boot-starter-web"
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.tomlj:tomlj:1.0.0"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
