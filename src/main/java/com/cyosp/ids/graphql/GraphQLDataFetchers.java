@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cyosp.ids.configurer.ImagesWebConfigurer.IMAGES_PATH;
 import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.Paths.get;
 
@@ -27,7 +28,11 @@ public class GraphQLDataFetchers {
             newDirectoryStream(get(idsConfiguration.getImagesDirectory()), path -> lowerCaseExtension(path).endsWith(".jpg"))
                     .forEach(path -> {
                         String fileName = path.getFileName().toString();
-                        images.add(new Image(fileName, fileName));
+                        images.add(Image.builder()
+                                .id(path.getRoot().toString() + fileName)
+                                .name(fileName)
+                                .urlPath(IMAGES_PATH + "/" + fileName)
+                                .build());
                     });
             return images;
         };
