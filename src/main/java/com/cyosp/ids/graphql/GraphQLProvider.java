@@ -1,4 +1,4 @@
-package com.cyosp.ids;
+package com.cyosp.ids.graphql;
 
 import com.google.common.io.Resources;
 import graphql.GraphQL;

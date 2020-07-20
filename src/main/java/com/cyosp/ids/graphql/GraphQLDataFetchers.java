@@ -1,4 +1,4 @@
-package com.cyosp.ids;
+package com.cyosp.ids.graphql;
 
 import com.cyosp.ids.configuration.Configuration;
 import com.cyosp.ids.model.Image;

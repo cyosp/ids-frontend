@@ -1,5 +1,6 @@
-package com.cyosp.ids;
+package com.cyosp.ids.graphql;
 
+import com.cyosp.ids.graphql.GraphQLDataFetchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
