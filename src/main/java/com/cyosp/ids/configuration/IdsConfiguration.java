@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 
+import static java.io.File.separator;
+import static java.lang.System.getProperty;
 import static org.tomlj.Toml.parse;
 
 @Slf4j
@@ -33,7 +35,10 @@ public class IdsConfiguration {
         }
     }
 
-    public String get(String key) {
-        return tomlParseResult.getString(key);
+    public String getImagesDirectory() {
+        String imagesDirectory = tomlParseResult.getString("images.directory");
+        if (!imagesDirectory.startsWith(separator))
+            imagesDirectory = getProperty("user.dir") + separator + imagesDirectory;
+        return imagesDirectory;
     }
 }

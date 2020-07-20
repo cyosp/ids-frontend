@@ -24,7 +24,7 @@ public class GraphQLDataFetchers {
     public DataFetcher<List<Image>> getImagesDataFetcher() {
         return dataFetchingEnvironment -> {
             final List<Image> images = new ArrayList<>();
-            newDirectoryStream(get(configuration.get("images.directory")), path -> lowerCaseExtension(path).endsWith(".jpg"))
+            newDirectoryStream(get(idsConfiguration.getImagesDirectory()), path -> lowerCaseExtension(path).endsWith(".jpg"))
                     .forEach(path -> {
                         String fileName = path.getFileName().toString();
                         images.add(new Image(fileName, fileName));
