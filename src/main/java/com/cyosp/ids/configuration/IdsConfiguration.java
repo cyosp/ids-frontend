@@ -14,8 +14,7 @@ import static org.tomlj.Toml.parse;
 
 @Slf4j
 @Component
-public class Configuration {
-
+public class IdsConfiguration {
     private static final String CONFIGURATION_FILE_NAME = "ids.toml";
 
     private TomlParseResult tomlParseResult;

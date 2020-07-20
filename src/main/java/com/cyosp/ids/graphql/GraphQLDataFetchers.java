@@ -1,6 +1,6 @@
 package com.cyosp.ids.graphql;
 
-import com.cyosp.ids.configuration.Configuration;
+import com.cyosp.ids.configuration.IdsConfiguration;
 import com.cyosp.ids.model.Image;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
@@ -15,10 +15,10 @@ import static java.nio.file.Paths.get;
 @Component
 public class GraphQLDataFetchers {
 
-    private final Configuration configuration;
+    private final IdsConfiguration idsConfiguration;
 
-    public GraphQLDataFetchers(Configuration configuration) {
-        this.configuration = configuration;
+    public GraphQLDataFetchers(IdsConfiguration idsConfiguration) {
+        this.idsConfiguration = idsConfiguration;
     }
 
     public DataFetcher<List<Image>> getImagesDataFetcher() {
