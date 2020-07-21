@@ -7,3 +7,15 @@ type Image  {
     name: String
     urlPath: String
 }
+
+enum Role {
+    ADMINISTRATOR
+    VIEWER
+}
+
+type User {
+    id: ID
+    login: String
+    password: String
+    role: Role
+}
