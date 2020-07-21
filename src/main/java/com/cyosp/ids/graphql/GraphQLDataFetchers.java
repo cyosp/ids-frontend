@@ -1,7 +1,9 @@
 package com.cyosp.ids.graphql;
 
 import com.cyosp.ids.configuration.IdsConfiguration;
+import com.cyosp.ids.configuration.IdsUsersConfiguration;
 import com.cyosp.ids.model.Image;
+import com.cyosp.ids.model.User;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +19,12 @@ import static java.nio.file.Paths.get;
 public class GraphQLDataFetchers {
 
     private final IdsConfiguration idsConfiguration;
+    private final IdsUsersConfiguration idsUsersConfiguration;
 
-    public GraphQLDataFetchers(IdsConfiguration idsConfiguration) {
+    public GraphQLDataFetchers(IdsConfiguration idsConfiguration,
+                               IdsUsersConfiguration idsUsersConfiguration) {
         this.idsConfiguration = idsConfiguration;
+        this.idsUsersConfiguration = idsUsersConfiguration;
     }
 
     public DataFetcher<List<Image>> getImagesDataFetcher() {
@@ -36,6 +41,10 @@ public class GraphQLDataFetchers {
                     });
             return images;
         };
+    }
+
+    public DataFetcher<List<User>> getUsersDataFetcher() {
+        return dataFetchingEnvironment -> idsUsersConfiguration.getUsers();
     }
 
     String lowerCaseExtension(Path path) {

@@ -1,5 +1,6 @@
 type Query {
     list: [Image]
+    users: [User]
 }
 
 type Image  {
