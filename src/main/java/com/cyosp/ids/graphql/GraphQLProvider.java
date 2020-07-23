@@ -23,6 +23,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Component
 public class GraphQLProvider {
     private static final String QUERY = "Query";
+    private static final String MUTATION = "Mutation";
 
     private final GraphQLDataFetchers graphQLDataFetchers;
 
@@ -53,6 +54,8 @@ public class GraphQLProvider {
                         .dataFetcher("list", graphQLDataFetchers.getImagesDataFetcher()))
                 .type(newTypeWiring(QUERY)
                         .dataFetcher("users", graphQLDataFetchers.getUsersDataFetcher()))
+                .type(newTypeWiring(MUTATION)
+                        .dataFetcher("addAdminUser", graphQLDataFetchers.addAdminUserDataFetcher()))
                 .build();
     }
 

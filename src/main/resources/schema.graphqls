@@ -20,3 +20,7 @@ type User {
     password: String
     role: Role
 }
+
+type Mutation {
+    addAdminUser(login: String!, password: String!): User
+}
