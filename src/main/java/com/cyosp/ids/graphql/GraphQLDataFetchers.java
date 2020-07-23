@@ -1,9 +1,9 @@
 package com.cyosp.ids.graphql;
 
 import com.cyosp.ids.configuration.IdsConfiguration;
-import com.cyosp.ids.configuration.IdsUsersConfiguration;
 import com.cyosp.ids.model.Image;
 import com.cyosp.ids.model.User;
+import com.cyosp.ids.repository.UserRepository;
 import graphql.schema.DataFetcher;
 import org.springframework.stereotype.Component;
 
@@ -19,14 +19,14 @@ import static java.util.UUID.randomUUID;
 
 @Component
 public class GraphQLDataFetchers {
-
     private final IdsConfiguration idsConfiguration;
-    private final IdsUsersConfiguration idsUsersConfiguration;
+
+    private final UserRepository userRepository;
 
     public GraphQLDataFetchers(IdsConfiguration idsConfiguration,
-                               IdsUsersConfiguration idsUsersConfiguration) {
+                               UserRepository userRepository) {
         this.idsConfiguration = idsConfiguration;
-        this.idsUsersConfiguration = idsUsersConfiguration;
+        this.userRepository = userRepository;
     }
 
     public DataFetcher<List<Image>> getImagesDataFetcher() {
@@ -46,7 +46,7 @@ public class GraphQLDataFetchers {
     }
 
     public DataFetcher<List<User>> getUsersDataFetcher() {
-        return dataFetchingEnvironment -> idsUsersConfiguration.getUsers();
+        return dataFetchingEnvironment -> userRepository.findAll();
     }
 
     public DataFetcher<User> addAdminUserDataFetcher() {
@@ -57,8 +57,7 @@ public class GraphQLDataFetchers {
                     .password(dataFetchingEnvironment.getArgument("password"))
                     .role(ADMINISTRATOR)
                     .build();
-            idsUsersConfiguration.getUsers().add(user);
-            return user;
+            return userRepository.save(user);
         };
     }
 
