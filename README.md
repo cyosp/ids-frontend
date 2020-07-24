@@ -1,6 +1,8 @@
 # IDS
 
-Image Directory Sharing
+IDS is the acronym of: *Image Directory Sharing* whose aims are:
+ * Share images from a directory
+ * Doesn't use a database
 
 ## Build
 
