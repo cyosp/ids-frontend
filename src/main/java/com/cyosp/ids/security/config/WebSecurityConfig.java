@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static com.cyosp.ids.rest.Rest.REST_PREFIX;
+import static com.cyosp.ids.rest.register.RegisterController.REGISTER_PATH;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 
@@ -56,8 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .authorizeRequests()
-                .antMatchers("/rest/register/**").permitAll()
-                .antMatchers("/rest/authenticate").permitAll()
+                .antMatchers(REST_PREFIX + REGISTER_PATH + "/**").permitAll()
+                .antMatchers(REST_PREFIX + "/authenticate").permitAll()
 
                 .anyRequest()
                 .authenticated()

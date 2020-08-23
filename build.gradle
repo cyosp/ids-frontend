@@ -45,6 +45,7 @@ dependencies {
     compile "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
     compile "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
     compile "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
+    compile "org.hibernate:hibernate-validator:6.1.5.Final"
     compile "org.apache.commons:commons-lang3:3.11"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
