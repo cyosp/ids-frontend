@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Component
-public class TokenProvider {
+public class JwtTokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
     private static final String AUTHORITIES_SEPARATOR = ",";
 
@@ -33,7 +33,7 @@ public class TokenProvider {
     private Key key;
     private long duration;
 
-    public TokenProvider(TokenSettingRepository tokenSettingRepository) {
+    public JwtTokenProvider(TokenSettingRepository tokenSettingRepository) {
         this.tokenSettingRepository = tokenSettingRepository;
     }
 

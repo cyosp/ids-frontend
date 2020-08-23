@@ -3,7 +3,7 @@ package com.cyosp.ids.security.config;
 import com.cyosp.ids.security.jwt.JwtAccessDeniedHandler;
 import com.cyosp.ids.security.jwt.JwtAuthenticationEntryPoint;
 import com.cyosp.ids.security.jwt.JwtConfigurer;
-import com.cyosp.ids.security.jwt.TokenProvider;
+import com.cyosp.ids.security.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,14 +19,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    public WebSecurityConfig(TokenProvider tokenProvider,
+    public WebSecurityConfig(JwtTokenProvider jwtTokenProvider,
                              JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
                              JwtAccessDeniedHandler jwtAccessDeniedHandler) {
-        this.tokenProvider = tokenProvider;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.jwtAccessDeniedHandler = jwtAccessDeniedHandler;
     }
@@ -67,6 +67,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     private JwtConfigurer securityConfigurerAdapter() {
-        return new JwtConfigurer(tokenProvider);
+        return new JwtConfigurer(jwtTokenProvider);
     }
 }

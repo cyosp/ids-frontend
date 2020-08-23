@@ -16,10 +16,10 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Slf4j
 public class JwtFilter extends GenericFilterBean {
-    private final TokenProvider tokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtFilter(TokenProvider tokenProvider) {
-        this.tokenProvider = tokenProvider;
+    public JwtFilter(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
@@ -29,8 +29,8 @@ public class JwtFilter extends GenericFilterBean {
         String jwt = extractToken(httpServletRequest);
         String requestURI = httpServletRequest.getRequestURI();
 
-        if (hasText(jwt) && tokenProvider.isValid(jwt)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
+        if (hasText(jwt) && jwtTokenProvider.isValid(jwt)) {
+            Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
             getContext().setAuthentication(authentication);
             log.info("Set authentication to security context for {} and uri: {}", authentication.getName(), requestURI);
         } else
