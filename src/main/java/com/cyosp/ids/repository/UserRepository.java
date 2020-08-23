@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -51,5 +52,11 @@ public class UserRepository {
 
     public List<User> findAll() {
         return users;
+    }
+
+    public Optional<User> findByLogin(String login) {
+        return users.stream()
+                .filter(lambdaLogin -> lambdaLogin.getLogin().equals(login))
+                .findFirst();
     }
 }
