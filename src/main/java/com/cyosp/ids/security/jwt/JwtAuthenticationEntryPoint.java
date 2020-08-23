@@ -1,4 +1,4 @@
-package com.cyosp.ids.security;
+package com.cyosp.ids.security.jwt;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

@@ -1,4 +1,4 @@
-package com.cyosp.ids.security;
+package com.cyosp.ids.security.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
