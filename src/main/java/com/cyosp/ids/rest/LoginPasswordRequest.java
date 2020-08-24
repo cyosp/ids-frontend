@@ -1,4 +1,4 @@
-package com.cyosp.ids.rest.register;
+package com.cyosp.ids.rest;
 
 import lombok.Data;
 
@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class RegisterRequest {
+public class LoginPasswordRequest {
     @Email
     @NotNull
     @Size(max = 50)

@@ -3,6 +3,7 @@ package com.cyosp.ids.rest.register;
 import com.cyosp.ids.model.Role;
 import com.cyosp.ids.model.User;
 import com.cyosp.ids.repository.UserRepository;
+import com.cyosp.ids.rest.LoginPasswordRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -33,11 +34,11 @@ public class RegisterController {
         this.userRepository = userRepository;
     }
 
-    ResponseEntity<RegisterResponse> register(RegisterRequest registerRequest, Role role) {
+    ResponseEntity<RegisterResponse> register(LoginPasswordRequest loginPasswordRequest, Role role) {
         User user = User.builder()
                 .id(randomUUID().toString())
-                .login(registerRequest.getLogin())
-                .password(new BCryptPasswordEncoder().encode(registerRequest.getPassword()))
+                .login(loginPasswordRequest.getLogin())
+                .password(new BCryptPasswordEncoder().encode(loginPasswordRequest.getPassword()))
                 .role(role)
                 .build();
 
@@ -49,18 +50,18 @@ public class RegisterController {
     }
 
     @PostMapping(REGISTER_PATH + "/admin")
-    public ResponseEntity<RegisterResponse> adminRegister(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> adminRegister(@Valid @RequestBody LoginPasswordRequest loginPasswordRequest) {
         Optional<User> optionalAdminUser = userRepository.findAll().stream()
                 .filter(user -> user.getRole() == ADMINISTRATOR)
                 .findFirst();
         if (optionalAdminUser.isEmpty()) {
-            return register(registerRequest, ADMINISTRATOR);
+            return register(loginPasswordRequest, ADMINISTRATOR);
         } else
             throw new AuthenticationServiceException("Administrator user already registered");
     }
 
     @PostMapping(REGISTER_PATH + "/user")
-    public ResponseEntity<RegisterResponse> userRegister(@Valid @RequestBody RegisterRequest registerRequest) {
-        return register(registerRequest, VIEWER);
+    public ResponseEntity<RegisterResponse> userRegister(@Valid @RequestBody LoginPasswordRequest loginPasswordRequest) {
+        return register(loginPasswordRequest, VIEWER);
     }
 }
