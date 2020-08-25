@@ -5,8 +5,10 @@ import com.cyosp.ids.model.Image;
 import com.cyosp.ids.model.User;
 import com.cyosp.ids.repository.UserRepository;
 import graphql.schema.DataFetcher;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import java.nio.file.AccessDeniedException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +18,7 @@ import static com.cyosp.ids.model.Role.ADMINISTRATOR;
 import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.Paths.get;
 import static java.util.UUID.randomUUID;
+import static org.springframework.security.core.context.SecurityContextHolder.getContext;
 
 @Component
 public class GraphQLDataFetchers {
@@ -46,7 +49,14 @@ public class GraphQLDataFetchers {
     }
 
     public DataFetcher<List<User>> getUsersDataFetcher() {
-        return dataFetchingEnvironment -> userRepository.findAll();
+        return dataFetchingEnvironment -> {
+            if (getContext().getAuthentication().getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .anyMatch(authority -> ADMINISTRATOR.name().equals(authority)))
+                return userRepository.findAll();
+            else
+                throw new AccessDeniedException("Only administrator user is allowed");
+        };
     }
 
     public DataFetcher<User> addAdminUserDataFetcher() {
