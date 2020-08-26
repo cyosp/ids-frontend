@@ -59,18 +59,6 @@ public class GraphQLDataFetchers {
         };
     }
 
-    public DataFetcher<User> addAdminUserDataFetcher() {
-        return dataFetchingEnvironment -> {
-            User user = User.builder()
-                    .id(randomUUID().toString())
-                    .login(dataFetchingEnvironment.getArgument("login"))
-                    .password(dataFetchingEnvironment.getArgument("password"))
-                    .role(ADMINISTRATOR)
-                    .build();
-            return userRepository.save(user);
-        };
-    }
-
     String lowerCaseExtension(Path path) {
         String fileName = path.getFileName().toString();
         String extension = "";

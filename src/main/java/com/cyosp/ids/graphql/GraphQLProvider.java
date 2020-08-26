@@ -54,8 +54,6 @@ public class GraphQLProvider {
                         .dataFetcher("list", graphQLDataFetchers.getImagesDataFetcher()))
                 .type(newTypeWiring(QUERY)
                         .dataFetcher("users", graphQLDataFetchers.getUsersDataFetcher()))
-                .type(newTypeWiring(MUTATION)
-                        .dataFetcher("addAdminUser", graphQLDataFetchers.addAdminUserDataFetcher()))
                 .build();
     }
 
