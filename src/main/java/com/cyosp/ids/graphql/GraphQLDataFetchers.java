@@ -48,14 +48,17 @@ public class GraphQLDataFetchers {
         };
     }
 
+    void checkAdministratorUser() throws AccessDeniedException {
+        if (getContext().getAuthentication().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .noneMatch(authority -> ADMINISTRATOR.name().equals(authority)))
+            throw new AccessDeniedException("Only administrator user is allowed");
+    }
+
     public DataFetcher<List<User>> getUsersDataFetcher() {
         return dataFetchingEnvironment -> {
-            if (getContext().getAuthentication().getAuthorities().stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(authority -> ADMINISTRATOR.name().equals(authority)))
-                return userRepository.findAll();
-            else
-                throw new AccessDeniedException("Only administrator user is allowed");
+            checkAdministratorUser();
+            return userRepository.findAll();
         };
     }
 
