@@ -5,9 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import static com.cyosp.ids.model.Image.IMAGES_URL_PATH;
+
 @Configuration
 public class ImagesWebConfigurer implements WebMvcConfigurer {
-    public static final String IMAGES_PATH = "/images";
 
     private final IdsConfiguration idsConfiguration;
 
@@ -17,7 +18,7 @@ public class ImagesWebConfigurer implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
-        resourceHandlerRegistry.addResourceHandler(IMAGES_PATH + "/**")
+        resourceHandlerRegistry.addResourceHandler(IMAGES_URL_PATH + "/**")
                 .addResourceLocations("file:" + idsConfiguration.getImagesDirectory() + "/");
     }
 }
