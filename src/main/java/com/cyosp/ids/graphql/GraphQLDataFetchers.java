@@ -32,20 +32,19 @@ public class GraphQLDataFetchers {
         this.userRepository = userRepository;
     }
 
+    List<Image> listImages() {
+        final List<Image> images = new ArrayList<>();
+        try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getImagesDirectory()),
+                path -> lowerCaseExtension(path).endsWith(".jpg"))) {
+            paths.forEach(path -> images.add(from(path.getFileName().toString())));
+        } catch (IOException e) {
+            log.warn("Fail to list images: " + e.getMessage());
+        }
+        return images;
+    }
+
     public DataFetcher<List<Image>> getImagesDataFetcher() {
-        return dataFetchingEnvironment -> {
-            final List<Image> images = new ArrayList<>();
-            newDirectoryStream(get(idsConfiguration.getImagesDirectory()), path -> lowerCaseExtension(path).endsWith(".jpg"))
-                    .forEach(path -> {
-                        String fileName = path.getFileName().toString();
-                        images.add(Image.builder()
-                                .id(path.getRoot().toString() + fileName)
-                                .name(fileName)
-                                .urlPath(IMAGES_PATH + "/" + fileName)
-                                .build());
-                    });
-            return images;
-        };
+        return dataFetchingEnvironment -> new ArrayList<>(listImages());
     }
 
     void checkAdministratorUser() throws AccessDeniedException {
