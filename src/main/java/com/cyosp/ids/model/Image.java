@@ -2,11 +2,17 @@ package com.cyosp.ids.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.Setter;
+
+import java.io.File;
 
 import static java.io.File.separator;
+import static lombok.AccessLevel.NONE;
+import static lombok.AccessLevel.PRIVATE;
 
 @Data
-@Builder
+@Setter(value = NONE)
+@Builder(access = PRIVATE)
 public class Image {
     public static final String IMAGES_URL_PATH = "/images";
     public static final String IDS_HIDDEN_DIRECTORY = ".ids";
@@ -15,13 +21,15 @@ public class Image {
 
     private String name;
 
+    private File file;
+
     private String urlPath;
 
-    private String previewPath;
+    private File previewFile;
 
     private String previewUrlPath;
 
-    private String thumbnailPath;
+    private File thumbnailFile;
 
     private String thumbnailUrlPath;
 
@@ -37,10 +45,11 @@ public class Image {
         return Image.builder()
                 .id(name)
                 .name(name)
+                .file(new File(name))
                 .urlPath(urlPrefixPath + name)
-                .previewPath(previewPath)
+                .previewFile(new File(previewPath))
                 .previewUrlPath(urlPrefixPath + previewPath)
-                .thumbnailPath(thumbnailPath)
+                .thumbnailFile(new File(thumbnailPath))
                 .thumbnailUrlPath(urlPrefixPath + thumbnailPath)
                 .build();
     }

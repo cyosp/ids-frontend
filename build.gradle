@@ -47,6 +47,7 @@ dependencies {
     compile "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
     compile "org.hibernate:hibernate-validator:6.1.5.Final"
     compile "org.apache.commons:commons-lang3:3.11"
+    compile "org.imgscalr:imgscalr-lib:4.2"
 
     testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
     testCompile "org.mockito:mockito-core:${mockitoVersion}"

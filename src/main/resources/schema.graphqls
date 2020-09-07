@@ -7,6 +7,8 @@ type Image  {
     id: ID
     name: String
     urlPath: String
+    previewUrlPath: String
+    thumbnailUrlPath: String
 }
 
 enum Role {
@@ -19,4 +21,8 @@ type User {
     login: String
     password: String
     role: Role
+}
+
+type Mutation {
+    generateAlternativeFormats: [Image]
 }
