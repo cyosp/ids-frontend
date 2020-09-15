@@ -1,8 +1,12 @@
 package com.cyosp.ids.graphql;
 
+import com.cyosp.ids.model.Directory;
+import com.cyosp.ids.model.FileSystemElement;
+import com.cyosp.ids.model.Image;
 import com.google.common.io.Resources;
 import graphql.GraphQL;
 import graphql.schema.GraphQLSchema;
+import graphql.schema.TypeResolver;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
 import graphql.schema.idl.SchemaParser;
@@ -41,6 +45,17 @@ public class GraphQLProvider {
         graphQL = newGraphQL(graphQLSchema).build();
     }
 
+    TypeResolver fileSystemElementTypeResolver = typeResolutionEnvironment -> {
+        Object object = typeResolutionEnvironment.getObject();
+        if (object instanceof Image) {
+            return typeResolutionEnvironment.getSchema().getObjectType(Image.class.getSimpleName());
+        } else if (object instanceof Directory) {
+            return typeResolutionEnvironment.getSchema().getObjectType(Directory.class.getSimpleName());
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    };
+
     private GraphQLSchema buildSchema(String sdl) {
         TypeDefinitionRegistry typeRegistry = new SchemaParser().parse(sdl);
         RuntimeWiring runtimeWiring = buildWiring();
@@ -50,8 +65,10 @@ public class GraphQLProvider {
 
     private RuntimeWiring buildWiring() {
         return newRuntimeWiring()
+                .type(FileSystemElement.class.getSimpleName(),
+                        typeWriting -> typeWriting.typeResolver(fileSystemElementTypeResolver))
                 .type(newTypeWiring(QUERY)
-                        .dataFetcher("list", graphQLDataFetchers.getImagesDataFetcher()))
+                        .dataFetcher("list", graphQLDataFetchers.getFileSystemElementsDataFetcher()))
                 .type(newTypeWiring(QUERY)
                         .dataFetcher("users", graphQLDataFetchers.getUsersDataFetcher()))
                 .type(newTypeWiring(MUTATION)

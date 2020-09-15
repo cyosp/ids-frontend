@@ -2,6 +2,7 @@ package com.cyosp.ids.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import java.io.File;
@@ -13,13 +14,16 @@ import static lombok.AccessLevel.PRIVATE;
 @Data
 @Setter(value = NONE)
 @Builder(access = PRIVATE)
-public class Image {
+@EqualsAndHashCode(callSuper = true)
+public class Image extends FileSystemElement {
     public static final String IMAGES_URL_PATH = "/images";
     public static final String IDS_HIDDEN_DIRECTORY = ".ids";
 
     private String id;
 
     private String name;
+
+    private String type;
 
     private File file;
 
@@ -45,6 +49,7 @@ public class Image {
         return Image.builder()
                 .id(name)
                 .name(name)
+                .type(Image.class.getSimpleName())
                 .file(new File(name))
                 .urlPath(urlPrefixPath + name)
                 .previewFile(new File(previewPath))

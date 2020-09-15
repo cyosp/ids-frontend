@@ -1,11 +1,24 @@
 type Query {
-    list: [Image]
+    list: [FileSystemElement]
     users: [User]
 }
 
-type Image  {
-    id: ID
+interface FileSystemElement {
+    id: ID!
     name: String
+    type: String
+}
+
+type Directory implements FileSystemElement {
+    id: ID!
+    name: String
+    type: String
+}
+
+type Image implements FileSystemElement {
+    id: ID!
+    name: String
+    type: String
     urlPath: String
     previewUrlPath: String
     thumbnailUrlPath: String

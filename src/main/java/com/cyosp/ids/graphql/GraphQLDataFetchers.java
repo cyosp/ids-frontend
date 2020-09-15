@@ -1,6 +1,8 @@
 package com.cyosp.ids.graphql;
 
 import com.cyosp.ids.configuration.IdsConfiguration;
+import com.cyosp.ids.model.Directory;
+import com.cyosp.ids.model.FileSystemElement;
 import com.cyosp.ids.model.Image;
 import com.cyosp.ids.model.User;
 import com.cyosp.ids.repository.UserRepository;
@@ -23,6 +25,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cyosp.ids.model.Image.IDS_HIDDEN_DIRECTORY;
 import static com.cyosp.ids.model.Image.from;
 import static com.cyosp.ids.model.Role.ADMINISTRATOR;
 import static java.awt.Image.SCALE_DEFAULT;
@@ -49,6 +52,30 @@ public class GraphQLDataFetchers {
         this.userRepository = userRepository;
     }
 
+    boolean isImage(Path path) {
+        return lowerCaseExtension(path).endsWith(".jpg");
+    }
+
+    boolean isDirectory(Path path) {
+        return path.toFile().isDirectory() && !path.getFileName().toString().equals(IDS_HIDDEN_DIRECTORY);
+    }
+
+    List<FileSystemElement> list() {
+        final List<FileSystemElement> fileSystemElements = new ArrayList<>();
+        try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getImagesDirectory()),
+                path -> isImage(path) || isDirectory(path))) {
+            paths.forEach(path -> {
+                if (isImage(path))
+                    fileSystemElements.add(from(path.getFileName().toString()));
+                else
+                    fileSystemElements.add(new Directory(path.getFileName().toString(), path.getFileName().toString()));
+            });
+        } catch (IOException e) {
+            log.warn("Fail to list file system elements: " + e.getMessage());
+        }
+        return fileSystemElements;
+    }
+
     List<Image> listImages() {
         final List<Image> images = new ArrayList<>();
         try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getImagesDirectory()),
@@ -60,8 +87,8 @@ public class GraphQLDataFetchers {
         return images;
     }
 
-    public DataFetcher<List<Image>> getImagesDataFetcher() {
-        return dataFetchingEnvironment -> new ArrayList<>(listImages());
+    public DataFetcher<List<FileSystemElement>> getFileSystemElementsDataFetcher() {
+        return dataFetchingEnvironment -> new ArrayList<>(list());
     }
 
     void checkAdministratorUser() throws AccessDeniedException {
