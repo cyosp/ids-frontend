@@ -19,6 +19,6 @@ public class ImagesWebConfigurer implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry resourceHandlerRegistry) {
         resourceHandlerRegistry.addResourceHandler(IMAGES_URL_PATH + "/**")
-                .addResourceLocations("file:" + idsConfiguration.getImagesDirectory() + "/");
+                .addResourceLocations("file:" + idsConfiguration.getAbsoluteImagesDirectory() + "/");
     }
 }

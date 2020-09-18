@@ -35,7 +35,7 @@ public class IdsConfiguration {
         }
     }
 
-    public String getImagesDirectory() {
+    public String getAbsoluteImagesDirectory() {
         String imagesDirectory = tomlParseResult.getString("images.directory");
         if (!imagesDirectory.startsWith(separator))
             imagesDirectory = getProperty("user.dir") + separator + imagesDirectory;

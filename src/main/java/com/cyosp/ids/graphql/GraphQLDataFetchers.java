@@ -30,10 +30,12 @@ import static com.cyosp.ids.model.Image.from;
 import static com.cyosp.ids.model.Role.ADMINISTRATOR;
 import static java.awt.Image.SCALE_DEFAULT;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+import static java.io.File.separator;
 import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.Paths.get;
+import static java.util.Optional.ofNullable;
 import static javax.imageio.ImageIO.*;
 import static javax.imageio.ImageWriteParam.MODE_EXPLICIT;
 import static org.imgscalr.Scalr.resize;
@@ -60,15 +62,30 @@ public class GraphQLDataFetchers {
         return path.toFile().isDirectory() && !path.getFileName().toString().equals(IDS_HIDDEN_DIRECTORY);
     }
 
-    List<FileSystemElement> list() {
+    File relative(Path path) {
+        return new File(path.toFile().toString().replace(idsConfiguration.getAbsoluteImagesDirectory() + separator, ""));
+    }
+
+    List<FileSystemElement> list(String directory) {
         final List<FileSystemElement> fileSystemElements = new ArrayList<>();
-        try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getImagesDirectory()),
+
+        String absoluteDirectoryPath = idsConfiguration.getAbsoluteImagesDirectory();
+        StringBuilder relativeDirectoryPathEndedWithSeparator = new StringBuilder();
+        if (ofNullable(directory).isPresent()) {
+            absoluteDirectoryPath += separator + directory;
+            relativeDirectoryPathEndedWithSeparator
+                    .append(directory)
+                    .append(separator);
+        }
+
+        try (DirectoryStream<Path> paths = newDirectoryStream(get(absoluteDirectoryPath),
                 path -> isImage(path) || isDirectory(path))) {
             paths.forEach(path -> {
+                File relativePath = relative(path);
                 if (isImage(path))
-                    fileSystemElements.add(from(path.getFileName().toString()));
+                    fileSystemElements.add(from(relativePath));
                 else
-                    fileSystemElements.add(new Directory(path.getFileName().toString(), path.getFileName().toString()));
+                    fileSystemElements.add(new Directory(relativePath));
             });
         } catch (IOException e) {
             log.warn("Fail to list file system elements: " + e.getMessage());
@@ -78,9 +95,9 @@ public class GraphQLDataFetchers {
 
     List<Image> listImages() {
         final List<Image> images = new ArrayList<>();
-        try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getImagesDirectory()),
+        try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getAbsoluteImagesDirectory()),
                 path -> lowerCaseExtension(path).endsWith(".jpg"))) {
-            paths.forEach(path -> images.add(from(path.getFileName().toString())));
+            paths.forEach(path -> images.add(from(relative(path))));
         } catch (IOException e) {
             log.warn("Fail to list images: " + e.getMessage());
         }
@@ -88,7 +105,10 @@ public class GraphQLDataFetchers {
     }
 
     public DataFetcher<List<FileSystemElement>> getFileSystemElementsDataFetcher() {
-        return dataFetchingEnvironment -> new ArrayList<>(list());
+        return dataFetchingEnvironment -> {
+            String directory = dataFetchingEnvironment.getArgument("directory");
+            return new ArrayList<>(list(directory));
+        };
     }
 
     void checkAdministratorUser() throws AccessDeniedException {
