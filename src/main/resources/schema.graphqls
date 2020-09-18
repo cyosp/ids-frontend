@@ -13,6 +13,7 @@ type Directory implements FileSystemElement {
     id: ID!
     name: String
     type: String
+    elements: [FileSystemElement]
 }
 
 type Image implements FileSystemElement {

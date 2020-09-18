@@ -67,6 +67,8 @@ public class GraphQLProvider {
         return newRuntimeWiring()
                 .type(FileSystemElement.class.getSimpleName(),
                         typeWriting -> typeWriting.typeResolver(fileSystemElementTypeResolver))
+                .type(newTypeWiring(Directory.class.getSimpleName())
+                        .dataFetcher("elements", graphQLDataFetchers.getDirectoryElementsDataFetcher()))
                 .type(newTypeWiring(QUERY)
                         .dataFetcher("list", graphQLDataFetchers.getFileSystemElementsDataFetcher()))
                 .type(newTypeWiring(QUERY)

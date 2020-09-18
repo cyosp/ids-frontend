@@ -111,6 +111,13 @@ public class GraphQLDataFetchers {
         };
     }
 
+    public DataFetcher<List<FileSystemElement>> getDirectoryElementsDataFetcher() {
+        return dataFetchingEnvironment -> {
+            Directory directory = dataFetchingEnvironment.getSource();
+            return new ArrayList<>(list(directory.getId()));
+        };
+    }
+
     void checkAdministratorUser() throws AccessDeniedException {
         if (getContext().getAuthentication().getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
