@@ -70,13 +70,8 @@ public class GraphQLDataFetchers {
         final List<FileSystemElement> fileSystemElements = new ArrayList<>();
 
         String absoluteDirectoryPath = idsConfiguration.getAbsoluteImagesDirectory();
-        StringBuilder relativeDirectoryPathEndedWithSeparator = new StringBuilder();
-        if (ofNullable(directory).isPresent()) {
+        if (ofNullable(directory).isPresent())
             absoluteDirectoryPath += separator + directory;
-            relativeDirectoryPathEndedWithSeparator
-                    .append(directory)
-                    .append(separator);
-        }
 
         try (DirectoryStream<Path> paths = newDirectoryStream(get(absoluteDirectoryPath),
                 path -> isImage(path) || isDirectory(path))) {
