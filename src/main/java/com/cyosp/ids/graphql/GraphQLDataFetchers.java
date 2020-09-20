@@ -6,6 +6,7 @@ import com.cyosp.ids.model.FileSystemElement;
 import com.cyosp.ids.model.Image;
 import com.cyosp.ids.model.User;
 import com.cyosp.ids.repository.UserRepository;
+import com.cyosp.ids.service.ModelService;
 import graphql.schema.DataFetcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,8 +26,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.cyosp.ids.model.Image.IDS_HIDDEN_DIRECTORY;
-import static com.cyosp.ids.model.Image.from;
 import static com.cyosp.ids.model.Role.ADMINISTRATOR;
 import static java.awt.Image.SCALE_DEFAULT;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
@@ -36,6 +35,7 @@ import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.Paths.get;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static javax.imageio.ImageIO.*;
 import static javax.imageio.ImageWriteParam.MODE_EXPLICIT;
 import static org.imgscalr.Scalr.resize;
@@ -44,43 +44,52 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Slf4j
 @Component
 public class GraphQLDataFetchers {
+    public static final String DIRECTORY = "directory";
+
     private final IdsConfiguration idsConfiguration;
 
     private final UserRepository userRepository;
 
+    private final ModelService modelService;
+
     public GraphQLDataFetchers(IdsConfiguration idsConfiguration,
-                               UserRepository userRepository) {
+                               UserRepository userRepository,
+                               ModelService modelService) {
         this.idsConfiguration = idsConfiguration;
         this.userRepository = userRepository;
+        this.modelService = modelService;
     }
 
-    boolean isImage(Path path) {
-        return lowerCaseExtension(path).endsWith(".jpg");
-    }
-
-    boolean isDirectory(Path path) {
-        return path.toFile().isDirectory() && !path.getFileName().toString().equals(IDS_HIDDEN_DIRECTORY);
-    }
-
-    File relative(Path path) {
-        return new File(path.toFile().toString().replace(idsConfiguration.getAbsoluteImagesDirectory() + separator, ""));
+    List<Image> listImagesInAllDirectories(String directory) {
+        List<Image> images = new ArrayList<>();
+        for (FileSystemElement fileSystemElement : list(directory)) {
+            if (fileSystemElement instanceof Image)
+                images.add((Image) fileSystemElement);
+            else {
+                images.addAll(
+                        list(fileSystemElement.getId()).stream()
+                                .filter(fse -> fse instanceof Image)
+                                .map(image -> (Image) image)
+                                .collect(toList()));
+            }
+        }
+        return images;
     }
 
     List<FileSystemElement> list(String directory) {
         final List<FileSystemElement> fileSystemElements = new ArrayList<>();
 
-        String absoluteDirectoryPath = idsConfiguration.getAbsoluteImagesDirectory();
+        final StringBuilder absoluteDirectoryPath = new StringBuilder(idsConfiguration.getAbsoluteImagesDirectory());
         if (ofNullable(directory).isPresent())
-            absoluteDirectoryPath += separator + directory;
+            absoluteDirectoryPath.append(separator).append(directory);
 
-        try (DirectoryStream<Path> paths = newDirectoryStream(get(absoluteDirectoryPath),
-                path -> isImage(path) || isDirectory(path))) {
+        try (DirectoryStream<Path> paths = newDirectoryStream(get(absoluteDirectoryPath.toString()),
+                path -> modelService.isImage(path) || modelService.isDirectory(path))) {
             paths.forEach(path -> {
-                File relativePath = relative(path);
-                if (isImage(path))
-                    fileSystemElements.add(from(relativePath));
+                if (modelService.isImage(path))
+                    fileSystemElements.add(modelService.imageFrom(path));
                 else
-                    fileSystemElements.add(new Directory(relativePath));
+                    fileSystemElements.add(modelService.directoryFrom(path));
             });
         } catch (IOException e) {
             log.warn("Fail to list file system elements: " + e.getMessage());
@@ -88,20 +97,9 @@ public class GraphQLDataFetchers {
         return fileSystemElements;
     }
 
-    List<Image> listImages() {
-        final List<Image> images = new ArrayList<>();
-        try (DirectoryStream<Path> paths = newDirectoryStream(get(idsConfiguration.getAbsoluteImagesDirectory()),
-                path -> lowerCaseExtension(path).endsWith(".jpg"))) {
-            paths.forEach(path -> images.add(from(relative(path))));
-        } catch (IOException e) {
-            log.warn("Fail to list images: " + e.getMessage());
-        }
-        return images;
-    }
-
     public DataFetcher<List<FileSystemElement>> getFileSystemElementsDataFetcher() {
         return dataFetchingEnvironment -> {
-            String directory = dataFetchingEnvironment.getArgument("directory");
+            String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
             return new ArrayList<>(list(directory));
         };
     }
@@ -186,7 +184,8 @@ public class GraphQLDataFetchers {
         return dataFetchingEnvironment -> {
             checkAdministratorUser();
             final List<Image> images = new ArrayList<>();
-            for (Image image : listImages()) {
+            String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
+            for (Image image : listImagesInAllDirectories(directory)) {
                 File previewFile = image.getPreviewFile();
                 File thumbnailFile = image.getThumbnailFile();
 
@@ -204,15 +203,5 @@ public class GraphQLDataFetchers {
             }
             return images;
         };
-    }
-
-    String lowerCaseExtension(Path path) {
-        String fileName = path.getFileName().toString();
-        String extension = "";
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex > 0) {
-            extension = fileName.substring(dotIndex).toLowerCase();
-        }
-        return extension;
     }
 }

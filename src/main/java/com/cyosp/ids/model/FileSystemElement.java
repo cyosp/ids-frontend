@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.File;
 
+import static java.io.File.separator;
 import static lombok.AccessLevel.PROTECTED;
 
 @Data
@@ -12,17 +13,20 @@ import static lombok.AccessLevel.PROTECTED;
 public abstract class FileSystemElement {
     protected String id;
 
+    protected File file;
+
     protected String name;
 
     protected String type;
 
-    protected FileSystemElement(File file, Class<? extends FileSystemElement> clazz) {
-        setup(file, clazz);
+    protected FileSystemElement(String absoluteImagesDirectory, File relativeFile, Class<? extends FileSystemElement> clazz) {
+        setup(absoluteImagesDirectory, relativeFile, clazz);
     }
 
-    protected void setup(File file, Class<? extends FileSystemElement> clazz) {
-        id = file.toString();
-        name = file.getName();
+    protected void setup(String absoluteImagesDirectory, File relativeFile, Class<? extends FileSystemElement> clazz) {
+        id = relativeFile.toString();
+        file = new File(absoluteImagesDirectory + separator + relativeFile);
+        name = relativeFile.getName();
         type = clazz.getSimpleName();
     }
 }

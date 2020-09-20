@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.io.File;
 
 import static java.io.File.separator;
+import static java.util.Objects.isNull;
 import static lombok.AccessLevel.NONE;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -19,8 +20,6 @@ public class Image extends FileSystemElement {
     public static final String IMAGES_URL_PATH = "/images";
     public static final String IDS_HIDDEN_DIRECTORY = ".ids";
 
-    private File file;
-
     private String urlPath;
 
     private File previewFile;
@@ -31,26 +30,28 @@ public class Image extends FileSystemElement {
 
     private String thumbnailUrlPath;
 
-    public static Image from(File file) {
+    public static Image from(String absoluteImagesDirectory, File relativeFile) {
         final String urlPrefixPath = IMAGES_URL_PATH + "/";
 
-        String name = file.getName();
+        String name = relativeFile.getName();
 
         int dotIndex = name.lastIndexOf('.');
         String nameWithoutExtension = dotIndex > 0 ? name.substring(0, dotIndex) : name;
 
-        String previewPath = IDS_HIDDEN_DIRECTORY + separator + nameWithoutExtension + ".preview.jpg";
-        String thumbnailPath = IDS_HIDDEN_DIRECTORY + separator + nameWithoutExtension + ".thumbnail.jpg";
+        String parentDirectory = relativeFile.getParent();
+        parentDirectory = isNull(parentDirectory) ? "" : parentDirectory + separator;
+
+        String previewPath = parentDirectory + IDS_HIDDEN_DIRECTORY + separator + nameWithoutExtension + ".preview.jpg";
+        String thumbnailPath = parentDirectory + IDS_HIDDEN_DIRECTORY + separator + nameWithoutExtension + ".thumbnail.jpg";
 
         Image image = Image.builder()
-                .file(new File(name))
-                .urlPath(urlPrefixPath + name)
-                .previewFile(new File(previewPath))
+                .urlPath(urlPrefixPath + parentDirectory + name)
+                .previewFile(new File(absoluteImagesDirectory + separator + previewPath))
                 .previewUrlPath(urlPrefixPath + previewPath)
-                .thumbnailFile(new File(thumbnailPath))
+                .thumbnailFile(new File(absoluteImagesDirectory + separator + thumbnailPath))
                 .thumbnailUrlPath(urlPrefixPath + thumbnailPath)
                 .build();
-        image.setup(file, Image.class);
+        image.setup(absoluteImagesDirectory, relativeFile, Image.class);
 
         return image;
     }

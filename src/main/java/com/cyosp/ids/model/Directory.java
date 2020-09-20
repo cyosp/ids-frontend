@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 @EqualsAndHashCode(callSuper = true)
 public class Directory extends FileSystemElement {
 
-    public Directory(File file) {
-        super(file, Directory.class);
+    public Directory(String absoluteImagesDirectory, File relativeFile) {
+        super(absoluteImagesDirectory, relativeFile, Directory.class);
     }
 }

@@ -1,6 +1,5 @@
-package com.cyosp.ids.graphql;
+package com.cyosp.ids.service;
 
-import com.cyosp.ids.graphql.GraphQLDataFetchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,16 +12,16 @@ import static java.nio.file.Path.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-class GraphQLDataFetchersTest {
+class ModelServiceTest {
 
     @InjectMocks
-    private GraphQLDataFetchers graphQLDataFetchers;
+    private ModelService modelService;
 
     @Test
     void lowerCaseExtension() {
         Path path = of(create("file:///image1.jpg"));
 
-        String lowerCaseExtension = graphQLDataFetchers.lowerCaseExtension(path);
+        String lowerCaseExtension = modelService.lowerCaseExtension(path);
 
         assertEquals(".jpg", lowerCaseExtension);
     }
@@ -31,7 +30,7 @@ class GraphQLDataFetchersTest {
     void lowerCaseExtension_UpperCaseExtension() {
         Path path = of(create("file:///image2.JPG"));
 
-        String lowerCaseExtension = graphQLDataFetchers.lowerCaseExtension(path);
+        String lowerCaseExtension = modelService.lowerCaseExtension(path);
 
         assertEquals(".jpg", lowerCaseExtension);
     }
@@ -40,7 +39,7 @@ class GraphQLDataFetchersTest {
     void lowerCaseExtension_NoExtension() {
         Path path = of(create("file:///image3"));
 
-        String lowerCaseExtension = graphQLDataFetchers.lowerCaseExtension(path);
+        String lowerCaseExtension = modelService.lowerCaseExtension(path);
 
         assertEquals("", lowerCaseExtension);
     }
