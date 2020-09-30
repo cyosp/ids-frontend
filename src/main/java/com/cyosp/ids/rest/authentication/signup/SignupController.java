@@ -3,7 +3,7 @@ package com.cyosp.ids.rest.authentication.signup;
 import com.cyosp.ids.model.Role;
 import com.cyosp.ids.model.User;
 import com.cyosp.ids.repository.UserRepository;
-import com.cyosp.ids.rest.LoginPasswordRequest;
+import com.cyosp.ids.rest.authentication.AuthenticationRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -34,11 +34,11 @@ public class SignupController {
         this.userRepository = userRepository;
     }
 
-    ResponseEntity<SignupResponse> register(LoginPasswordRequest loginPasswordRequest, Role role) {
+    ResponseEntity<SignupResponse> register(AuthenticationRequest authenticationRequest, Role role) {
         User user = User.builder()
                 .id(randomUUID().toString())
-                .login(loginPasswordRequest.getLogin())
-                .password(new BCryptPasswordEncoder().encode(loginPasswordRequest.getPassword()))
+                .login(authenticationRequest.getEmail())
+                .password(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()))
                 .role(role)
                 .build();
 
@@ -50,18 +50,18 @@ public class SignupController {
     }
 
     @PostMapping(SIGNUP_PATH + "/admin")
-    public ResponseEntity<SignupResponse> adminRegister(@Valid @RequestBody LoginPasswordRequest loginPasswordRequest) {
+    public ResponseEntity<SignupResponse> adminRegister(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         Optional<User> optionalAdminUser = userRepository.findAll().stream()
                 .filter(user -> user.getRole() == ADMINISTRATOR)
                 .findFirst();
         if (optionalAdminUser.isEmpty()) {
-            return register(loginPasswordRequest, ADMINISTRATOR);
+            return register(authenticationRequest, ADMINISTRATOR);
         } else
             throw new AuthenticationServiceException("Administrator user already registered");
     }
 
     @PostMapping(SIGNUP_PATH)
-    public ResponseEntity<SignupResponse> userRegister(@Valid @RequestBody LoginPasswordRequest loginPasswordRequest) {
-        return register(loginPasswordRequest, VIEWER);
+    public ResponseEntity<SignupResponse> userRegister(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
+        return register(authenticationRequest, VIEWER);
     }
 }

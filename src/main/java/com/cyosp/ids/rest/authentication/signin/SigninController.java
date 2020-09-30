@@ -1,6 +1,6 @@
 package com.cyosp.ids.rest.authentication.signin;
 
-import com.cyosp.ids.rest.LoginPasswordRequest;
+import com.cyosp.ids.rest.authentication.AuthenticationRequest;
 import com.cyosp.ids.security.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -35,9 +35,9 @@ public class SigninController {
     }
 
     @PostMapping(SIGNIN_PATH)
-    public ResponseEntity<SigninResponse> authorize(@Valid @RequestBody LoginPasswordRequest loginPasswordRequest) {
+    public ResponseEntity<SigninResponse> authorize(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-                new UsernamePasswordAuthenticationToken(loginPasswordRequest.getLogin(), loginPasswordRequest.getPassword());
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(usernamePasswordAuthenticationToken);
         getContext().setAuthentication(authentication);
