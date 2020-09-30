@@ -27,7 +27,7 @@ public class UserModelDetailsService implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User createSpringSecurityUser(User user) {
-        return new org.springframework.security.core.userdetails.User(user.getLogin(), user.getPassword(),
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
                 of(new SimpleGrantedAuthority(user.getRole().name())));
     }
 }

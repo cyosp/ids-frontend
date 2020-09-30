@@ -37,7 +37,7 @@ public class SignupController {
     ResponseEntity<SignupResponse> register(AuthenticationRequest authenticationRequest, Role role) {
         User user = User.builder()
                 .id(randomUUID().toString())
-                .login(authenticationRequest.getEmail())
+                .email(authenticationRequest.getEmail())
                 .password(new BCryptPasswordEncoder().encode(authenticationRequest.getPassword()))
                 .role(role)
                 .build();

@@ -56,7 +56,7 @@ public class UserRepository {
 
     public Optional<User> findByLogin(String login) {
         return users.stream()
-                .filter(lambdaLogin -> lambdaLogin.getLogin().equals(login))
+                .filter(lambdaLogin -> lambdaLogin.getEmail().equals(login))
                 .findFirst();
     }
 }
