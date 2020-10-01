@@ -19,10 +19,10 @@ public class UserModelDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(final String username) {
-        return userRepository.findByLogin(username)
+    public UserDetails loadUserByUsername(final String email) {
+        return userRepository.findByEmail(email)
                 .map(this::createSpringSecurityUser)
-                .orElseThrow(() -> new UsernameNotFoundException("Login not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("Email not found: " + email));
 
     }
 
