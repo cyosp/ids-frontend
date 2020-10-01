@@ -34,7 +34,7 @@ public class SigninController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-    @PostMapping(SIGNIN_PATH)
+    @PostMapping
     public ResponseEntity<SigninResponse> authorize(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword());

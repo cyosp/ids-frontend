@@ -49,7 +49,7 @@ public class SignupController {
                 .build(), OK);
     }
 
-    @PostMapping(SIGNUP_PATH + "/admin")
+    @PostMapping("/admin")
     public ResponseEntity<SignupResponse> adminRegister(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         Optional<User> optionalAdminUser = userRepository.findAll().stream()
                 .filter(user -> user.getRole() == ADMINISTRATOR)
@@ -60,7 +60,7 @@ public class SignupController {
             throw new AuthenticationServiceException("Administrator user already registered");
     }
 
-    @PostMapping(SIGNUP_PATH)
+    @PostMapping
     public ResponseEntity<SignupResponse> userRegister(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         return register(authenticationRequest, VIEWER);
     }
