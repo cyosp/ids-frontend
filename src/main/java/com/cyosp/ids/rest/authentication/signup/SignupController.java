@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 import static com.cyosp.ids.model.Role.ADMINISTRATOR;
 import static com.cyosp.ids.model.Role.VIEWER;
@@ -35,6 +34,13 @@ public class SignupController {
     }
 
     ResponseEntity<SignupResponse> register(AuthenticationRequest authenticationRequest, Role role) {
+        String email = authenticationRequest.getEmail();
+
+        boolean userFound = userRepository.findAll().stream()
+                .anyMatch(user -> email.equals(user.getEmail()));
+        if (userFound)
+            throw new AuthenticationServiceException("User already registered");
+
         User user = User.builder()
                 .id(randomUUID().toString())
                 .email(authenticationRequest.getEmail())
@@ -51,13 +57,12 @@ public class SignupController {
 
     @PostMapping("/admin")
     public ResponseEntity<SignupResponse> adminRegister(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
-        Optional<User> optionalAdminUser = userRepository.findAll().stream()
-                .filter(user -> user.getRole() == ADMINISTRATOR)
-                .findFirst();
-        if (optionalAdminUser.isEmpty()) {
-            return register(authenticationRequest, ADMINISTRATOR);
-        } else
+        boolean adminUserFound = userRepository.findAll().stream()
+                .anyMatch(user -> user.getRole() == ADMINISTRATOR);
+        if (adminUserFound) {
             throw new AuthenticationServiceException("Administrator user already registered");
+        } else
+            return register(authenticationRequest, ADMINISTRATOR);
     }
 
     @PostMapping
