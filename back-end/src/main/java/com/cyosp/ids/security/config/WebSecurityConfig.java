@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
 import static com.cyosp.ids.rest.authentication.signin.SigninController.SIGNIN_PATH;
 import static com.cyosp.ids.rest.authentication.signup.SignupController.SIGNUP_PATH;
@@ -51,6 +52,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers()
                 .frameOptions()
                 .sameOrigin()
+
+                .and()
+                .cors()
+                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
 
                 .and()
                 .sessionManagement()
