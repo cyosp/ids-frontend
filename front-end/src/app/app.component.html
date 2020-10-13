@@ -1,5 +1,18 @@
 <div id="app">
   <nav class="navbar navbar-expand navbar-dark bg-primary">
     <a href="#" class="navbar-brand">Ids</a>
+    <ul class="navbar-nav ml-auto" *ngIf="!isAuthenticated">
+      <li class="nav-item">
+        <a href="/login" class="nav-link" routerLink="login">Login</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav ml-auto" *ngIf="isAuthenticated">
+      <li class="nav-item">
+        <a href class="nav-link" (click)="logout()">Logout</a>
+      </li>
+    </ul>
   </nav>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
 </div>
