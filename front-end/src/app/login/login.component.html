@@ -8,7 +8,7 @@
       novalidate
     >
       <div class="form-group">
-        <label for="email">
+        <label for="email" i18n="@@login-email">
           Email
         </label>
         <input
@@ -21,13 +21,13 @@
           #email="ngModel"
         />
         <div class="alert alert-danger" role="alert" *ngIf="f.submitted && email.invalid">
-          <div *ngIf="email.errors.required">
+          <div *ngIf="email.errors.required" i18n="@@login-email-errors-required">
             Email is required
           </div>
         </div>
       </div>
       <div class="form-group">
-        <label for="password">
+        <label for="password" i18n="@@login-password">
           Password
         </label>
         <input
@@ -41,29 +41,32 @@
           #password="ngModel"
         />
         <div class="alert alert-danger" role="alert" *ngIf="f.submitted && password.invalid">
-          <div *ngIf="password.errors.required">
+          <div *ngIf="password.errors.required" i18n="@@login-password-errors-required">
             Password is required
           </div>
-          <div *ngIf="password.errors.minlength">
+          <div *ngIf="password.errors.minlength" i18n="@@login-password-errors-minlength">
             Password must be at least 8 characters
           </div>
         </div>
       </div>
       <div class="form-group">
-        <button class="btn btn-primary btn-block">Login</button>
+        <button class="btn btn-primary btn-block" i18n="@@login-login">
+          Login
+        </button>
       </div>
       <div class="form-group">
         <div
           class="alert alert-danger"
           role="alert"
           *ngIf="f.submitted && isLoginFailed"
+          i18n="@@login-failed"
         >
           Login failed
         </div>
       </div>
     </form>
 
-    <div class="alert alert-success" *ngIf="isAuthenticated">
+    <div class="alert alert-success" *ngIf="isAuthenticated" i18n="@@login-authenticated">
       You are authenticated
     </div>
   </div>
