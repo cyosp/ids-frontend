@@ -21,7 +21,7 @@
       <trans-unit id="login-password-errors-required" datatype="html">
         <target>Mot de passe requis</target>
       </trans-unit>
-      <trans-unit id="login-password-errors-minlength_" datatype="html">
+      <trans-unit id="login-password-errors-minlength" datatype="html">
         <target>Le mot de passe doit être d'au moins 8 caractères</target>
       </trans-unit>
       <trans-unit id="login-login" datatype="html">
