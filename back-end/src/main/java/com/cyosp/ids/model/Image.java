@@ -51,7 +51,7 @@ public class Image extends FileSystemElement {
                 .thumbnailFile(new File(absoluteImagesDirectory + separator + thumbnailPath))
                 .thumbnailUrlPath(urlPrefixPath + thumbnailPath)
                 .build();
-        image.setup(absoluteImagesDirectory, relativeFile, Image.class);
+        image.setup(absoluteImagesDirectory, relativeFile);
 
         return image;
     }

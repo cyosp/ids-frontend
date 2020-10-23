@@ -4,22 +4,22 @@ type Query {
 }
 
 interface FileSystemElement {
+    __typename: String
     id: ID!
     name: String
-    type: String
 }
 
 type Directory implements FileSystemElement {
+    __typename: String
     id: ID!
     name: String
-    type: String
     elements: [FileSystemElement]
 }
 
 type Image implements FileSystemElement {
+    __typename: String
     id: ID!
     name: String
-    type: String
     urlPath: String
     previewUrlPath: String
     thumbnailUrlPath: String

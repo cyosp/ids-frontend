@@ -12,6 +12,6 @@ import static lombok.AccessLevel.PRIVATE;
 public class Directory extends FileSystemElement {
 
     public Directory(String absoluteImagesDirectory, File relativeFile) {
-        super(absoluteImagesDirectory, relativeFile, Directory.class);
+        super(absoluteImagesDirectory, relativeFile);
     }
 }

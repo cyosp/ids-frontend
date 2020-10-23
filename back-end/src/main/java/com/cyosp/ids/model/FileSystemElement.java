@@ -17,16 +17,13 @@ public abstract class FileSystemElement {
 
     protected String name;
 
-    protected String type;
-
-    protected FileSystemElement(String absoluteImagesDirectory, File relativeFile, Class<? extends FileSystemElement> clazz) {
-        setup(absoluteImagesDirectory, relativeFile, clazz);
+    protected FileSystemElement(String absoluteImagesDirectory, File relativeFile) {
+        setup(absoluteImagesDirectory, relativeFile);
     }
 
-    protected void setup(String absoluteImagesDirectory, File relativeFile, Class<? extends FileSystemElement> clazz) {
+    protected void setup(String absoluteImagesDirectory, File relativeFile) {
         id = relativeFile.toString();
         file = new File(absoluteImagesDirectory + separator + relativeFile);
         name = relativeFile.getName();
-        type = clazz.getSimpleName();
     }
 }
