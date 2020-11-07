@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
+import {ListQuery} from '../list-query.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +15,10 @@ export class LoginComponent implements OnInit {
   isAuthenticated = false;
   isLoginFailed = false;
 
-  constructor(private tokenStorageService: TokenStorageService, private authenticationService: AuthenticationService) {
+  constructor(private tokenStorageService: TokenStorageService,
+              private authenticationService: AuthenticationService,
+              private router: Router,
+              private userListQuery: ListQuery) {
   }
 
   ngOnInit(): void {
@@ -22,11 +27,14 @@ export class LoginComponent implements OnInit {
 
   onSubmit(): void {
     this.authenticationService.login(this.form).subscribe(
-      data => {
-        this.tokenStorageService.saveToken(data.accessToken);
+      dataRest => {
+        this.tokenStorageService.saveToken(dataRest.accessToken);
         this.isAuthenticated = true;
         this.isLoginFailed = false;
-        this.reloadPage();
+        this.router.navigate(['gallery']);
+
+        this.userListQuery.fetch()
+          .subscribe(({data}) => console.log(data));
       },
       () => {
         this.isLoginFailed = true;
