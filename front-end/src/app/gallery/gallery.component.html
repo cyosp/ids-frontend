@@ -1,7 +1,7 @@
 <div class="horizontal-gutter">
   <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
     <mat-grid-tile *ngFor='let p of photoUrls'>
-      <img [src]='p' class="tile-image">
+      <img [src]='p | secure | async' class="tile-image">
     </mat-grid-tile>
   </mat-grid-list>
 </div>
