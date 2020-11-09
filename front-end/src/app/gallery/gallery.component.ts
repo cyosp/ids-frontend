@@ -14,6 +14,7 @@ export class GalleryComponent implements OnInit {
     isAuthenticated = false;
     isLoginFailed = false;
     photoUrls: string[] = [];
+    directories: any[] = [];
     breakpoint: number;
 
     constructor(private tokenStorageService: TokenStorageService,
@@ -34,6 +35,11 @@ export class GalleryComponent implements OnInit {
     getPhotos(): void {
         this.userListQuery.fetch()
             .subscribe(data => {
+                this.directories = this.directories.concat((data as any).data.list
+                    .filter(filesystemelement => filesystemelement.__typename === 'Directory')
+                    .map(p => {
+                        return p.name;
+                    }));
                 this.photoUrls = this.photoUrls.concat((data as any).data.list
                     .filter(filesystemelement => filesystemelement.__typename === 'Image')
                     .map(p => {
