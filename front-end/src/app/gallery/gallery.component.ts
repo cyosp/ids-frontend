@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
+import {environment} from '../../environments/environment';
 
 @Component({
     selector: 'app-gallery',
@@ -43,7 +44,7 @@ export class GalleryComponent implements OnInit {
                 this.photoUrls = this.photoUrls.concat((data as any).data.list
                     .filter(filesystemelement => filesystemelement.__typename === 'Image')
                     .map(p => {
-                        return 'http://localhost:8080' + p.thumbnailUrlPath;
+                        return environment.backEndLocation + p.thumbnailUrlPath;
                     }));
             });
     }
