@@ -7,12 +7,9 @@ import {Query, gql} from 'apollo-angular';
 export class ListQuery extends Query {
     document = gql`
         query { list {
-            id
             name
             __typename
             ... on Image {
-                urlPath
-                previewUrlPath
                 thumbnailUrlPath
             }
         }
