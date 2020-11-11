@@ -14,8 +14,7 @@ export class GalleryComponent implements OnInit {
     form: any = {};
     isAuthenticated = false;
     isLoginFailed = false;
-    photoUrls: string[] = [];
-    directories: any[] = [];
+    fileSystemElements: any[] = [];
     breakpoint: number;
 
     constructor(private tokenStorageService: TokenStorageService,
@@ -36,15 +35,22 @@ export class GalleryComponent implements OnInit {
     getPhotos(): void {
         this.userListQuery.fetch()
             .subscribe(data => {
-                this.directories = this.directories.concat((data as any).data.list
-                    .filter(filesystemelement => filesystemelement.__typename === 'Directory')
-                    .map(p => {
-                        return p.name;
-                    }));
-                this.photoUrls = this.photoUrls.concat((data as any).data.list
-                    .filter(filesystemelement => filesystemelement.__typename === 'Image')
-                    .map(p => {
-                        return environment.backEndLocation + p.thumbnailUrlPath;
+                this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
+                    .filter(fse => fse.__typename === 'Directory' && fse.elements[0] && fse.elements[0].__typename === 'Image'
+                        || fse.__typename === 'Image'
+                    )
+                    .map(fse => {
+                        let fseThumbnailUrl = environment.backEndLocation;
+                        if (fse.__typename === 'Directory') {
+                            fseThumbnailUrl += fse.elements[0].thumbnailUrlPath;
+                        } else {
+                            fseThumbnailUrl += fse.thumbnailUrlPath;
+                        }
+                        return {
+                            name: fse.name,
+                            type: fse.__typename,
+                            thumbnailUrl: fseThumbnailUrl
+                        };
                     }));
             });
     }

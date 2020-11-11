@@ -9,6 +9,14 @@ export class ListQuery extends Query {
         query { list {
             name
             __typename
+            ... on Directory {
+                elements {
+                    __typename
+                    ... on Image {
+                        thumbnailUrlPath
+                    }
+                }
+            }
             ... on Image {
                 thumbnailUrlPath
             }
