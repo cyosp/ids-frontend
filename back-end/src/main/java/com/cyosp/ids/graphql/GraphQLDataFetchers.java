@@ -34,6 +34,7 @@ import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.Paths.get;
+import static java.util.Comparator.comparing;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static javax.imageio.ImageIO.*;
@@ -83,17 +84,22 @@ public class GraphQLDataFetchers {
         if (ofNullable(directory).isPresent())
             absoluteDirectoryPath.append(separator).append(directory);
 
+        List<Path> unorderedPaths = new ArrayList<>();
         try (DirectoryStream<Path> paths = newDirectoryStream(get(absoluteDirectoryPath.toString()),
                 path -> modelService.isImage(path) || modelService.isDirectory(path))) {
-            paths.forEach(path -> {
-                if (modelService.isImage(path))
-                    fileSystemElements.add(modelService.imageFrom(path));
-                else
-                    fileSystemElements.add(modelService.directoryFrom(path));
-            });
+            paths.forEach(unorderedPaths::add);
         } catch (IOException e) {
             log.warn("Fail to list file system elements: " + e.getMessage());
         }
+        unorderedPaths.stream()
+                .filter(modelService::isDirectory)
+                .sorted(comparing(path -> path.getFileName().toString()))
+                .forEach(path -> fileSystemElements.add(modelService.directoryFrom(path)));
+        unorderedPaths.stream()
+                .filter(modelService::isImage)
+                .sorted(comparing(path -> path.getFileName().toString()))
+                .forEach(path -> fileSystemElements.add(modelService.imageFrom(path)));
+
         return fileSystemElements;
     }
 
