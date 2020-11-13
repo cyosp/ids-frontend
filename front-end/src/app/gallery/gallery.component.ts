@@ -36,13 +36,13 @@ export class GalleryComponent implements OnInit {
         this.userListQuery.fetch()
             .subscribe(data => {
                 this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
-                    .filter(fse => fse.__typename === 'Directory' && fse.elements[0] && fse.elements[0].__typename === 'Image'
+                    .filter(fse => fse.__typename === 'Directory' && fse.elements.filter(this.isImage).length > 0
                         || fse.__typename === 'Image'
                     )
                     .map(fse => {
                         let fseThumbnailUrl = environment.backEndLocation;
                         if (fse.__typename === 'Directory') {
-                            fseThumbnailUrl += fse.elements[0].thumbnailUrlPath;
+                            fseThumbnailUrl += fse.elements.filter(this.isImage)[0].thumbnailUrlPath;
                         } else {
                             fseThumbnailUrl += fse.thumbnailUrlPath;
                         }
@@ -53,5 +53,10 @@ export class GalleryComponent implements OnInit {
                         };
                     }));
             });
+    }
+
+    isImage(element, index, array): boolean
+    {
+        return element.__typename === 'Image';
     }
 }
