@@ -1,10 +1,15 @@
 <div class="horizontal-gutter">
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
-            <img [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name" class="tile-image">
-            <mat-grid-tile-footer *ngIf="fse.type === 'Directory'">
-                {{ fse.name }}
-            </mat-grid-tile-footer>
+            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
+                <img [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                <mat-grid-tile-footer>
+                    {{ fse.name }}
+                </mat-grid-tile-footer>
+            </a>
+            <a *ngIf="fse.type === 'Image'">
+                <img [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+            </a>
         </mat-grid-tile>
     </mat-grid-list>
 </div>

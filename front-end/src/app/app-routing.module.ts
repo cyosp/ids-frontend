@@ -9,7 +9,14 @@ const routes: Routes = [
     path: 'login', component: LoginComponent,
   },
   {
-    path: 'gallery', component: GalleryComponent
+    path: 'gallery',
+    component: GalleryComponent,
+    children: [
+      {
+        path: ':directoryId',
+        component: GalleryComponent
+      }
+    ]
   }
 ];
 

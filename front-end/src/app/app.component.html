@@ -1,6 +1,15 @@
 <div id="app">
   <nav class="navbar navbar-expand navbar-dark bg-primary">
-    <a href="#" class="navbar-brand">Ids</a>
+    <a *ngIf="isAuthenticated" routerLink="/gallery" i18n="@@navbar-home" class="gallery-navigation">
+      Home
+    </a>
+    <span *ngFor='let directory of directories'>
+      <span *ngIf="isAuthenticated">&nbsp;</span>
+      <span *ngIf="isAuthenticated" class="gallery-navigation">&gt;</span>
+      <a *ngIf="isAuthenticated" routerLink="/gallery{{ directory.id }}" i18n="@@navbar-gallery" class="gallery-navigation">
+        {{ directory.name }}
+      </a>
+    </span>
     <ul class="navbar-nav ml-auto" *ngIf="!isAuthenticated">
       <li class="nav-item">
         <a href="/login" class="nav-link" routerLink="login" i18n="@@navbar-login">

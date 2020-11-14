@@ -3,6 +3,7 @@ import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {environment} from '../../environments/environment';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     selector: 'app-gallery',
@@ -19,21 +20,45 @@ export class GalleryComponent implements OnInit {
 
     constructor(private tokenStorageService: TokenStorageService,
                 private authenticationService: AuthenticationService,
-                private userListQuery: ListQuery) {
+                private userListQuery: ListQuery,
+                public router: Router,
+                private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {
         this.breakpoint = (window.innerWidth / 200);
         this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
-        this.getPhotos();
+
+        this.route.url.subscribe(
+            val => {
+                this.fileSystemElements = [];
+                this.updateFileSystemElements();
+            }
+        );
+    }
+
+    private updateFileSystemElements(): any {
+        const path = decodeURI(this.router.url);
+        let directoryId = null;
+        if (path !== '/gallery') {
+            directoryId = path.replace(/\/gallery\//, '');
+        }
+        if (directoryId) {
+            directoryId = directoryId.replace(/>/g, '/');
+        }
+        this.getPhotos(directoryId);
     }
 
     onResize(event): any {
         this.breakpoint = (event.target.innerWidth / 200);
     }
 
-    getPhotos(): void {
-        this.userListQuery.fetch()
+    getPhotos(directoryId: string): void {
+        let queryVariables = {};
+        if (directoryId) {
+            queryVariables = { directoryId };
+        }
+        this.userListQuery.fetch(queryVariables)
             .subscribe(data => {
                 this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
                     .filter(fse => fse.__typename === 'Directory' && fse.elements.filter(this.isImage).length > 0
@@ -47,6 +72,7 @@ export class GalleryComponent implements OnInit {
                             fseThumbnailUrl += fse.thumbnailUrlPath;
                         }
                         return {
+                            id: fse.id.replace(/\//g, '>'),
                             name: fse.name,
                             type: fse.__typename,
                             thumbnailUrl: fseThumbnailUrl

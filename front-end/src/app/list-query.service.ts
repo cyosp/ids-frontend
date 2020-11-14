@@ -6,7 +6,8 @@ import {Query, gql} from 'apollo-angular';
 })
 export class ListQuery extends Query {
     document = gql`
-        query { list {
+        query list($directoryId: ID) { list(directory: $directoryId) {
+            id
             name
             __typename
             ... on Directory {
