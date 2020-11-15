@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
     styleUrls: ['./gallery.component.css']
 })
 export class GalleryComponent implements OnInit {
+    readonly THUMBNAIL_SIZE = 200;
 
     form: any = {};
     isAuthenticated = false;
@@ -26,7 +27,7 @@ export class GalleryComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.breakpoint = (window.innerWidth / 200);
+        this.breakpoint = (window.innerWidth / this.THUMBNAIL_SIZE);
         this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
 
         this.route.url.subscribe(
@@ -50,7 +51,7 @@ export class GalleryComponent implements OnInit {
     }
 
     onResize(event): any {
-        this.breakpoint = (event.target.innerWidth / 200);
+        this.breakpoint = (event.target.innerWidth / this.THUMBNAIL_SIZE);
     }
 
     getPhotos(directoryId: string): void {

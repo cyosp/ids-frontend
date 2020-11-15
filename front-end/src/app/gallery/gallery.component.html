@@ -3,7 +3,7 @@
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
                 <img *ngIf="fse.thumbnailUrl !== null" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
-                <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" width="200" height="200"/>
+                <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" [attr.width]="THUMBNAIL_SIZE" [attr.height]="THUMBNAIL_SIZE"></svg>
                 <mat-grid-tile-footer>
                     {{ fse.name }}
                 </mat-grid-tile-footer>
