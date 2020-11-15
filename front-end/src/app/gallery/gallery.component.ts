@@ -61,13 +61,18 @@ export class GalleryComponent implements OnInit {
         this.userListQuery.fetch(queryVariables)
             .subscribe(data => {
                 this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
-                    .filter(fse => fse.__typename === 'Directory' && fse.elements.filter(this.isImage).length > 0
+                    .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
                         || fse.__typename === 'Image'
                     )
                     .map(fse => {
                         let fseThumbnailUrl = environment.backEndLocation;
                         if (fse.__typename === 'Directory') {
-                            fseThumbnailUrl += fse.elements.filter(this.isImage)[0].thumbnailUrlPath;
+                            const directoryImages = fse.elements.filter(this.isImage);
+                            if (directoryImages.length > 0) {
+                                fseThumbnailUrl += directoryImages[0].thumbnailUrlPath;
+                            } else {
+                                fseThumbnailUrl = null;
+                            }
                         } else {
                             fseThumbnailUrl += fse.thumbnailUrlPath;
                         }
