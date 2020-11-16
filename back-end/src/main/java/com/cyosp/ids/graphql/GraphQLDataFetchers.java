@@ -68,7 +68,7 @@ public class GraphQLDataFetchers {
                 images.add((Image) fileSystemElement);
             else {
                 images.addAll(
-                        list(fileSystemElement.getId()).stream()
+                        listRecursively(fileSystemElement.getId()).stream()
                                 .filter(fse -> fse instanceof Image)
                                 .map(image -> (Image) image)
                                 .collect(toList()));
@@ -77,7 +77,15 @@ public class GraphQLDataFetchers {
         return images;
     }
 
+    List<FileSystemElement> listRecursively(String directory) {
+        return list(directory, true);
+    }
+
     List<FileSystemElement> list(String directory) {
+        return list(directory, false);
+    }
+
+    private List<FileSystemElement> list(String directory, boolean recursive) {
         final List<FileSystemElement> fileSystemElements = new ArrayList<>();
 
         final StringBuilder absoluteDirectoryPath = new StringBuilder(idsConfiguration.getAbsoluteImagesDirectory());
@@ -94,7 +102,13 @@ public class GraphQLDataFetchers {
         unorderedPaths.stream()
                 .filter(modelService::isDirectory)
                 .sorted(comparing(path -> path.getFileName().toString()))
-                .forEach(path -> fileSystemElements.add(modelService.directoryFrom(path)));
+                .forEach(path -> {
+                    if(recursive) {
+                        String relativeDirectory = path.toString().replaceFirst( "^" + idsConfiguration.getAbsoluteImagesDirectory() + separator, "");
+                        fileSystemElements.addAll(listRecursively(relativeDirectory));
+                    }
+                    fileSystemElements.add(modelService.directoryFrom(path));
+                });
         unorderedPaths.stream()
                 .filter(modelService::isImage)
                 .sorted(comparing(path -> path.getFileName().toString()))
