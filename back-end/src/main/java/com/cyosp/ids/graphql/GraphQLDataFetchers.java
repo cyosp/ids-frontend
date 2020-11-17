@@ -180,7 +180,7 @@ public class GraphQLDataFetchers {
         String extension = dotIndex > 0 && dotIndex < filename.length() ? filename.substring(dotIndex + 1) : null;
 
         String jpgFormat = "jpg";
-        if (!jpgFormat.equals(extension))
+        if (!jpgFormat.equalsIgnoreCase(extension))
             throw new UnsupportedOperationException(format("Only %s format is managed", jpgFormat));
 
         ImageWriter imageWriter = getImageWritersByFormatName(jpgFormat).next();
