@@ -7,6 +7,7 @@ import com.cyosp.ids.model.Image;
 import com.cyosp.ids.model.User;
 import com.cyosp.ids.repository.UserRepository;
 import com.cyosp.ids.service.ModelService;
+import graphql.GraphQLContext;
 import graphql.schema.DataFetcher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,18 +24,18 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.cyosp.ids.model.Role.ADMINISTRATOR;
 import static java.awt.Image.SCALE_DEFAULT;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 import static java.io.File.separator;
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.nio.file.Files.createDirectories;
 import static java.nio.file.Files.newDirectoryStream;
 import static java.nio.file.Paths.get;
-import static java.util.Comparator.comparing;
+import static java.util.Comparator.*;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
 import static javax.imageio.ImageIO.*;
@@ -45,7 +46,8 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 @Slf4j
 @Component
 public class GraphQLDataFetchers {
-    public static final String DIRECTORY = "directory";
+    private static final String DIRECTORY = "directory";
+    private static final String DIRECTORY_REVERSED_ORDER = "directoryReversedOrder";
 
     private final IdsConfiguration idsConfiguration;
 
@@ -61,14 +63,14 @@ public class GraphQLDataFetchers {
         this.modelService = modelService;
     }
 
-    List<Image> listImagesInAllDirectories(String directory) {
+    List<Image> listImagesInAllDirectories(String directory, boolean directoryReversedOrder) {
         List<Image> images = new ArrayList<>();
-        for (FileSystemElement fileSystemElement : list(directory)) {
+        for (FileSystemElement fileSystemElement : listFileSystemElements(directory, directoryReversedOrder)) {
             if (fileSystemElement instanceof Image)
                 images.add((Image) fileSystemElement);
             else {
                 images.addAll(
-                        listRecursively(fileSystemElement.getId()).stream()
+                        listRecursively(fileSystemElement.getId(), directoryReversedOrder).stream()
                                 .filter(fse -> fse instanceof Image)
                                 .map(image -> (Image) image)
                                 .collect(toList()));
@@ -77,15 +79,15 @@ public class GraphQLDataFetchers {
         return images;
     }
 
-    List<FileSystemElement> listRecursively(String directory) {
-        return list(directory, true);
+    List<FileSystemElement> listRecursively(String directory, boolean directoryReversedOrder) {
+        return list(directory, true, directoryReversedOrder);
     }
 
-    List<FileSystemElement> list(String directory) {
-        return list(directory, false);
+    List<FileSystemElement> listFileSystemElements(String directory, boolean directoryReversedOrder) {
+        return list(directory, false, directoryReversedOrder);
     }
 
-    private List<FileSystemElement> list(String directory, boolean recursive) {
+    private List<FileSystemElement> list(String directory, boolean recursive, boolean directoryReversedOrder) {
         final List<FileSystemElement> fileSystemElements = new ArrayList<>();
 
         final StringBuilder absoluteDirectoryPath = new StringBuilder(idsConfiguration.getAbsoluteImagesDirectory());
@@ -102,10 +104,11 @@ public class GraphQLDataFetchers {
         unorderedPaths.stream()
                 .filter(modelService::isDirectory)
                 .sorted(comparing(path -> path.getFileName().toString()))
+                .sorted(directoryReversedOrder ? reverseOrder() : naturalOrder())
                 .forEach(path -> {
                     if(recursive) {
                         String relativeDirectory = path.toString().replaceFirst( "^" + idsConfiguration.getAbsoluteImagesDirectory() + separator, "");
-                        fileSystemElements.addAll(listRecursively(relativeDirectory));
+                        fileSystemElements.addAll(listRecursively(relativeDirectory, directoryReversedOrder));
                     }
                     fileSystemElements.add(modelService.directoryFrom(path));
                 });
@@ -120,14 +123,23 @@ public class GraphQLDataFetchers {
     public DataFetcher<List<FileSystemElement>> getFileSystemElementsDataFetcher() {
         return dataFetchingEnvironment -> {
             String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
-            return new ArrayList<>(list(directory));
+
+            boolean directoryReversedOrder = TRUE.equals(dataFetchingEnvironment.getArgument(DIRECTORY_REVERSED_ORDER));
+            GraphQLContext graphQLContext = dataFetchingEnvironment.getContext();
+            graphQLContext.put(DIRECTORY_REVERSED_ORDER, directoryReversedOrder);
+
+            return new ArrayList<>(listFileSystemElements(directory, directoryReversedOrder));
         };
     }
 
     public DataFetcher<List<FileSystemElement>> getDirectoryElementsDataFetcher() {
         return dataFetchingEnvironment -> {
             Directory directory = dataFetchingEnvironment.getSource();
-            return new ArrayList<>(list(directory.getId()));
+
+            GraphQLContext graphQLContext = dataFetchingEnvironment.getContext();
+            boolean directoryReversedOrder = TRUE.equals(graphQLContext.get(DIRECTORY_REVERSED_ORDER));
+
+            return new ArrayList<>(listFileSystemElements(directory.getId(), directoryReversedOrder));
         };
     }
 
@@ -203,9 +215,10 @@ public class GraphQLDataFetchers {
     public DataFetcher<List<Image>> generateAlternativeFormats() {
         return dataFetchingEnvironment -> {
             checkAdministratorUser();
+            final boolean directoryReversedOrder = true;
             final List<Image> images = new ArrayList<>();
             String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
-            for (Image image : listImagesInAllDirectories(directory)) {
+            for (Image image : listImagesInAllDirectories(directory, directoryReversedOrder)) {
                 File previewFile = image.getPreviewFile();
                 File thumbnailFile = image.getThumbnailFile();
 

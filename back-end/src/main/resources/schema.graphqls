@@ -1,5 +1,5 @@
 type Query {
-    list(directory: ID): [FileSystemElement]
+    list(directory: ID, directoryReversedOrder: Boolean): [FileSystemElement]
     users: [User]
 }
 
