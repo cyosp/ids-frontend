@@ -55,9 +55,11 @@ export class GalleryComponent implements OnInit {
     }
 
     getPhotos(directoryId: string): void {
-        let queryVariables = {};
+        const queryVariables: any = {
+            directoryReversedOrder: true
+        };
         if (directoryId) {
-            queryVariables = { directoryId };
+            queryVariables.directoryId = directoryId;
         }
         this.userListQuery.fetch(queryVariables)
             .subscribe(data => {
