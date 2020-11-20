@@ -1,12 +1,15 @@
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {TokenStorageService} from './token-storage.service';
+import {tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    constructor(public tokenStorageService: TokenStorageService) {
+    constructor(public tokenStorageService: TokenStorageService,
+                private router: Router) {
     }
 
     intercept(httpRequest: HttpRequest<any>,
@@ -19,9 +22,14 @@ export class AuthInterceptorService implements HttpInterceptor {
                     Authorization: `Bearer ` + token
                 }
             });
-            return httpHandler.handle(httpRequest);
-        } else {
-            return httpHandler.handle(httpRequest);
         }
+
+        return httpHandler.handle(httpRequest).pipe(tap(() => {
+            },
+            (error: any) => {
+                if (error instanceof HttpErrorResponse && error.status === 401) {
+                    this.router.navigate(['login']);
+                }
+            }));
     }
 }
