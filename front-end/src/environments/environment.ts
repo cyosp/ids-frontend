@@ -4,7 +4,12 @@
 
 export const environment = {
   production: false,
-  backEndLocation: 'http://localhost:8080'
+
+  backEndLocation: 'http://localhost:8080',
+
+  // When true directories are displayed in reversed order
+  // Example: 2020, 2019, 2018...
+  directoryReversedOrder: true
 };
 
 /*

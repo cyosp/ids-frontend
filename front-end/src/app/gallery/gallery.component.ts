@@ -56,7 +56,7 @@ export class GalleryComponent implements OnInit {
 
     getPhotos(directoryId: string): void {
         const queryVariables: any = {
-            directoryReversedOrder: true
+            directoryReversedOrder: environment.directoryReversedOrder
         };
         if (directoryId) {
             queryVariables.directoryId = directoryId;
