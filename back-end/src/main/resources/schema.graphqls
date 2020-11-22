@@ -1,5 +1,5 @@
 type Query {
-    list(directory: ID, directoryReversedOrder: Boolean): [FileSystemElement]
+    list(directory: ID, directoryReversedOrder: Boolean, previewDirectoryReversedOrder: Boolean): [FileSystemElement]
     users: [User]
 }
 
@@ -13,6 +13,7 @@ type Directory implements FileSystemElement {
     __typename: String
     id: ID!
     name: String
+    preview: Image
     elements: [FileSystemElement]
 }
 

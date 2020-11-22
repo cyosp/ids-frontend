@@ -2,6 +2,7 @@ package com.cyosp.ids.service;
 
 import com.cyosp.ids.configuration.IdsConfiguration;
 import com.cyosp.ids.model.Directory;
+import com.cyosp.ids.model.FileSystemElement;
 import com.cyosp.ids.model.Image;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,19 @@ public class ModelService {
     }
 
     private File relative(Path path) {
-        return new File(path.toFile().toString().replace(idsConfiguration.getAbsoluteImagesDirectory() + separator, ""));
+        return new File(relative(path.toFile().toString()));
+    }
+
+    private String relative(String absolutePath) {
+        return absolutePath.replaceFirst("^" + idsConfiguration.getAbsoluteImagesDirectory() + separator, "");
+    }
+
+    public String stringRelative(Path path) {
+        return relative(path.toString());
+    }
+
+    public String stringRelative(FileSystemElement fileSystemElement) {
+        return stringRelative(Path.of(fileSystemElement.getFile().toURI()));
     }
 
     public Image imageFrom(Path path) {

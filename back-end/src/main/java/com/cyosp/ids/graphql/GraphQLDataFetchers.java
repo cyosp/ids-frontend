@@ -48,6 +48,7 @@ import static org.springframework.security.core.context.SecurityContextHolder.ge
 public class GraphQLDataFetchers {
     private static final String DIRECTORY = "directory";
     private static final String DIRECTORY_REVERSED_ORDER = "directoryReversedOrder";
+    private static final String PREVIEW_DIRECTORY_REVERSED_ORDER = "previewDirectoryReversedOrder";
 
     private final IdsConfiguration idsConfiguration;
 
@@ -63,14 +64,14 @@ public class GraphQLDataFetchers {
         this.modelService = modelService;
     }
 
-    List<Image> listImagesInAllDirectories(String directory, boolean directoryReversedOrder) {
+    List<Image> listImagesInAllDirectories(String directory, boolean directoryReversedOrder, boolean previewDirectoryReversedOrder) {
         List<Image> images = new ArrayList<>();
-        for (FileSystemElement fileSystemElement : listFileSystemElements(directory, directoryReversedOrder)) {
+        for (FileSystemElement fileSystemElement : listFileSystemElements(directory, directoryReversedOrder, previewDirectoryReversedOrder)) {
             if (fileSystemElement instanceof Image)
                 images.add((Image) fileSystemElement);
             else {
                 images.addAll(
-                        listRecursively(fileSystemElement.getId(), directoryReversedOrder).stream()
+                        listRecursively(fileSystemElement.getId(), directoryReversedOrder, previewDirectoryReversedOrder).stream()
                                 .filter(fse -> fse instanceof Image)
                                 .map(image -> (Image) image)
                                 .collect(toList()));
@@ -79,20 +80,24 @@ public class GraphQLDataFetchers {
         return images;
     }
 
-    List<FileSystemElement> listRecursively(String directory, boolean directoryReversedOrder) {
-        return list(directory, true, directoryReversedOrder);
+    List<FileSystemElement> listRecursively(String directory, boolean directoryReversedOrder, boolean previewDirectoryReversedOrder) {
+        return list(directory, true, directoryReversedOrder, previewDirectoryReversedOrder);
     }
 
-    List<FileSystemElement> listFileSystemElements(String directory, boolean directoryReversedOrder) {
-        return list(directory, false, directoryReversedOrder);
+    List<FileSystemElement> listFileSystemElements(String directory, boolean directoryReversedOrder, boolean previewDirectoryReversedOrder) {
+        return list(directory, false, directoryReversedOrder, previewDirectoryReversedOrder);
     }
 
-    private List<FileSystemElement> list(String directory, boolean recursive, boolean directoryReversedOrder) {
+    List<FileSystemElement> listFileSystemElements(Directory directory, boolean directoryReversedOrder, boolean previewDirectoryReversedOrder) {
+        return list(modelService.stringRelative(directory), false, directoryReversedOrder, previewDirectoryReversedOrder);
+    }
+
+    private List<FileSystemElement> list(String directoryString, boolean recursive, boolean directoryReversedOrder, boolean previewDirectoryReversedOrder) {
         final List<FileSystemElement> fileSystemElements = new ArrayList<>();
 
         final StringBuilder absoluteDirectoryPath = new StringBuilder(idsConfiguration.getAbsoluteImagesDirectory());
-        if (ofNullable(directory).isPresent())
-            absoluteDirectoryPath.append(separator).append(directory);
+        if (ofNullable(directoryString).isPresent())
+            absoluteDirectoryPath.append(separator).append(directoryString);
 
         List<Path> unorderedPaths = new ArrayList<>();
         try (DirectoryStream<Path> paths = newDirectoryStream(get(absoluteDirectoryPath.toString()),
@@ -106,11 +111,12 @@ public class GraphQLDataFetchers {
                 .sorted(comparing(path -> path.getFileName().toString()))
                 .sorted(directoryReversedOrder ? reverseOrder() : naturalOrder())
                 .forEach(path -> {
-                    if(recursive) {
-                        String relativeDirectory = path.toString().replaceFirst( "^" + idsConfiguration.getAbsoluteImagesDirectory() + separator, "");
-                        fileSystemElements.addAll(listRecursively(relativeDirectory, directoryReversedOrder));
+                    Directory directory = modelService.directoryFrom(path);
+                    directory.setPreview(preview(directory, previewDirectoryReversedOrder));
+                    fileSystemElements.add(directory);
+                    if (recursive) {
+                        fileSystemElements.addAll(listRecursively(modelService.stringRelative(path), directoryReversedOrder, previewDirectoryReversedOrder));
                     }
-                    fileSystemElements.add(modelService.directoryFrom(path));
                 });
         unorderedPaths.stream()
                 .filter(modelService::isImage)
@@ -120,15 +126,44 @@ public class GraphQLDataFetchers {
         return fileSystemElements;
     }
 
+    Image preview(Directory directory, boolean previewDirectoryReversedOrder) {
+        List<FileSystemElement> fileSystemElements = listFileSystemElements(directory, previewDirectoryReversedOrder, previewDirectoryReversedOrder);
+
+        Image image = fileSystemElements.stream()
+                .map(fse -> Path.of(fse.getFile().toURI()))
+                .filter(modelService::isImage)
+                .map(modelService::imageFrom)
+                .findFirst()
+                .orElse(null);
+
+        if (ofNullable(image).isEmpty()) {
+            Directory nextDirectory = fileSystemElements.stream()
+                    .map(fse -> Path.of(fse.getFile().toURI()))
+                    .filter(modelService::isDirectory)
+                    .map(modelService::directoryFrom)
+                    .findFirst()
+                    .orElse(null);
+            if (ofNullable(nextDirectory).isPresent()) {
+                image = preview(nextDirectory, previewDirectoryReversedOrder);
+            }
+        }
+
+        return image;
+    }
+
     public DataFetcher<List<FileSystemElement>> getFileSystemElementsDataFetcher() {
         return dataFetchingEnvironment -> {
             String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
 
-            boolean directoryReversedOrder = TRUE.equals(dataFetchingEnvironment.getArgument(DIRECTORY_REVERSED_ORDER));
             GraphQLContext graphQLContext = dataFetchingEnvironment.getContext();
+
+            boolean directoryReversedOrder = TRUE.equals(dataFetchingEnvironment.getArgument(DIRECTORY_REVERSED_ORDER));
             graphQLContext.put(DIRECTORY_REVERSED_ORDER, directoryReversedOrder);
 
-            return new ArrayList<>(listFileSystemElements(directory, directoryReversedOrder));
+            boolean previewDirectoryReversedOrder = TRUE.equals(dataFetchingEnvironment.getArgument(PREVIEW_DIRECTORY_REVERSED_ORDER));
+            graphQLContext.put(PREVIEW_DIRECTORY_REVERSED_ORDER, previewDirectoryReversedOrder);
+
+            return new ArrayList<>(listFileSystemElements(directory, directoryReversedOrder, previewDirectoryReversedOrder));
         };
     }
 
@@ -137,9 +172,11 @@ public class GraphQLDataFetchers {
             Directory directory = dataFetchingEnvironment.getSource();
 
             GraphQLContext graphQLContext = dataFetchingEnvironment.getContext();
-            boolean directoryReversedOrder = TRUE.equals(graphQLContext.get(DIRECTORY_REVERSED_ORDER));
 
-            return new ArrayList<>(listFileSystemElements(directory.getId(), directoryReversedOrder));
+            boolean directoryReversedOrder = TRUE.equals(graphQLContext.get(DIRECTORY_REVERSED_ORDER));
+            boolean previewDirectoryReversedOrder = TRUE.equals(graphQLContext.get(PREVIEW_DIRECTORY_REVERSED_ORDER));
+
+            return new ArrayList<>(listFileSystemElements(directory.getId(), directoryReversedOrder, previewDirectoryReversedOrder));
         };
     }
 
@@ -215,10 +252,12 @@ public class GraphQLDataFetchers {
     public DataFetcher<List<Image>> generateAlternativeFormats() {
         return dataFetchingEnvironment -> {
             checkAdministratorUser();
+            // Generate alternative formats first for recent dated folders
             final boolean directoryReversedOrder = true;
+            final boolean previewDirectoryReversedOrder = false;
             final List<Image> images = new ArrayList<>();
             String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
-            for (Image image : listImagesInAllDirectories(directory, directoryReversedOrder)) {
+            for (Image image : listImagesInAllDirectories(directory, directoryReversedOrder, previewDirectoryReversedOrder)) {
                 File previewFile = image.getPreviewFile();
                 File thumbnailFile = image.getThumbnailFile();
 
