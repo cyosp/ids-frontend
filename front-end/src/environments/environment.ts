@@ -9,7 +9,10 @@ export const environment = {
 
   // When true directories are displayed in reversed order
   // Example: 2020, 2019, 2018...
-  directoryReversedOrder: true
+  directoryReversedOrder: true,
+  // When true and a directory doesn't contain an image,
+  // directories are explored in reversed order to select preview image
+  previewDirectoryReversedOrder: false
 };
 
 /*

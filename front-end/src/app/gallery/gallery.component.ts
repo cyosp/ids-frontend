@@ -56,7 +56,8 @@ export class GalleryComponent implements OnInit {
 
     getPhotos(directoryId: string): void {
         const queryVariables: any = {
-            directoryReversedOrder: environment.directoryReversedOrder
+            directoryReversedOrder: environment.directoryReversedOrder,
+            previewDirectoryReversedOrder: environment.previewDirectoryReversedOrder,
         };
         if (directoryId) {
             queryVariables.directoryId = directoryId;
@@ -70,9 +71,8 @@ export class GalleryComponent implements OnInit {
                     .map(fse => {
                         let fseThumbnailUrl = environment.backEndLocation;
                         if (fse.__typename === 'Directory') {
-                            const directoryImages = fse.elements.filter(this.isImage);
-                            if (directoryImages.length > 0) {
-                                fseThumbnailUrl += directoryImages[0].thumbnailUrlPath;
+                            if (fse.preview) {
+                                fseThumbnailUrl += fse.preview.thumbnailUrlPath;
                             } else {
                                 fseThumbnailUrl = null;
                             }
@@ -87,10 +87,5 @@ export class GalleryComponent implements OnInit {
                         };
                     }));
             });
-    }
-
-    isImage(element, index, array): boolean
-    {
-        return element.__typename === 'Image';
     }
 }
