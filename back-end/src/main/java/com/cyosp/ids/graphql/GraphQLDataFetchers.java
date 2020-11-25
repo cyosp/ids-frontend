@@ -24,10 +24,11 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.cyosp.ids.model.Role.ADMINISTRATOR;
-import static java.awt.Image.SCALE_DEFAULT;
+import static java.awt.Image.SCALE_SMOOTH;
 import static java.awt.image.BufferedImage.TYPE_INT_RGB;
 import static java.io.File.separator;
 import static java.lang.Boolean.TRUE;
@@ -214,7 +215,7 @@ public class GraphQLDataFetchers {
         }
 
         final int squareSize = 200;
-        java.awt.Image squareImage = croppedImage.getScaledInstance(squareSize, squareSize, SCALE_DEFAULT);
+        java.awt.Image squareImage = croppedImage.getScaledInstance(squareSize, squareSize, SCALE_SMOOTH);
         BufferedImage thumbnailImage = new BufferedImage(squareSize, squareSize, TYPE_INT_RGB);
         thumbnailImage.getGraphics().drawImage(squareImage, 0, 0, null);
         return thumbnailImage;
