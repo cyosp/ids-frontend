@@ -50,6 +50,7 @@ public class GraphQLDataFetchers {
     private static final String DIRECTORY = "directory";
     private static final String DIRECTORY_REVERSED_ORDER = "directoryReversedOrder";
     private static final String PREVIEW_DIRECTORY_REVERSED_ORDER = "previewDirectoryReversedOrder";
+    private static final String FORCE_THUMBNAIL_GENERATION = "forceThumbnailGeneration";
 
     private final IdsConfiguration idsConfiguration;
 
@@ -256,19 +257,20 @@ public class GraphQLDataFetchers {
             // Generate alternative formats first for recent dated folders
             final boolean directoryReversedOrder = true;
             final boolean previewDirectoryReversedOrder = false;
+            boolean forceThumbnailGeneration = TRUE.equals(dataFetchingEnvironment.getArgument(FORCE_THUMBNAIL_GENERATION));
             final List<Image> images = new ArrayList<>();
             String directory = dataFetchingEnvironment.getArgument(DIRECTORY);
             for (Image image : listImagesInAllDirectories(directory, directoryReversedOrder, previewDirectoryReversedOrder)) {
                 File previewFile = image.getPreviewFile();
                 File thumbnailFile = image.getThumbnailFile();
 
-                if (!previewFile.exists() || !thumbnailFile.exists()) {
+                if (!previewFile.exists() || !thumbnailFile.exists() || forceThumbnailGeneration) {
                     BufferedImage bufferedImage = read(image.getFile());
 
                     if (!previewFile.exists())
                         save(createPreview(bufferedImage), previewFile);
 
-                    if (!thumbnailFile.exists())
+                    if (!thumbnailFile.exists() || forceThumbnailGeneration)
                         save(createThumbnail(bufferedImage), thumbnailFile);
 
                     images.add(image);

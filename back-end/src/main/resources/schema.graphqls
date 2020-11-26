@@ -39,5 +39,5 @@ type User {
 }
 
 type Mutation {
-    generateAlternativeFormats: [Image]
+    generateAlternativeFormats(forceThumbnailGeneration: Boolean): [Image]
 }
