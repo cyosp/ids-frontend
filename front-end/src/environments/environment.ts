@@ -12,7 +12,9 @@ export const environment = {
   directoryReversedOrder: true,
   // When true and a directory doesn't contain an image,
   // directories are explored in reversed order to select preview image
-  previewDirectoryReversedOrder: false
+  previewDirectoryReversedOrder: false,
+  // When true, images which are at the same level as directories are displayed
+  mixDirectoriesAndImages: false
 };
 
 /*
