@@ -26,9 +26,10 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
       this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
       this.route.queryParams.subscribe(params => {
+          if (params.view) {
               this.view = decodeURI(params.view);
           }
-      );
+      });
   }
 
   onSubmit(): void {
