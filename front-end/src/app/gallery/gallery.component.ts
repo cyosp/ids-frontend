@@ -13,7 +13,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class GalleryComponent implements OnInit {
     readonly THUMBNAIL_SIZE = 200;
 
-    form: any = {};
     isAuthenticated = false;
     isLoginFailed = false;
     fileSystemElements: any[] = [];
