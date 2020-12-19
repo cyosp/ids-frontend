@@ -3,7 +3,8 @@ MAINTAINER CYOSP <cyosp@cyosp.com>
 
 RUN apk upgrade \
     && apk add \
-      nginx
+      nginx \
+      gettext
 
 RUN mkdir -p /run/nginx /var/www/html
 
@@ -14,4 +15,4 @@ ADD dist/ids /var/www/html
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/bin/sh",  "-c",  "envsubst < /var/www/html/assets/env.template.js > /var/www/html/assets/env.js && exec nginx -g 'daemon off;'"]

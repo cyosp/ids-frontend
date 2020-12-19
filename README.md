@@ -26,9 +26,13 @@ Once you have build Angular application, run:
 
 ### Docker container
 
-```
-docker run -p 4200:80 cyosp/ids-frontend:0.0.0
-```
+`docker run -p 4200:80 cyosp/ids-frontend:0.0.0`
+
+Optional environment variables:
+ - `--env BACKEND_LOCATION="http://localhost:8080"`
+ - `--env DIRECTORY_REVERSED_ORDER="true"`
+ - `--env PREVIEW_DIRECTORY_REVERSED_ORDER="false"`
+ - `--env MIX_DIRECTORIES_AND_IMAGES="false"`
 
 ## Running unit tests
 
