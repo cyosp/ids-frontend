@@ -5,16 +5,16 @@
 export const environment = {
   production: false,
 
-  backEndLocation: 'http://localhost:8080',
+  backEndLocation: window["env"]["backEndLocation"] || "http://localhost:8080",
 
   // When true directories are displayed in reversed order
   // Example: 2020, 2019, 2018...
-  directoryReversedOrder: true,
+  directoryReversedOrder: window["env"]["directoryReversedOrder"] || true,
   // When true and a directory doesn't contain an image,
   // directories are explored in reversed order to select preview image
-  previewDirectoryReversedOrder: false,
+  previewDirectoryReversedOrder: window["env"]["previewDirectoryReversedOrder"] || false,
   // When true, images which are at the same level as directories are displayed
-  mixDirectoriesAndImages: false
+  mixDirectoriesAndImages: window["env"]["mixDirectoriesAndImages"] || false
 };
 
 /*
