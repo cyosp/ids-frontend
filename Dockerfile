@@ -16,4 +16,6 @@ ADD dist/ids /var/www/html
 
 EXPOSE 80
 
-CMD ["/bin/sh",  "-c",  "envsubst < /var/www/html/assets/env.template.js > /var/www/html/assets/env.js && exec nginx -g 'daemon off;'"]
+ADD docker/entrypoint.sh /
+RUN chmod +x /entrypoint.sh
+ENTRYPOINT "/entrypoint.sh"
