@@ -1,0 +1,107 @@
+name: Release Jar and Docker image
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get tag name
+        id: tag
+        run: echo ::set-output name=NAME::${GITHUB_REF/refs\/tags\//}
+
+      - name: Checkout code
+        uses: actions/checkout@v2.3.4
+
+      - name: Use tag name as IDS frontend version and Docker tag name
+        uses: jacobtomlinson/gha-find-replace@0.1.2
+        with:
+          include: "package.json"
+          find: '"0.0.0"'
+          replace: '"${{ steps.tag.outputs.NAME }}"'
+
+      - name: Install Node 15
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 15
+
+      - name: Install Angular CLI 10
+        run: sudo npm install -g @angular/cli@10.2.1
+
+      - name: Component versions
+        run: node -v && npm -v && ng --version
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build IDS frontend
+        run: ng build --prod --localize
+
+      - name: Remove node modules directory
+        run: rm -r node_modules
+
+      - name: Zip build applications
+        run: zip -r ids-frontend-${{ steps.tag.outputs.NAME }}.zip *
+        working-directory: dist/ids
+
+      - name: Create check sum file
+        run: sha512sum *.zip > ids-frontend-SHA512.txt
+        working-directory: dist/ids
+
+      - name: Create GitHub release
+        id: release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ steps.tag.outputs.NAME }}
+          draft: true
+
+      - name: Upload Zip to release
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: dist/ids/ids-frontend-${{ steps.tag.outputs.NAME }}.zip
+          asset_name: ids-frontend-${{ steps.tag.outputs.NAME }}.zip
+          asset_content_type: application/octet-stream
+
+      - name: Upload check sum file to release
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.release.outputs.upload_url }}
+          asset_path: dist/ids/ids-frontend-SHA512.txt
+          asset_name: ids-frontend-SHA512.txt
+          asset_content_type: text/plain
+
+      - name: Publish release with notes
+        uses: cyosp/publish-release-with-notes@1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          id: ${{ steps.release.outputs.id }}
+          version: ${{ steps.tag.outputs.NAME }}
+          notes: ${{ github.workspace }}/RELEASE-NOTES.md
+
+      - name: Create Docker image
+        run: docker build -t cyosp/ids-frontend:${{ steps.tag.outputs.NAME }} .
+
+      - name: Log to Docker
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        run: echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+      - name: Push Docker image
+        run: docker push cyosp/ids-frontend:${{ steps.tag.outputs.NAME }}
+
+      - name: Remove Docker configuration file
+        run: rm ~/.docker/config.json
