@@ -91,6 +91,10 @@ jobs:
           version: ${{ steps.tag.outputs.NAME }}
           notes: ${{ github.workspace }}/RELEASE-NOTES.md
 
+      - name: Remove uploaded files to release
+        run: rm ids-frontend-${{ steps.tag.outputs.NAME }}.zip ids-frontend-SHA512.txt
+        working-directory: dist/ids
+
       - name: Create Docker image
         run: docker build -t cyosp/ids-frontend:${{ steps.tag.outputs.NAME }} .
 
