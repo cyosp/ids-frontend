@@ -1,7 +1,11 @@
+function valueOrDefault(value, defaultValue): any {
+  return value === undefined ? defaultValue : value;
+}
+
 export const environment = {
   production: true,
-  backEndLocation: window["env"]["backEndLocation"] || "http://localhost:8080",
-  directoryReversedOrder: window["env"]["directoryReversedOrder"] || true,
-  previewDirectoryReversedOrder: window["env"]["previewDirectoryReversedOrder"] || false,
-  mixDirectoriesAndImages: window["env"]["mixDirectoriesAndImages"] || false
+  backEndLocation: valueOrDefault(window["env"]["backEndLocation"], "http://localhost:8080"),
+  directoryReversedOrder: valueOrDefault(window["env"]["directoryReversedOrder"], true),
+  previewDirectoryReversedOrder: valueOrDefault(window["env"]["previewDirectoryReversedOrder"], false),
+  mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false)
 };
