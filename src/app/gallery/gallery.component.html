@@ -1,4 +1,4 @@
-<div class="horizontal-gutter">
+<div *ngIf="!imageToDisplay" class="horizontal-gutter">
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
@@ -8,9 +8,14 @@
                     {{ fse.name }}
                 </mat-grid-tile-footer>
             </a>
-            <a *ngIf="fse.type === 'Image'">
+            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image'">
                 <img [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
             </a>
         </mat-grid-tile>
     </mat-grid-list>
+</div>
+<div *ngIf="imageToDisplay">
+    <center>
+        <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name">
+    </center>
 </div>

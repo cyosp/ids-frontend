@@ -10,6 +10,12 @@
         {{ directory.name }}
       </a>
     </span>
+    <span *ngIf="isAuthenticated && isGallery && imageName">&nbsp;</span>
+    <span *ngIf="isAuthenticated && isGallery && imageName" class="gallery-navigation">&gt;</span>
+    <span *ngIf="isAuthenticated && isGallery && imageName">&nbsp;</span>
+    <span *ngIf="isAuthenticated && isGallery && imageName" class="gallery-navigation">
+      {{ imageName }}
+    </span>
     <ul class="navbar-nav ml-auto" *ngIf="!isAuthenticated">
       <li class="nav-item">
         <a href="login" class="nav-link" routerLink="login" i18n="@@navbar-login">

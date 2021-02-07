@@ -12,6 +12,7 @@ export class AppComponent implements OnInit {
     isAuthenticated = false;
     isGallery = false;
     directories: any[] = [];
+    imageName: string;
 
     constructor(private tokenStorageService: TokenStorageService,
                 private router: Router) {
@@ -24,6 +25,7 @@ export class AppComponent implements OnInit {
                 this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
                 this.isGallery = this.router.url.startsWith('/gallery');
                 this.directories = [];
+                this.imageName = null;
                 if (this.isGallery) {
                     let urlPath = decodeURI(this.router.url).replace(/\/gallery/, '');
                     if (urlPath.startsWith('/')) {
@@ -32,7 +34,8 @@ export class AppComponent implements OnInit {
                     if ( urlPath !== '')
                     {
                         let directoryId = '';
-                        const folders = urlPath.split('>');
+                        const urlPathPipeSplitted = urlPath.split('|');
+                        const folders = urlPathPipeSplitted[0].split('>');
                         for (let i = 0; i < folders.length; i++) {
                             const directoryName = folders[i];
                             directoryId += (i === 0 ? '/' : '>') + directoryName;
@@ -43,6 +46,7 @@ export class AppComponent implements OnInit {
                                 }
                             );
                         }
+                        this.imageName = urlPathPipeSplitted[1];
                     }
                 }
             }

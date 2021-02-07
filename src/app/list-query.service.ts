@@ -19,7 +19,8 @@ export class ListQuery extends Query {
                 }
             }
             ... on Image {
-                thumbnailUrlPath
+                thumbnailUrlPath,
+                previewUrlPath
             }
         }
         }`;
