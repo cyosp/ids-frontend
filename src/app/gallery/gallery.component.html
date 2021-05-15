@@ -15,5 +15,5 @@
     </mat-grid-list>
 </div>
 <div *ngIf="imageToDisplay" id="gallery-preview">
-    <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryHeight">
+    <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryPreviewHeight">
 </div>

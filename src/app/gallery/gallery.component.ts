@@ -18,7 +18,7 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     fileSystemElements: any[] = [];
     imageToDisplay: any;
     breakpoint: number;
-    galleryHeight: number;
+    galleryPreviewHeight: number;
 
     constructor(private tokenStorageService: TokenStorageService,
                 private authenticationService: AuthenticationService,
@@ -41,7 +41,7 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.galleryHeight = window.innerHeight - document.getElementById('app').offsetHeight;
+        this.galleryPreviewHeight = window.innerHeight - document.getElementById('app').offsetHeight;
     }
 
     private updateFileSystemElements(): any {
