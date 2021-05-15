@@ -14,8 +14,6 @@
         </mat-grid-tile>
     </mat-grid-list>
 </div>
-<div *ngIf="imageToDisplay">
-    <center>
-        <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryHeight">
-    </center>
+<div *ngIf="imageToDisplay" id="gallery-preview">
+    <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryHeight">
 </div>

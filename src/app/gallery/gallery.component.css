@@ -1,3 +1,7 @@
 .horizontal-gutter {
   margin: 6px;
 }
+
+#gallery-preview {
+  text-align: center;
+}
