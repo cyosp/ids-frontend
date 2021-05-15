@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, AfterViewInit {
     readonly THUMBNAIL_SIZE = 200;
 
     isAuthenticated = false;
@@ -18,6 +18,7 @@ export class GalleryComponent implements OnInit {
     fileSystemElements: any[] = [];
     imageToDisplay: any;
     breakpoint: number;
+    galleryHeight: number;
 
     constructor(private tokenStorageService: TokenStorageService,
                 private authenticationService: AuthenticationService,
@@ -37,6 +38,10 @@ export class GalleryComponent implements OnInit {
                 this.updateFileSystemElements();
             }
         );
+    }
+
+    ngAfterViewInit(): void {
+        this.galleryHeight = window.innerHeight - document.getElementById('app').offsetHeight;
     }
 
     private updateFileSystemElements(): any {

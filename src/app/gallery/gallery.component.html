@@ -16,6 +16,6 @@
 </div>
 <div *ngIf="imageToDisplay">
     <center>
-        <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name">
+        <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryHeight">
     </center>
 </div>
