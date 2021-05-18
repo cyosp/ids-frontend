@@ -19,6 +19,7 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     imageToDisplay: any;
     breakpoint: number;
     galleryPreviewHeight: number;
+    navbarHeight: number;
 
     constructor(private tokenStorageService: TokenStorageService,
                 private authenticationService: AuthenticationService,
@@ -40,8 +41,13 @@ export class GalleryComponent implements OnInit, AfterViewInit {
         );
     }
 
+    private computeGalleryPreviewHeight(): void {
+        this.galleryPreviewHeight = window.innerHeight - this.navbarHeight;
+    }
+
     ngAfterViewInit(): void {
-        this.galleryPreviewHeight = window.innerHeight - document.getElementById('app').offsetHeight;
+        this.navbarHeight = document.getElementById('navbar').offsetHeight;
+        this.computeGalleryPreviewHeight();
     }
 
     private updateFileSystemElements(): any {
@@ -116,5 +122,9 @@ export class GalleryComponent implements OnInit, AfterViewInit {
                     }));
             }
         });
+    }
+
+    onGalleryPreviewResize(): any {
+        this.computeGalleryPreviewHeight();
     }
 }
