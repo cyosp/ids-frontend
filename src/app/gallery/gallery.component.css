@@ -5,3 +5,11 @@
 #gallery-preview {
   text-align: center;
 }
+
+#gallery-preview-chevron-left {
+  margin-right: 15px;
+}
+
+#gallery-preview-chevron-right {
+  margin-left: 15px;
+}

@@ -15,5 +15,7 @@
     </mat-grid-list>
 </div>
 <div *ngIf="imageToDisplay" id="gallery-preview" (window:resize)="onGalleryPreviewResize()">
+    <em class="fa fa-chevron-left" id="gallery-preview-chevron-left"></em>
     <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryPreviewHeight">
+    <em class="fa fa-chevron-right" id="gallery-preview-chevron-right"></em>
 </div>
