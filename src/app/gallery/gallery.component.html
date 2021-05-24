@@ -1,4 +1,4 @@
-<div *ngIf="!imageToDisplay" class="horizontal-gutter">
+<div *ngIf="previewImages.length === 0" class="horizontal-gutter">
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
@@ -14,8 +14,13 @@
         </mat-grid-tile>
     </mat-grid-list>
 </div>
-<div *ngIf="imageToDisplay" id="gallery-preview" (window:resize)="onGalleryPreviewResize()">
-    <em class="fa fa-chevron-left" id="gallery-preview-chevron-left"></em>
-    <img [src]='imageToDisplay.previewUrlPath | secure | async' [alt]="imageToDisplay.name" [height]="galleryPreviewHeight">
-    <em class="fa fa-chevron-right" id="gallery-preview-chevron-right"></em>
+<div id="gallery-preview" *ngIf="previewImages.length !== 0" (window:resize)="onGalleryPreviewResize()">
+    <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">
+        <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
+    </a>
+    <img [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
+         [alt]="previewImageIndex.name" [height]="galleryPreviewHeight">
+    <a *ngIf="previewImageIndex < previewImages.length - 1" routerLink="/gallery/{{ previewImages[previewImageIndex + 1 ].id }}">
+        <em id="gallery-preview-chevron-right" class="fa fa-chevron-right" ></em>
+    </a>
 </div>

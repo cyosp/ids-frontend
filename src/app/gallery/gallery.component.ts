@@ -16,7 +16,8 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     isAuthenticated = false;
     isLoginFailed = false;
     fileSystemElements: any[] = [];
-    imageToDisplay: any;
+    previewImageIndex: any;
+    previewImages: any[] = [];
     breakpoint: number;
     galleryPreviewHeight: number;
     navbarHeight: number;
@@ -35,7 +36,8 @@ export class GalleryComponent implements OnInit, AfterViewInit {
         this.route.url.subscribe(
             val => {
                 this.fileSystemElements = [];
-                this.imageToDisplay = null;
+                this.previewImageIndex = null;
+                this.previewImages = [];
                 this.updateFileSystemElements();
             }
         );
@@ -72,6 +74,14 @@ export class GalleryComponent implements OnInit, AfterViewInit {
         this.breakpoint = (event.target.innerWidth / this.THUMBNAIL_SIZE);
     }
 
+    private getPathAndFileNameSplitted(fileSystemElement: any): string {
+        return fileSystemElement.id.replace(new RegExp('/(' + fileSystemElement.name + ')'), '|$1');
+    }
+
+    private replacePathSeparators(fileSystemPath: string): string {
+        return fileSystemPath.replace(/\//g, '>');
+    }
+
     getPhotos(directoryId: string, imageName: string): void {
         const queryVariables: any = {
             directoryReversedOrder: environment.directoryReversedOrder,
@@ -81,47 +91,56 @@ export class GalleryComponent implements OnInit, AfterViewInit {
             queryVariables.directoryId = directoryId;
         }
         this.userListQuery.fetch(queryVariables).subscribe(data => {
-            const directoryCount = (data as any).data.list
-                .filter(fse => fse.__typename === 'Directory')
-                .length;
-            if (imageName) {
-                (data as any).data.list
-                    .filter(fse => fse.__typename === 'Image' && fse.name === imageName)
-                    .map(fse => {
-                        this.imageToDisplay = {
-                            name: fse.name,
-                            previewUrlPath: environment.backEndLocation + fse.previewUrlPath
-                        };
-                    });
-            } else {
-                this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
-                    .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
-                        || fse.__typename === 'Image'
-                        && (directoryCount > 0 && environment.mixDirectoriesAndImages || directoryCount === 0)
-                    )
-                    .map(fse => {
-                        let fseThumbnailUrl = environment.backEndLocation;
-                        let id;
-                        if (fse.__typename === 'Directory') {
-                            if (fse.preview) {
-                                fseThumbnailUrl += fse.preview.thumbnailUrlPath;
-                            } else {
-                                fseThumbnailUrl = null;
+                const directoryCount = (data as any).data.list
+                    .filter(fse => fse.__typename === 'Directory')
+                    .length;
+                if (imageName) {
+                    let imageIndex = 0;
+                    this.previewImages = this.previewImages.concat((data as any).data.list
+                        .filter(fse => fse.__typename === 'Image')
+                        .map(fse => {
+                                if (fse.name === imageName) {
+                                    this.previewImageIndex = imageIndex;
+                                }
+                                imageIndex++;
+
+                                return {
+                                    id: this.replacePathSeparators(this.getPathAndFileNameSplitted(fse)),
+                                    name: fse.name,
+                                    previewUrlPath: environment.backEndLocation + fse.previewUrlPath
+                                };
                             }
-                            id = fse.id;
-                        } else {
-                            fseThumbnailUrl += fse.thumbnailUrlPath;
-                            id = fse.id.replace(new RegExp('/(' + fse.name + ')'), '|$1');
-                        }
-                        return {
-                            id: id.replace(/\//g, '>'),
-                            name: fse.name,
-                            type: fse.__typename,
-                            thumbnailUrl: fseThumbnailUrl
-                        };
-                    }));
+                        ));
+                } else {
+                    this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
+                        .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
+                            || fse.__typename === 'Image'
+                            && (directoryCount > 0 && environment.mixDirectoriesAndImages || directoryCount === 0)
+                        )
+                        .map(fse => {
+                            let fseThumbnailUrl = environment.backEndLocation;
+                            let id;
+                            if (fse.__typename === 'Directory') {
+                                if (fse.preview) {
+                                    fseThumbnailUrl += fse.preview.thumbnailUrlPath;
+                                } else {
+                                    fseThumbnailUrl = null;
+                                }
+                                id = fse.id;
+                            } else {
+                                fseThumbnailUrl += fse.thumbnailUrlPath;
+                                id = this.getPathAndFileNameSplitted(fse);
+                            }
+                            return {
+                                id: this.replacePathSeparators(id),
+                                name: fse.name,
+                                type: fse.__typename,
+                                thumbnailUrl: fseThumbnailUrl
+                            };
+                        }));
+                }
             }
-        });
+        );
     }
 
     onGalleryPreviewResize(): any {

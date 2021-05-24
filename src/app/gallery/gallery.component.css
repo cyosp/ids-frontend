@@ -7,9 +7,13 @@
 }
 
 #gallery-preview-chevron-left {
-  margin-right: 15px;
+  position: absolute;
+  top: 50%;
+  left: 10px;
 }
 
 #gallery-preview-chevron-right {
-  margin-left: 15px;
+  position: absolute;
+  top: 50%;
+  right: 10px;
 }
