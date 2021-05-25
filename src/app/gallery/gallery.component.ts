@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
@@ -27,6 +27,29 @@ export class GalleryComponent implements OnInit, AfterViewInit {
                 private userListQuery: ListQuery,
                 public router: Router,
                 private route: ActivatedRoute) {
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event: KeyboardEvent): any {
+        if (this.previewImages.length !== 0) {
+            const NO_NEW_INDEX = -1;
+            let newIndex = NO_NEW_INDEX;
+            switch (event.key) {
+                case 'ArrowLeft':
+                    if (this.previewImageIndex > 0) {
+                        newIndex = this.previewImageIndex - 1;
+                    }
+                    break;
+                case 'ArrowRight':
+                    if (this.previewImageIndex < this.previewImages.length - 1) {
+                        newIndex = this.previewImageIndex + 1;
+                    }
+                    break;
+            }
+            if (newIndex !== NO_NEW_INDEX) {
+                this.router.navigate(['/gallery/' + this.previewImages[newIndex].id]);
+            }
+        }
     }
 
     ngOnInit(): void {
