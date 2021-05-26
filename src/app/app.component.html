@@ -25,8 +25,8 @@
     </ul>
     <ul class="navbar-nav ml-auto" *ngIf="isAuthenticated">
       <li class="nav-item">
-        <a href="login" class="nav-link" (click)="logout()" i18n="@@navbar-logout">
-          Logout
+        <a href="login" class="nav-link" (click)="logout()">
+          <em class="fa fa-power-off"></em>
         </a>
       </li>
     </ul>
