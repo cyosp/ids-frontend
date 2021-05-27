@@ -14,13 +14,19 @@
         </mat-grid-tile>
     </mat-grid-list>
 </div>
-<div id="gallery-preview" *ngIf="previewImages.length !== 0" (window:resize)="onGalleryPreviewResize()">
+<div id="gallery-preview"
+     *ngIf="previewImages.length !== 0"
+     (window:resize)="onGalleryPreviewResize()"
+     [style.height.px]="galleryPreviewHeight"
+     [style.width.px]="galleryPreviewWidth">
     <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">
         <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
     </a>
-    <img [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
-         [alt]="previewImageIndex.name" [height]="galleryPreviewHeight">
-    <a *ngIf="previewImageIndex < previewImages.length - 1" routerLink="/gallery/{{ previewImages[previewImageIndex + 1 ].id }}">
-        <em id="gallery-preview-chevron-right" class="fa fa-chevron-right" ></em>
+    <img id="gallery-preview-image"
+         [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
+         [alt]="previewImageIndex.name">
+    <a *ngIf="previewImageIndex < previewImages.length - 1"
+       routerLink="/gallery/{{ previewImages[previewImageIndex + 1 ].id }}">
+        <em id="gallery-preview-chevron-right" class="fa fa-chevron-right"></em>
     </a>
 </div>

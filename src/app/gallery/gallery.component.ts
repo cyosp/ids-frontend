@@ -19,6 +19,7 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     previewImageIndex: any;
     previewImages: any[] = [];
     breakpoint: number;
+    galleryPreviewWidth: number;
     galleryPreviewHeight: number;
     navbarHeight: number;
 
@@ -66,13 +67,14 @@ export class GalleryComponent implements OnInit, AfterViewInit {
         );
     }
 
-    private computeGalleryPreviewHeight(): void {
+    private computeGalleryPreviewDimensions(): void {
+        this.galleryPreviewWidth = window.innerWidth;
         this.galleryPreviewHeight = window.innerHeight - this.navbarHeight;
     }
 
     ngAfterViewInit(): void {
         this.navbarHeight = document.getElementById('navbar').offsetHeight;
-        this.computeGalleryPreviewHeight();
+        this.computeGalleryPreviewDimensions();
     }
 
     private updateFileSystemElements(): any {
@@ -167,6 +169,6 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     }
 
     onGalleryPreviewResize(): any {
-        this.computeGalleryPreviewHeight();
+        this.computeGalleryPreviewDimensions();
     }
 }
