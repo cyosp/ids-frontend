@@ -1,7 +1,7 @@
 <div id="app">
   <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary">
-    <a *ngIf="isAuthenticated && isGallery" routerLink="/gallery" i18n="@@navbar-home" class="gallery-navigation">
-      Home
+    <a *ngIf="isAuthenticated && isGallery" routerLink="/gallery" class="gallery-navigation">
+      <em class="fa fa-home"></em>
     </a>
     <span *ngFor='let directory of directories'>
       <span *ngIf="isAuthenticated && isGallery">&nbsp;</span>
