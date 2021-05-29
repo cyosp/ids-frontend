@@ -2,10 +2,6 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="navbar-login" datatype="html">
-        <target>Se connecter</target>
-      </trans-unit>
-
       <trans-unit id="login-email" datatype="html">
         <target>Email</target>
       </trans-unit>
