@@ -17,6 +17,8 @@
 <div id="gallery-preview"
      *ngIf="previewImages.length !== 0"
      (window:resize)="onGalleryPreviewResize()"
+     (swipeleft)="onSwipeLeft()"
+     (swiperight)="onSwipeRight()"
      [style.height.px]="galleryPreviewHeight"
      [style.width.px]="galleryPreviewWidth">
     <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">

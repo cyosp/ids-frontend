@@ -1,10 +1,10 @@
-import {NgModule} from '@angular/core';
+import {Injectable, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {GalleryComponent} from './gallery/gallery.component';
 
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
 import {FormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
@@ -13,6 +13,15 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {GraphQLModule} from './graphql.module';
 import {AuthInterceptorService} from './authInterceptor.service';
 import {SecurePipe} from './SecurePipe';
+
+import * as Hammer from 'hammerjs';
+
+@Injectable()
+export class MyHammerConfig extends HammerGestureConfig {
+  overrides = {
+    swipe: {direction: Hammer.DIRECTION_ALL},
+  } as any;
+}
 
 @NgModule({
   declarations: [
@@ -28,12 +37,16 @@ import {SecurePipe} from './SecurePipe';
     HttpClientModule,
     MatGridListModule,
     CommonModule,
-    GraphQLModule
+    GraphQLModule,
+    HammerModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptorService,
     multi: true
+  }, {
+    provide: HAMMER_GESTURE_CONFIG,
+    useClass: MyHammerConfig
   }],
   bootstrap: [AppComponent]
 })

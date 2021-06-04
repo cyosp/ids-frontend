@@ -4,6 +4,7 @@ import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
+import 'hammerjs';
 
 @Component({
     selector: 'app-gallery',
@@ -12,6 +13,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 export class GalleryComponent implements OnInit, AfterViewInit {
     readonly THUMBNAIL_SIZE = 200;
+
+    readonly LEFT_DIRECTION = 'Left';
+    readonly RIGHT_DIRECTION = 'Right';
 
     isAuthenticated = false;
     isLoginFailed = false;
@@ -32,16 +36,27 @@ export class GalleryComponent implements OnInit, AfterViewInit {
 
     @HostListener('window:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent): any {
+        switch (event.key) {
+            case 'ArrowLeft':
+                this.changePreview(this.LEFT_DIRECTION);
+                break;
+            case 'ArrowRight':
+                this.changePreview(this.RIGHT_DIRECTION);
+                break;
+        }
+    }
+
+    private changePreview(direction: string): any {
         if (this.previewImages.length !== 0) {
             const NO_NEW_INDEX = -1;
             let newIndex = NO_NEW_INDEX;
-            switch (event.key) {
-                case 'ArrowLeft':
+            switch (direction) {
+                case this.LEFT_DIRECTION:
                     if (this.previewImageIndex > 0) {
                         newIndex = this.previewImageIndex - 1;
                     }
                     break;
-                case 'ArrowRight':
+                case this.RIGHT_DIRECTION:
                     if (this.previewImageIndex < this.previewImages.length - 1) {
                         newIndex = this.previewImageIndex + 1;
                     }
@@ -170,5 +185,13 @@ export class GalleryComponent implements OnInit, AfterViewInit {
 
     onGalleryPreviewResize(): any {
         this.computeGalleryPreviewDimensions();
+    }
+
+    onSwipeLeft(): void {
+        this.changePreview(this.RIGHT_DIRECTION);
+    }
+
+    onSwipeRight(): void {
+        this.changePreview(this.LEFT_DIRECTION);
     }
 }
