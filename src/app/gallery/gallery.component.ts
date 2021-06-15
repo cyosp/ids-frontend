@@ -1,17 +1,19 @@
-import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
+import {AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import 'hammerjs';
+import {Subscription} from 'rxjs';
+import {SharedDataService} from '../shared-data.service';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.css']
 })
-export class GalleryComponent implements OnInit, AfterViewInit {
+export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     readonly THUMBNAIL_SIZE = 200;
 
     readonly LEFT_DIRECTION = 'Left';
@@ -27,11 +29,15 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     galleryPreviewHeight: number;
     navbarHeight: number;
 
+    imageUrlPath: string;
+    subscription: Subscription;
+
     constructor(private tokenStorageService: TokenStorageService,
                 private authenticationService: AuthenticationService,
                 private userListQuery: ListQuery,
                 public router: Router,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private sharedDataService: SharedDataService) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -69,6 +75,8 @@ export class GalleryComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+        this.subscription = this.sharedDataService.imageUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
+
         this.breakpoint = (window.innerWidth / this.THUMBNAIL_SIZE);
         this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
 
@@ -80,6 +88,10 @@ export class GalleryComponent implements OnInit, AfterViewInit {
                 this.updateFileSystemElements();
             }
         );
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     private computeGalleryPreviewDimensions(): void {
@@ -141,6 +153,7 @@ export class GalleryComponent implements OnInit, AfterViewInit {
                         .map(fse => {
                                 if (fse.name === imageName) {
                                     this.previewImageIndex = imageIndex;
+                                    this.sharedDataService.setImageUrlPath(environment.backEndLocation + fse.urlPath);
                                 }
                                 imageIndex++;
 

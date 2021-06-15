@@ -13,42 +13,46 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import {GraphQLModule} from './graphql.module';
 import {AuthInterceptorService} from './authInterceptor.service';
 import {SecurePipe} from './SecurePipe';
+import {SharedDataService} from './shared-data.service';
+import {DownloadFileDirective} from './download-file.directive';
 
 import * as Hammer from 'hammerjs';
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
-  overrides = {
-    swipe: {direction: Hammer.DIRECTION_ALL},
-  } as any;
+    overrides = {
+        swipe: {direction: Hammer.DIRECTION_ALL},
+    } as any;
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    LoginComponent,
-    GalleryComponent,
-    SecurePipe
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    MatGridListModule,
-    CommonModule,
-    GraphQLModule,
-    HammerModule
-  ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptorService,
-    multi: true
-  }, {
-    provide: HAMMER_GESTURE_CONFIG,
-    useClass: MyHammerConfig
-  }],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        LoginComponent,
+        GalleryComponent,
+        SecurePipe,
+        DownloadFileDirective
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        HttpClientModule,
+        MatGridListModule,
+        CommonModule,
+        GraphQLModule,
+        HammerModule
+    ],
+    providers: [{
+        provide: HTTP_INTERCEPTORS,
+        useClass: AuthInterceptorService,
+        multi: true
+    }, {
+        provide: HAMMER_GESTURE_CONFIG,
+        useClass: MyHammerConfig
+    }, SharedDataService
+    ],
+    bootstrap: [AppComponent]
 })
 
 export class AppModule {

@@ -1,6 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TokenStorageService} from './token-storage.service';
 import {Router} from '@angular/router';
+import {SharedDataService} from './shared-data.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'app-root',
@@ -8,17 +10,23 @@ import {Router} from '@angular/router';
     styleUrls: ['./app.component.css']
 })
 
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
     isAuthenticated = false;
     isGallery = false;
     directories: any[] = [];
     imageName: string;
 
+    imageUrlPath: string;
+    subscription: Subscription;
+
     constructor(private tokenStorageService: TokenStorageService,
-                private router: Router) {
+                private router: Router,
+                private sharedDataService: SharedDataService
+                ) {
     }
 
     ngOnInit(): void {
+        this.subscription = this.sharedDataService.imageUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
 
         this.router.events.subscribe(
             val => {
@@ -51,6 +59,10 @@ export class AppComponent implements OnInit {
                 }
             }
         );
+    }
+
+    ngOnDestroy(): void {
+        this.subscription.unsubscribe();
     }
 
     logout(): void {

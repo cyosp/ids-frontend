@@ -1,3 +1,16 @@
 .gallery-navigation {
     color: white;
 }
+
+.gallery-navigation a {
+    color: white;
+}
+
+.gallery-navigation a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.wait-spinner {
+    display: none;
+}
