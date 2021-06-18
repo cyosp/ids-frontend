@@ -1,99 +1,99 @@
 <div id="app">
     <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary">
-        <a *ngIf="isAuthenticated && isGallery" routerLink="/gallery" class="gallery-navigation">
-            <em class="fa fa-home"></em>
-        </a>
-        <span *ngFor='let directory of directories'>
-      <span *ngIf="isAuthenticated && isGallery">&nbsp;</span>
-      <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation">&gt;</span>
-      <a *ngIf="isAuthenticated && isGallery" routerLink="/gallery{{ directory.id }}" class="gallery-navigation">
-        {{ directory.name }}
-      </a>
-    </span>
-        <span *ngIf="isAuthenticated && isGallery && imageName">&nbsp;</span>
-        <span *ngIf="isAuthenticated && isGallery && imageName" class="gallery-navigation">&gt;</span>
-        <span *ngIf="isAuthenticated && isGallery && imageName">&nbsp;</span>
-        <span *ngIf="isAuthenticated && isGallery && imageName" class="gallery-navigation">
-      <a [downloadFile]="imageUrlPath">
-        {{ imageName }}
-      </a>
-      <svg id="wait-spinner" class="wait-spinner" xmlns="http://www.w3.org/2000/svg"
-           width="50px" height="50px" viewBox="0 0 100 100"
-           preserveAspectRatio="xMidYMid">
-        <g transform="rotate(0 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-1.0185185185185184s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(30 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.9259259259259258s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(60 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.8333333333333333s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(90 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.7407407407407407s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(120 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.6481481481481481s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(150 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.5555555555555555s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(180 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.4629629629629629s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(210 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.37037037037037035s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(240 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.27777777777777773s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(270 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.18518518518518517s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(300 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
-                     begin="-0.09259259259259259s" repeatCount="indefinite"></animate>
-          </rect>
-        </g><g transform="rotate(330 50 50)">
-          <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
-            <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s" begin="0s"
-                     repeatCount="indefinite"></animate>
-          </rect>
-        </g>
-      </svg>
-    </span>
+        <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation">
+            <em *ngIf="directories.length == 0" class="fa fa-home"></em>
+            <a *ngIf="directories.length == 1" routerLink="/gallery">
+                <em class="fa fa-arrow-left"></em>
+            </a>
+            <a *ngIf="directories.length > 1" routerLink="/gallery{{ directories[directories.length - 2].id }}">
+                <em class="fa fa-arrow-left"></em>
+            </a>
+        </span>
+        <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation mx-auto ">
+            <span *ngIf="!imageName && directories.length >= 1">
+                {{ directories[directories.length - 1].name }}
+            </span>
+            <a *ngIf="imageName" [downloadFile]="imageUrlPath">
+                {{ imageName }}
+            </a>
+            <svg id="wait-spinner" class="wait-spinner" xmlns="http://www.w3.org/2000/svg"
+                 width="50px" height="50px" viewBox="0 0 100 100"
+                 preserveAspectRatio="xMidYMid">
+                <g transform="rotate(0 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-1.0185185185185184s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(30 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.9259259259259258s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(60 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.8333333333333333s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(90 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.7407407407407407s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(120 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.6481481481481481s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(150 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.5555555555555555s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(180 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.4629629629629629s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(210 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.37037037037037035s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(240 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.27777777777777773s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(270 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.18518518518518517s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(300 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s"
+                             begin="-0.09259259259259259s" repeatCount="indefinite"></animate>
+                  </rect>
+                </g><g transform="rotate(330 50 50)">
+                  <rect x="47.5" y="23.5" rx="2.5" ry="2.99" width="5" height="13" fill="#1c0409">
+                    <animate attributeName="opacity" values="1;0" keyTimes="0;1" dur="1.1111111111111112s" begin="0s"
+                             repeatCount="indefinite"></animate>
+                  </rect>
+                </g>
+            </svg>
+        </span>
+        <ul class="navbar-nav" *ngIf="isAuthenticated">
+            <li class="nav-item">
+                <a href="login" class="nav-link" (click)="logout()">
+                    <em class="fa fa-power-off"></em>
+                </a>
+            </li>
+        </ul>
+
         <ul class="navbar-nav ml-auto" *ngIf="!isAuthenticated">
             <li class="nav-item">
                 <a href="login" class="nav-link" routerLink="login">
                     <em class="fa fa-sign-in-alt"></em>
-                </a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto" *ngIf="isAuthenticated">
-            <li class="nav-item">
-                <a href="login" class="nav-link" (click)="logout()">
-                    <em class="fa fa-power-off"></em>
                 </a>
             </li>
         </ul>
