@@ -31,6 +31,7 @@ Once you have build Angular application, run:
 `docker run -p 4200:80 cyosp/ids-frontend:0.0.0`
 
 Optional environment variables:
+ - `--env SHARING_TITLE="My custom sharing title"`
  - `--env BACKEND_LOCATION="http://localhost:8080"`
  - `--env DIRECTORY_REVERSED_ORDER="true"`
  - `--env PREVIEW_DIRECTORY_REVERSED_ORDER="false"`

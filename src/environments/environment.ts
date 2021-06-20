@@ -11,6 +11,8 @@ export const environment = {
 
   backEndLocation: valueOrDefault(window["env"]["backEndLocation"], "http://localhost:8080"),
 
+  // Image directory sharing title
+  sharingTitle: valueOrDefault(window["env"]["sharingTitle"], "Ids"),
   // When true directories are displayed in reversed order
   // Example: 2020, 2019, 2018...
   directoryReversedOrder: valueOrDefault(window["env"]["directoryReversedOrder"], true),

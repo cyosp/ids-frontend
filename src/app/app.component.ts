@@ -3,6 +3,8 @@ import {TokenStorageService} from './token-storage.service';
 import {Router} from '@angular/router';
 import {SharedDataService} from './shared-data.service';
 import {Subscription} from 'rxjs';
+import {Title} from '@angular/platform-browser';
+import {environment} from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -19,13 +21,16 @@ export class AppComponent implements OnInit, OnDestroy {
     imageUrlPath: string;
     subscription: Subscription;
 
-    constructor(private tokenStorageService: TokenStorageService,
+    constructor(private titleService: Title,
+                private tokenStorageService: TokenStorageService,
                 private router: Router,
                 private sharedDataService: SharedDataService
                 ) {
     }
 
     ngOnInit(): void {
+        this.titleService.setTitle(environment.sharingTitle);
+
         this.subscription = this.sharedDataService.imageUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
 
         this.router.events.subscribe(

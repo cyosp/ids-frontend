@@ -1,5 +1,13 @@
 Release notes
 -------------
+##### 2.0.0 (2021-06-20)
+ * Add image gallery preview with keyboard and touch screen support
+ * Change gallery navigation bar to be mobile first
+ * Add hyperlink on navigation bar image name to download high resolution image
+ * Replace texts in navigation bar by icons
+ * Set application favicon
+ * Add configurable image directory sharing title
+
 ##### 1.0.2 (2021-01-29)
  * Fix: Docker container environment variables evaluation
 
