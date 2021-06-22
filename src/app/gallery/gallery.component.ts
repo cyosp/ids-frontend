@@ -127,7 +127,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private getPathAndFileNameSplitted(fileSystemElement: any): string {
-        return fileSystemElement.id.replace(new RegExp('/(' + fileSystemElement.name + ')'), '|$1');
+        return fileSystemElement.id.replace(new RegExp('/?(' + fileSystemElement.name + ')'), '|$1');
     }
 
     private replacePathSeparators(fileSystemPath: string): string {
