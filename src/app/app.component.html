@@ -2,10 +2,13 @@
     <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary">
         <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation">
             <em *ngIf="directories.length == 0" class="fa fa-home"></em>
-            <a *ngIf="directories.length == 1" routerLink="/gallery">
+            <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery">
                 <em class="fa fa-arrow-left"></em>
             </a>
-            <a *ngIf="directories.length > 1" routerLink="/gallery{{ directories[directories.length - 2].id }}">
+            <a *ngIf="directories.length > 1 && !imageName" routerLink="/gallery{{ directories[directories.length - 2].id }}">
+                <em class="fa fa-arrow-left"></em>
+            </a>
+            <a *ngIf="imageName" routerLink="/gallery{{ directories[directories.length - 1].id }}">
                 <em class="fa fa-arrow-left"></em>
             </a>
         </span>
