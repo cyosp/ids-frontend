@@ -1,5 +1,11 @@
 Release notes
 -------------
+##### 2.1.0 (2021-06-24)
+ * Maximize image preview without image distortion
+ * Fix: Gallery preview image alternate name set to undefined
+ * Fix: Left arrow in navigation bar come back one level too more when an image is previewed
+ * Fix: Image preview at root level
+
 ##### 2.0.0 (2021-06-20)
  * Add image gallery preview with keyboard and touch screen support
  * Change gallery navigation bar to be mobile first

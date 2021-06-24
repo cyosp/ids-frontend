@@ -24,7 +24,8 @@
     <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">
         <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
     </a>
-    <img id="gallery-preview-image"
+    <img #img (load)="onPreviewImageLoaded(img)"
+         [className]="previewImageClassName"
          [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
          [alt]="previewImages[previewImageIndex].name">
     <a *ngIf="previewImageIndex < previewImages.length - 1"

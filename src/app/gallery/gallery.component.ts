@@ -24,9 +24,13 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     fileSystemElements: any[] = [];
     previewImageIndex: any;
     previewImages: any[] = [];
+    isPreviewImageLandscape: boolean;
+    previewImageRatio: number;
+    previewImageClassName: string;
     breakpoint: number;
     galleryPreviewWidth: number;
     galleryPreviewHeight: number;
+    galleryPreviewRatio: number;
     navbarHeight: number;
 
     imageUrlPath: string;
@@ -97,6 +101,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     private computeGalleryPreviewDimensions(): void {
         this.galleryPreviewWidth = window.innerWidth;
         this.galleryPreviewHeight = window.innerHeight - this.navbarHeight;
+        this.galleryPreviewRatio = this.galleryPreviewWidth / this.galleryPreviewHeight;
     }
 
     ngAfterViewInit(): void {
@@ -198,6 +203,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onGalleryPreviewResize(): any {
         this.computeGalleryPreviewDimensions();
+        this.computePreviewImageClassName();
     }
 
     onSwipeLeft(): void {
@@ -206,5 +212,21 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     onSwipeRight(): void {
         this.changePreview(this.LEFT_DIRECTION);
+    }
+
+    onPreviewImageLoaded(previewImage): void {
+        this.isPreviewImageLandscape = previewImage.naturalWidth > previewImage.naturalHeight;
+        this.previewImageRatio = previewImage.naturalWidth / previewImage.naturalHeight;
+        this.computePreviewImageClassName();
+    }
+
+    computePreviewImageClassName(): void {
+        let classNameSuffix = 'width';
+        const isPreviewImageRatioGreaterThanGalleryPreviewRatio = this.previewImageRatio > this.galleryPreviewRatio;
+        if (this.isPreviewImageLandscape && isPreviewImageRatioGreaterThanGalleryPreviewRatio
+            || !this.isPreviewImageLandscape && !isPreviewImageRatioGreaterThanGalleryPreviewRatio) {
+            classNameSuffix = 'height';
+        }
+        this.previewImageClassName = 'gallery-preview-full-' + classNameSuffix;
     }
 }
