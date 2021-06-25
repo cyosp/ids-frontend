@@ -24,7 +24,6 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     fileSystemElements: any[] = [];
     previewImageIndex: any;
     previewImages: any[] = [];
-    isPreviewImageLandscape: boolean;
     previewImageRatio: number;
     previewImageClassName: string;
     breakpoint: number;
@@ -215,17 +214,14 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     onPreviewImageLoaded(previewImage): void {
-        this.isPreviewImageLandscape = previewImage.naturalWidth > previewImage.naturalHeight;
         this.previewImageRatio = previewImage.naturalWidth / previewImage.naturalHeight;
         this.computePreviewImageClassName();
     }
 
     computePreviewImageClassName(): void {
-        let classNameSuffix = 'width';
-        const isPreviewImageRatioGreaterThanGalleryPreviewRatio = this.previewImageRatio > this.galleryPreviewRatio;
-        if (this.isPreviewImageLandscape && isPreviewImageRatioGreaterThanGalleryPreviewRatio
-            || !this.isPreviewImageLandscape && !isPreviewImageRatioGreaterThanGalleryPreviewRatio) {
-            classNameSuffix = 'height';
+        let classNameSuffix = 'height';
+        if (this.previewImageRatio > this.galleryPreviewRatio) {
+            classNameSuffix = 'width';
         }
         this.previewImageClassName = 'gallery-preview-full-' + classNameSuffix;
     }
