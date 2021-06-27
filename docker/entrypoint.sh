@@ -1,7 +1,7 @@
 #!/bin/sh
 
 set -e
-
+if [ -z "${SHARING_TITLE}" ]; then export SHARING_TITLE="Ids"; fi
 if [ -z "${BACKEND_LOCATION}" ]; then export BACKEND_LOCATION="http://localhost:8080"; fi
 if [ -z "${DIRECTORY_REVERSED_ORDER}" ]; then export DIRECTORY_REVERSED_ORDER=true; fi
 if [ -z "${PREVIEW_DIRECTORY_REVERSED_ORDER}" ]; then export PREVIEW_DIRECTORY_REVERSED_ORDER=false; fi

@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 2.1.2 (2021-06-27)
+ * Fix: No default value for SHARING_TITLE Docker environment variable
+
 ##### 2.1.1 (2021-06-25)
  * Fix: Preview landscape image
 
