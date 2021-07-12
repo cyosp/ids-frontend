@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.0.0 (2021-07-12)
+ * Define a custom color identity
+
 ##### 2.1.2 (2021-06-27)
  * Fix: No default value for SHARING_TITLE Docker environment variable
 
