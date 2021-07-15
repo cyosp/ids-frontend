@@ -1,4 +1,4 @@
-import {Directive, HostListener, Input, Renderer2} from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
 @Directive({
@@ -6,7 +6,8 @@ import {HttpClient} from '@angular/common/http';
 })
 export class DownloadFileDirective {
     constructor(private readonly httpClient: HttpClient,
-                private readonly renderer2: Renderer2) {
+                private readonly renderer2: Renderer2,
+                private elementRef: ElementRef) {
     }
 
     private downloadUrl: string;
@@ -18,7 +19,7 @@ export class DownloadFileDirective {
 
     @HostListener('click')
     public async onClick(): Promise<void> {
-        const waitSpinner = document.getElementById('wait-spinner');
+        const waitSpinner = this.elementRef.nativeElement.querySelector('img');
 
         let newHyperlinkClicked = false;
         let timerStarted = false;
