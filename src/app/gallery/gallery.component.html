@@ -2,14 +2,16 @@
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
-                <img *ngIf="fse.thumbnailUrl !== null" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                <img *ngIf="fse.thumbnailUrl !== null && fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
+                <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
                 <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" [attr.width]="THUMBNAIL_SIZE" [attr.height]="THUMBNAIL_SIZE"></svg>
                 <mat-grid-tile-footer>
                     {{ fse.name }}
                 </mat-grid-tile-footer>
             </a>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image'">
-                <img [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                <img *ngIf="fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
+                <img [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
             </a>
         </mat-grid-tile>
     </mat-grid-list>
@@ -24,7 +26,9 @@
     <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">
         <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
     </a>
-    <img #img (load)="onPreviewImageLoaded(img)"
+    <img *ngIf="previewImages[previewImageIndex].previewImageLoading" src='assets/wait-spinner.svg'>
+    <img [hidden]="!previewImages[previewImageIndex].previewImageLoaded"
+         #img (load)="onPreviewImageLoaded(img, previewImages[previewImageIndex])"
          [className]="previewImageClassName"
          [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
          [alt]="previewImages[previewImageIndex].name">

@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.1.0 (2021-07-15)
+ * Add wait spinner on thumbnail and preview image loading
+
 ##### 3.0.0 (2021-07-12)
  * Define a custom color identity
 

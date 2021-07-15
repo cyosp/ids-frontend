@@ -161,11 +161,21 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                                 }
                                 imageIndex++;
 
-                                return {
+                                const fileSystemElement = {
                                     id: this.replacePathSeparators(this.getPathAndFileNameSplitted(fse)),
                                     name: fse.name,
-                                    previewUrlPath: environment.backEndLocation + fse.previewUrlPath
+                                    previewUrlPath: environment.backEndLocation + fse.previewUrlPath,
+                                    previewImageLoading: false,
+                                    previewImageLoaded: false
                                 };
+
+                                setTimeout(() => {
+                                    if (!fileSystemElement.previewImageLoaded) {
+                                        fileSystemElement.previewImageLoading = true;
+                                    }
+                                }, 200);
+
+                                return fileSystemElement;
                             }
                         ));
                 } else {
@@ -188,12 +198,23 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                                 fseThumbnailUrl += fse.thumbnailUrlPath;
                                 id = this.getPathAndFileNameSplitted(fse);
                             }
-                            return {
+
+                            const fileSystemElement = {
                                 id: this.replacePathSeparators(id),
                                 name: fse.name,
                                 type: fse.__typename,
-                                thumbnailUrl: fseThumbnailUrl
+                                thumbnailUrl: fseThumbnailUrl,
+                                thumbnailImageLoading: false,
+                                thumbnailImageLoaded: false
                             };
+
+                            setTimeout(() => {
+                                if (!fileSystemElement.thumbnailImageLoaded) {
+                                    fileSystemElement.thumbnailImageLoading = true;
+                                }
+                            }, 200);
+
+                            return fileSystemElement;
                         }));
                 }
             }
@@ -213,8 +234,10 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.changePreview(this.LEFT_DIRECTION);
     }
 
-    onPreviewImageLoaded(previewImage): void {
-        this.previewImageRatio = previewImage.naturalWidth / previewImage.naturalHeight;
+    onPreviewImageLoaded(previewImageElement, fileSystemElement): void {
+        fileSystemElement.previewImageLoading = false;
+        fileSystemElement.previewImageLoaded = true;
+        this.previewImageRatio = previewImageElement.naturalWidth / previewImageElement.naturalHeight;
         this.computePreviewImageClassName();
     }
 
@@ -224,5 +247,10 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
             classNameSuffix = 'width';
         }
         this.previewImageClassName = 'gallery-preview-full-' + classNameSuffix;
+    }
+
+    onThumbnailImageLoaded(fileSystemElement): void {
+        fileSystemElement.thumbnailImageLoading = false;
+        fileSystemElement.thumbnailImageLoaded = true;
     }
 }
