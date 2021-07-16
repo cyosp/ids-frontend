@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.2.0 (2021-07-16)
+ * Preload previous and next preview images
+
 ##### 3.1.0 (2021-07-15)
  * Add wait spinner on thumbnail and preview image loading
 

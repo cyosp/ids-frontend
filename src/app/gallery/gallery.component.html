@@ -3,15 +3,18 @@
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
                 <img *ngIf="fse.thumbnailUrl !== null && fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
-                <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
-                <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" [attr.width]="THUMBNAIL_SIZE" [attr.height]="THUMBNAIL_SIZE"></svg>
+                <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailImageLoaded"
+                     (load)="onThumbnailImageLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" [attr.width]="THUMBNAIL_SIZE"
+                     [attr.height]="THUMBNAIL_SIZE"></svg>
                 <mat-grid-tile-footer>
                     {{ fse.name }}
                 </mat-grid-tile-footer>
             </a>
             <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image'">
                 <img *ngIf="fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
-                <img [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                <img [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)"
+                     [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
             </a>
         </mat-grid-tile>
     </mat-grid-list>
@@ -36,4 +39,9 @@
        routerLink="/gallery/{{ previewImages[previewImageIndex + 1 ].id }}">
         <em id="gallery-preview-chevron-right" class="fa fa-chevron-right"></em>
     </a>
+    <!-- Preload previous and next preview images -->
+    <img hidden *ngIf="previewImageIndex > 0"
+         [src]='previewImages[previewImageIndex - 1 ].previewUrlPath | secure | async'>
+    <img hidden *ngIf="previewImageIndex < previewImages.length - 1"
+         [src]='previewImages[previewImageIndex + 1 ].previewUrlPath | secure | async'>
 </div>
