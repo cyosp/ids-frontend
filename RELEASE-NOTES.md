@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.2.1 (2021-07-17)
+ * Include Font Awesome using NPM
+
 ##### 3.2.0 (2021-07-16)
  * Preload previous and next preview images
 
