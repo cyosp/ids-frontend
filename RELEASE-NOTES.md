@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.4.0 (2021-07-22)
+ * Use favicon as iOS home screen icon
+
 ##### 3.3.0 (2021-07-22)
  * Redirect to gallery from login page if already authenticated
 
