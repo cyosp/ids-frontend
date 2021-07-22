@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {TokenStorageService} from '../token-storage.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
@@ -9,7 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit {
 
     form: any = {};
     isAuthenticated = false;
@@ -32,6 +32,16 @@ export class LoginComponent implements OnInit {
         });
     }
 
+    private navigateToGallery(): void {
+        this.router.navigate(['gallery']);
+    }
+
+    ngAfterViewInit(): void {
+        if (this.isAuthenticated) {
+            this.navigateToGallery();
+        }
+    }
+
     onSubmit(): void {
         this.authenticationService.login(this.form).subscribe(
             dataRest => {
@@ -41,7 +51,7 @@ export class LoginComponent implements OnInit {
                 if (this.view) {
                     this.router.navigate([this.view]);
                 } else {
-                    this.router.navigate(['gallery']);
+                    this.navigateToGallery();
                 }
 
                 this.userListQuery.fetch()

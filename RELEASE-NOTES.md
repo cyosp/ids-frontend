@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.3.0 (2021-07-22)
+ * Redirect to gallery from login page if already authenticated
+
 ##### 3.2.1 (2021-07-17)
  * Include Font Awesome using NPM
 
