@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 3.5.0 (2021-07-30)
+ * Add eye button to display password on login page
+
 ##### 3.4.0 (2021-07-22)
  * Use favicon as iOS home screen icon
 

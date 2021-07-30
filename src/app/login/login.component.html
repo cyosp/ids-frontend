@@ -30,16 +30,24 @@
                 <label for="password" i18n="@@login-password">
                     Password
                 </label>
-                <input
-                        type="password"
-                        class="form-control"
-                        name="password"
-                        [(ngModel)]="form.password"
-                        required
-                        minlength="8"
-                        maxlength="64"
-                        #password="ngModel"
-                />
+                <div class="input-group">
+                    <input
+                            [type]="passwordDisplayed ? 'text' : 'password'"
+                            class="form-control"
+                            name="password"
+                            [(ngModel)]="form.password"
+                            required
+                            minlength="8"
+                            maxlength="64"
+                            #password="ngModel"
+                    />
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <em class="fa" [ngClass]="{'fa-eye': passwordDisplayed, 'fa-eye-slash': !passwordDisplayed}"
+                                (click)="togglePasswordDisplayed()"></em>
+                        </span>
+                    </div>
+                </div>
                 <div class="alert alert-danger" role="alert" *ngIf="f.submitted && password.invalid">
                     <div *ngIf="password.errors.required" i18n="@@login-password-errors-required">
                         Password is required

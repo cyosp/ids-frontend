@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, AfterViewInit {
-
+    passwordDisplayed = false;
     form: any = {};
     isAuthenticated = false;
     isLoginFailed = false;
@@ -40,6 +40,10 @@ export class LoginComponent implements OnInit, AfterViewInit {
         if (this.isAuthenticated) {
             this.navigateToGallery();
         }
+    }
+
+    togglePasswordDisplayed(): void {
+        this.passwordDisplayed = !this.passwordDisplayed;
     }
 
     onSubmit(): void {
