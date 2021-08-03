@@ -73,4 +73,18 @@ export class AppComponent implements OnInit, OnDestroy {
     logout(): void {
         this.tokenStorageService.signOut();
     }
+
+    toggleBreadcrumbContent(): void {
+        const breadcrumbContentStyle = document.getElementById('breadcrumb-content').style;
+        let breadcrumbContentDisplay = 'none';
+        if (!breadcrumbContentStyle.display || breadcrumbContentStyle.display === breadcrumbContentDisplay) {
+            breadcrumbContentStyle.minWidth = document.getElementById('breadcrumb-button').offsetWidth + 'px';
+            breadcrumbContentDisplay = 'block';
+        }
+        breadcrumbContentStyle.display = breadcrumbContentDisplay;
+    }
+
+    hideBreadcrumbContent(): void {
+        document.getElementById('breadcrumb-content').style.display = 'none';
+    }
 }

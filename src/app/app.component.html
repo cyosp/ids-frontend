@@ -13,11 +13,32 @@
             </a>
         </span>
         <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation mx-auto ">
-            <span *ngIf="!imageName && directories.length >= 1">
-                {{ directories[directories.length - 1].name }}
+             <span *ngIf="directories.length >= 1">
+                 <button id="breadcrumb-button" (click)="toggleBreadcrumbContent()">
+                     &nbsp;
+                     <span class="fa fa-caret-down"></span>
+                     <span>&nbsp;</span>
+                     <span *ngIf="!imageName">
+                        {{ directories[directories.length - 1].name }}
+                     </span>
+                    <span *ngIf="imageName" >
+                        {{ imageName }}
+                    </span>
+                    &nbsp;
+                </button>
+                <span id="breadcrumb-content">
+                    <span *ngFor="let directory of directories; let directoryIndex = index;">
+                        <a *ngIf="directoryIndex != 0 || imageName" routerLink="/gallery{{ directories[directories.length - 1 - directoryIndex].id }}" (click)="hideBreadcrumbContent()" >
+                            {{ directories[directories.length - 1 - directoryIndex].name }}
+                        </a>
+                    </span>
+                    <a routerLink="/gallery">
+                        <em class="fa fa-home"></em>
+                    </a>
+                </span>
             </span>
             <a *ngIf="imageName" [downloadFile]="imageUrlPath">
-                {{ imageName }}
+                <em class="fa fa-download"></em>
                 <img style="display: none" src="../assets/wait-spinner.svg">
             </a>
         </span>

@@ -1,12 +1,32 @@
-.gallery-navigation {
-    color: white;
-}
+@import "src/variables";
 
-.gallery-navigation a {
-    color: white;
+nav .fa {
+    color: $navBarTextColor;
 }
 
 .gallery-navigation a:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+#breadcrumb-button {
+    border: none;
+    outline: none;
+    background-color: inherit;
+    color: $navBarTextColor;
+    padding: 0;
+}
+
+#breadcrumb-content {
+    display: none;
+    position: fixed;
+    background-color: $primary;
+    z-index: 1;
+}
+
+#breadcrumb-content a {
+    display: block;
+    padding: 8px 15px;
+    color: $navBarTextColor;
+    text-align: center;
 }

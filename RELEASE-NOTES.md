@@ -1,5 +1,10 @@
 Release notes
 -------------
+##### 4.0.0 (2021-08-03)
+ * Replace left arrow by level up icon
+ * Add breadcrumb menu in navigation bar on directory and image name 
+ * Add navigation bar icon to download image
+
 ##### 3.5.0 (2021-07-30)
  * Add eye button to display password on login page
 
