@@ -23,9 +23,6 @@
       <trans-unit id="login-failed" datatype="html">
         <target>Échec de la connexion</target>
       </trans-unit>
-      <trans-unit id="login-authenticated" datatype="html">
-        <target>Vous êtes authentifié</target>
-      </trans-unit>
     </body>
   </file>
 </xliff>
