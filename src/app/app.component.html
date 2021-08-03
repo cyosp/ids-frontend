@@ -3,13 +3,13 @@
         <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation">
             <em *ngIf="directories.length == 0" class="fa fa-home"></em>
             <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery">
-                <em class="fa fa-arrow-left"></em>
+                <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
             <a *ngIf="directories.length > 1 && !imageName" routerLink="/gallery{{ directories[directories.length - 2].id }}">
-                <em class="fa fa-arrow-left"></em>
+                <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
             <a *ngIf="imageName" routerLink="/gallery{{ directories[directories.length - 1].id }}">
-                <em class="fa fa-arrow-left"></em>
+                <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
         </span>
         <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation mx-auto ">
