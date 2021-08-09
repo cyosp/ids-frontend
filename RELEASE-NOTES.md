@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 4.1.0 (2021-08-09)
+ * Add transparency on breadcrumb menu
+
 ##### 4.0.0 (2021-08-03)
  * Replace left arrow by level up icon
  * Add breadcrumb menu in navigation bar on directory and image name 
