@@ -2,6 +2,7 @@ Release notes
 -------------
 ##### 4.1.0 (2021-08-09)
  * Add transparency on breadcrumb menu
+ * Navigation menu stays stick on the top
 
 ##### 4.0.0 (2021-08-03)
  * Replace left arrow by level up icon
