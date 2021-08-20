@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 4.2.0 (2021-08-20)
+ * Improve preview image arrows visibility
+
 ##### 4.1.0 (2021-08-09)
  * Add transparency on breadcrumb menu
  * Navigation menu stays stick on the top
