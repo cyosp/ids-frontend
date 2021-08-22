@@ -15,6 +15,7 @@ import {AuthInterceptorService} from './authInterceptor.service';
 import {SecurePipe} from './SecurePipe';
 import {SharedDataService} from './shared-data.service';
 import {DownloadFileDirective} from './download-file.directive';
+import {UrlService} from './url.service';
 
 import * as Hammer from 'hammerjs';
 
@@ -50,7 +51,8 @@ export class MyHammerConfig extends HammerGestureConfig {
     }, {
         provide: HAMMER_GESTURE_CONFIG,
         useClass: MyHammerConfig
-    }, SharedDataService
+    }, SharedDataService,
+        UrlService
     ],
     bootstrap: [AppComponent]
 })

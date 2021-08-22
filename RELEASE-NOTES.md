@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 4.3.0 (2021-08-22)
+ * Use arrow up to preview level up directory
+
 ##### 4.2.0 (2021-08-20)
  * Improve preview image arrows visibility
 

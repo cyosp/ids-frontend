@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import 'hammerjs';
 import {Subscription} from 'rxjs';
 import {SharedDataService} from '../shared-data.service';
+import {UrlService} from '../url.service';
 
 @Component({
     selector: 'app-gallery',
@@ -40,7 +41,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 private userListQuery: ListQuery,
                 public router: Router,
                 private route: ActivatedRoute,
-                private sharedDataService: SharedDataService) {
+                private sharedDataService: SharedDataService,
+                private urlService: UrlService) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -48,6 +50,9 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (event.key) {
             case 'ArrowLeft':
                 this.changePreview(this.LEFT_DIRECTION);
+                break;
+            case 'ArrowUp':
+                this.previewLevelUp();
                 break;
             case 'ArrowRight':
                 this.changePreview(this.RIGHT_DIRECTION);
@@ -75,6 +80,20 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.router.navigate(['/gallery/' + this.previewImages[newIndex].id]);
             }
         }
+    }
+
+    private previewLevelUp(): any {
+        const decodedInfos = this.urlService.decodePath();
+        const directories = decodedInfos.directories;
+        let levelUpDirectoryIndex = directories.length - 1;
+        if (decodedInfos.imageName === undefined) {
+            levelUpDirectoryIndex--;
+        }
+        let directoryCommand = '';
+        if (levelUpDirectoryIndex >= 0) {
+            directoryCommand = '/' + directories[levelUpDirectoryIndex].id;
+        }
+        this.router.navigate(['/gallery' + directoryCommand]);
     }
 
     ngOnInit(): void {

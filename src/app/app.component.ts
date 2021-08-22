@@ -5,6 +5,7 @@ import {SharedDataService} from './shared-data.service';
 import {Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../environments/environment';
+import {UrlService} from './url.service';
 
 @Component({
     selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(private titleService: Title,
                 private tokenStorageService: TokenStorageService,
                 private router: Router,
-                private sharedDataService: SharedDataService
+                private sharedDataService: SharedDataService,
+                private urlService: UrlService
                 ) {
     }
 
@@ -37,31 +39,9 @@ export class AppComponent implements OnInit, OnDestroy {
             val => {
                 this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
                 this.isGallery = this.router.url.startsWith('/gallery');
-                this.directories = [];
-                this.imageName = null;
-                if (this.isGallery) {
-                    let urlPath = decodeURI(this.router.url).replace(/\/gallery/, '');
-                    if (urlPath.startsWith('/')) {
-                        urlPath = urlPath.substring(1);
-                    }
-                    if ( urlPath !== '')
-                    {
-                        let directoryId = '';
-                        const urlPathPipeSplitted = urlPath.split('|');
-                        const folders = urlPathPipeSplitted[0].split('>');
-                        for (let i = 0; i < folders.length; i++) {
-                            const directoryName = folders[i];
-                            directoryId += (i === 0 ? '/' : '>') + directoryName;
-                            this.directories = this.directories.concat(
-                                {
-                                    id: directoryId,
-                                    name: directoryName
-                                }
-                            );
-                        }
-                        this.imageName = urlPathPipeSplitted[1];
-                    }
-                }
+                const decodedInfos = this.urlService.decodePath();
+                this.directories = decodedInfos.directories;
+                this.imageName = decodedInfos.imageName;
             }
         );
     }
