@@ -3,6 +3,7 @@ import {Injectable, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {GalleryComponent} from './gallery/gallery.component';
+import {ChangePasswordComponent} from './change-password/change-password.component';
 
 import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
@@ -31,6 +32,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         AppComponent,
         LoginComponent,
         GalleryComponent,
+        ChangePasswordComponent,
         SecurePipe,
         DownloadFileDirective
     ],

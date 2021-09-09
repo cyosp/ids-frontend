@@ -1,7 +1,10 @@
 <div id="app">
     <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary sticky-top">
-        <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation">
-            <em *ngIf="directories.length == 0" class="fa fa-home"></em>
+        <span *ngIf="isAuthenticated" class="gallery-navigation">
+            <a *ngIf="!isGallery" routerLink="/gallery">
+                <em class="fa fa-home"></em>
+            </a>
+            <em *ngIf="directories.length == 0 && isGallery" class="fa fa-home"></em>
             <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
@@ -12,7 +15,7 @@
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
         </span>
-        <span *ngIf="isAuthenticated && isGallery" class="gallery-navigation mx-auto ">
+        <span *ngIf="isAuthenticated" class="gallery-navigation mx-auto ">
              <span *ngIf="directories.length >= 1">
                  <button id="breadcrumb-button" (click)="toggleBreadcrumbContent()">
                      &nbsp;

@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 4.4.0 (2021-09-09)
+ * Add hidden password change page
+
 ##### 4.3.0 (2021-08-22)
  * Use arrow up to preview level up directory
 

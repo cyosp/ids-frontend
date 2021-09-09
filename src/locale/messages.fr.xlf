@@ -2,6 +2,7 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
+      <!-- login -->
       <trans-unit id="login-email" datatype="html">
         <target>Email</target>
       </trans-unit>
@@ -22,6 +23,40 @@
       </trans-unit>
       <trans-unit id="login-failed" datatype="html">
         <target>Échec de la connexion</target>
+      </trans-unit>
+      <!-- change-password -->
+      <trans-unit id="change-password-password" datatype="html">
+        <target>Mot de passe</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-password-required" datatype="html">
+        <target>Mot de passe requis</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-password-minlength" datatype="html">
+        <target>Le mot de passe doit être d'au moins 8 caractères</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-password-incorrect" datatype="html">
+        <target>Le mot de passe est incorrect</target>
+      </trans-unit>
+      <trans-unit id="change-password-new-password" datatype="html">
+        <target>Nouveau mot de passe</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-new-password-required" datatype="html">
+        <target>Nouveau mot de passe requis</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-new-password-minlength" datatype="html">
+        <target>Le nouveau mot de passe doit être d'au moins 8 caractères</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-new-password-incorrect-size" datatype="html">
+        <target>Le nouveau mot de passe doit être compris entre <x id="INTERPOLATION"/> et <x id="INTERPOLATION_1"/> caractères</target>
+      </trans-unit>
+       <trans-unit id="change-password-change-password" datatype="html">
+         <target>Changer le mot de passe</target>
+       </trans-unit>
+      <trans-unit id="change-password-success" datatype="html">
+        <target>Le mot de passe a été changé avec succès</target>
+      </trans-unit>
+      <trans-unit id="change-password-error-passwords-same" datatype="html">
+        <target>Les mots de passe sont identiques</target>
       </trans-unit>
     </body>
   </file>
