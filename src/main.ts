@@ -22,8 +22,22 @@ function hideBreadcrumbContent(): void {
     }
 }
 
+function matchUserMenuButton(target: any): boolean {
+    return target.matches('#user-menu-button') || target.matches('#user-menu-button span');
+}
+
+function hideUserMenuContent(): void {
+    const userMenuContent = document.getElementById('user-menu-content');
+    if (userMenuContent) {
+        userMenuContent.style.display = 'none';
+    }
+}
+
 window.onclick = event => {
     if (!matchBreadcrumbButton(event.target)) {
         hideBreadcrumbContent();
+    }
+    if (!matchUserMenuButton(event.target)) {
+        hideUserMenuContent();
     }
 };

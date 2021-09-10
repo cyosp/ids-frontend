@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 5.0.0 (2021-09-10)
+ * Add user menu to access to change password page
+
 ##### 4.4.0 (2021-09-09)
  * Add hidden password change page
 

@@ -45,13 +45,19 @@
                 <img style="display: none" src="../assets/wait-spinner.svg">
             </a>
         </span>
-        <ul class="navbar-nav" *ngIf="isAuthenticated">
-            <li class="nav-item">
-                <a href="login" class="nav-link" (click)="logout()">
+        <span class="navbar-nav" *ngIf="isAuthenticated">
+            <button id="user-menu-button" class="nav-link" (click)="toggleUserMenuContent()">
+                <span class="fa fa-user"></span>
+            </button>
+            <span id="user-menu-content">
+                <a class="nav-link" routerLink="change-password">
+                    <em class="fa fa-key"></em>
+                </a>
+                <a class="nav-link" href="login" (click)="logout()">
                     <em class="fa fa-power-off"></em>
                 </a>
-            </li>
-        </ul>
+            </span>
+        </span>
 
         <ul class="navbar-nav ml-auto" *ngIf="!isAuthenticated">
             <li class="nav-item">

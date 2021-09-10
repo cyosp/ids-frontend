@@ -67,4 +67,13 @@ export class AppComponent implements OnInit, OnDestroy {
     hideBreadcrumbContent(): void {
         document.getElementById('breadcrumb-content').style.display = 'none';
     }
+
+    toggleUserMenuContent(): void {
+        const userMenuContentStyle = document.getElementById('user-menu-content').style;
+        let userMenuContentDisplay = 'none';
+        if (!userMenuContentStyle.display || userMenuContentStyle.display === userMenuContentDisplay) {
+            userMenuContentDisplay = 'block';
+        }
+        userMenuContentStyle.display = userMenuContentDisplay;
+    }
 }
