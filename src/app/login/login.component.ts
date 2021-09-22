@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {TokenStorageService} from '../token-storage.service';
+import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     isLoginFailed = false;
     view;
 
-    constructor(private tokenStorageService: TokenStorageService,
+    constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
                 private router: Router,
                 private userListQuery: ListQuery,
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
+        this.isAuthenticated = this.userService.hasTokenNonExpired();
         this.route.queryParams.subscribe(params => {
             if (params.view) {
                 this.view = decodeURI(params.view);
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
     onSubmit(): void {
         this.authenticationService.login(this.form).subscribe(
             dataRest => {
-                this.tokenStorageService.saveToken(dataRest.accessToken);
+                this.userService.saveToken(dataRest.accessToken);
                 this.isAuthenticated = true;
                 this.isLoginFailed = false;
                 if (this.view) {

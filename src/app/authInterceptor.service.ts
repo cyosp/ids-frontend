@@ -1,21 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {TokenStorageService} from './token-storage.service';
+import {UserService} from './user.service';
 import {tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthInterceptorService implements HttpInterceptor {
 
-    constructor(public tokenStorageService: TokenStorageService,
+    constructor(public userService: UserService,
                 private router: Router) {
     }
 
     intercept(httpRequest: HttpRequest<any>,
               httpHandler: HttpHandler): Observable<HttpEvent<any>> {
 
-        const token = this.tokenStorageService.getToken();
+        const token = this.userService.getToken();
         if (token) {
             httpRequest = httpRequest.clone({
                 setHeaders: {

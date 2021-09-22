@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {TokenStorageService} from '../token-storage.service';
+import {UserService} from '../user.service';
 
 import {ChangePasswordMutationService} from '../change-password-mutation.service';
 
@@ -16,12 +16,12 @@ export class ChangePasswordComponent implements OnInit {
     passwordChanged = false;
     graphqlErrorExtensions;
 
-    constructor(private tokenStorageService: TokenStorageService,
+    constructor(private userService: UserService,
                 private changePasswordMutationService: ChangePasswordMutationService) {
     }
 
     ngOnInit(): void {
-        this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
+        this.isAuthenticated = this.userService.hasTokenNonExpired();
     }
 
     togglePasswordDisplayed(): void {

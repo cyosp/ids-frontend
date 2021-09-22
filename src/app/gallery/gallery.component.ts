@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {TokenStorageService} from '../token-storage.service';
+import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {environment} from '../../environments/environment';
@@ -36,7 +36,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     imageUrlPath: string;
     subscription: Subscription;
 
-    constructor(private tokenStorageService: TokenStorageService,
+    constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
                 private userListQuery: ListQuery,
                 public router: Router,
@@ -100,7 +100,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         this.subscription = this.sharedDataService.imageUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
 
         this.breakpoint = (window.innerWidth / this.THUMBNAIL_SIZE);
-        this.isAuthenticated = this.tokenStorageService.hasTokenNonExpired();
+        this.isAuthenticated = this.userService.hasTokenNonExpired();
 
         this.route.url.subscribe(
             val => {
