@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
+import {Role} from './role';
 
 const TOKEN_KEY = 'auth-token';
+const USER_ROLE = 'user-role';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +14,17 @@ export class UserService {
     window.localStorage.clear();
   }
 
+  save(key: string, value: string): void {
+    window.localStorage.removeItem(key);
+    window.localStorage.setItem(key, value);
+  }
+
   public saveToken(token: string): void {
-    window.localStorage.removeItem(TOKEN_KEY);
-    window.localStorage.setItem(TOKEN_KEY, token);
+    this.save(TOKEN_KEY, token);
+  }
+
+  public saveRole(role: string): void {
+    this.save(USER_ROLE, role);
   }
 
   public hasTokenNonExpired(): boolean {

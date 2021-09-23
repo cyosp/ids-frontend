@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.authenticationService.login(this.form).subscribe(
             dataRest => {
                 this.userService.saveToken(dataRest.accessToken);
+                this.userService.saveRole(dataRest.role);
                 this.isAuthenticated = true;
                 this.isLoginFailed = false;
                 if (this.view) {
