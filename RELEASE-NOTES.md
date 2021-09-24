@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 5.1.0 (2021-09-24)
+ * Remove scrollbars (on image gallery preview)
+
 ##### 5.0.0 (2021-09-10)
  * Add user menu to access to change password page
 
