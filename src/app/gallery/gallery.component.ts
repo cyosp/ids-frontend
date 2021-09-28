@@ -166,6 +166,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
             queryVariables.directoryId = directoryId;
         }
         this.userListQuery.fetch(queryVariables).subscribe(data => {
+                let overflowValue  = 'hidden';
                 const directoryCount = (data as any).data.list
                     .filter(fse => fse.__typename === 'Directory')
                     .length;
@@ -198,6 +199,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
                         ));
                 } else {
+                    overflowValue  = 'scroll';
                     this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
                         .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
                             || fse.__typename === 'Image'
@@ -236,6 +238,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                             return fileSystemElement;
                         }));
                 }
+                document.body.style.overflow = overflowValue;
             }
         );
     }

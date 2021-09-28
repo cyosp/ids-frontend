@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 5.1.1 (2021-09-28)
+ * Fix: Vertical scrollbar missing on thumbnail gallery preview
+
 ##### 5.1.0 (2021-09-24)
  * Remove scrollbars (on image gallery preview)
 
