@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 5.1.2 (2021-09-29)
+ * Remove cache on GraphQL queries
+
 ##### 5.1.1 (2021-09-28)
  * Fix: Vertical scrollbar missing on thumbnail gallery preview
 
