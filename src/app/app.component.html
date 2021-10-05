@@ -4,7 +4,6 @@
             <a *ngIf="!isGallery" routerLink="/gallery">
                 <em class="fa fa-home"></em>
             </a>
-            <em *ngIf="directories.length == 0 && isGallery" class="fa fa-home"></em>
             <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>

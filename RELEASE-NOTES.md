@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 5.2.0 (2021-10-05)
+ * Remove home icon from home page
+
 ##### 5.1.2 (2021-09-29)
  * Remove cache on GraphQL queries
 
