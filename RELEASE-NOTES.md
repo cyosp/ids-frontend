@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 5.3.0 (2021-12-31)
+* Build Docker image for Linux ARM v7
+
 ##### 5.2.0 (2021-10-05)
  * Remove home icon from home page
 

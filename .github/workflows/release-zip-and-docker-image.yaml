@@ -95,17 +95,27 @@ jobs:
         run: rm ids-frontend-${{ steps.tag.outputs.NAME }}.zip ids-frontend-SHA512.txt
         working-directory: dist/ids
 
-      - name: Create Docker image
-        run: docker build -t cyosp/ids-frontend:${{ steps.tag.outputs.NAME }} .
+      - name: Setup Docker QEMU
+        uses: docker/setup-qemu-action@v1.2.0
+        with:
+          platforms: linux/amd64,linux/arm/v7
 
-      - name: Log to Docker
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-        run: echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - name: Setup Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1.6.0
 
-      - name: Push Docker image
-        run: docker push cyosp/ids-frontend:${{ steps.tag.outputs.NAME }}
+      - name: Login to DockerHub
+        uses: docker/login-action@v1.12.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Remove Docker configuration file
-        run: rm ~/.docker/config.json
+      - name: Build and push Docker image to registry
+        uses: docker/build-push-action@v2.7.0
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm/v7
+          push: true
+          tags: cyosp/${{ github.event.repository.name }}:${{ steps.tag.outputs.NAME }}
