@@ -4,6 +4,7 @@ import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
 import {GalleryComponent} from './gallery/gallery.component';
 import {ChangePasswordComponent} from './change-password/change-password.component';
+import {DeleteModalComponent} from './delete-modal/delete-modal.component';
 
 import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
@@ -33,6 +34,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         LoginComponent,
         GalleryComponent,
         ChangePasswordComponent,
+        DeleteModalComponent,
         SecurePipe,
         DownloadFileDirective
     ],

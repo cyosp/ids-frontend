@@ -1,0 +1,13 @@
+<div class="modal-header">
+    <h4 class="modal-title text-danger" i18n="@@delete-modal-title">Delete</h4>
+    <span type="button" class="close" (click)="modal.dismiss('close')">
+        <span>&times;</span>
+    </span>
+</div>
+<div class="modal-body">
+    <strong i18n="@@delete-modal-question">Are you sure you want to delete this image ?</strong>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-outline-primary" (click)="modal.dismiss('no')" i18n="@@delete-modal-no">No</button>
+    <button class="btn btn-danger" (click)="modal.close('yes')" i18n="@@delete-modal-yes">Yes</button>
+</div>

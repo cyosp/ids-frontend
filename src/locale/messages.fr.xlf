@@ -58,6 +58,19 @@
       <trans-unit id="change-password-error-passwords-same" datatype="html">
         <target>Les mots de passe sont identiques</target>
       </trans-unit>
+      <!-- delete-modal -->
+       <trans-unit id="delete-modal-title" datatype="html">
+         <target>Suppression</target>
+       </trans-unit>
+       <trans-unit id="delete-modal-question" datatype="html">
+         <target>Êtes-vous certain de vouloir supprimer cette image ?</target>
+       </trans-unit>
+       <trans-unit id="delete-modal-yes" datatype="html">
+         <target>Oui</target>
+       </trans-unit>
+       <trans-unit id="delete-modal-no" datatype="html">
+         <target>Non</target>
+       </trans-unit>
     </body>
   </file>
 </xliff>
