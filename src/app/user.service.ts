@@ -36,6 +36,10 @@ export class UserService {
     return localStorage.getItem(TOKEN_KEY);
   }
 
+  isAdministrator(): boolean {
+    return (localStorage.getItem(USER_ROLE) as Role) === Role.ADMINISTRATOR;
+  }
+
   nonExpired(token: string): boolean {
     const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
     return (Math.floor((new Date()).getTime() / 1000)) < expiry;
