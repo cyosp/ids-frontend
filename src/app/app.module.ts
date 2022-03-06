@@ -20,6 +20,7 @@ import {SharedDataService} from './shared-data.service';
 import {DownloadFileDirective} from './download-file.directive';
 import {UrlService} from './url.service';
 import {NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
+import {FileSystemElementService} from './file-system-element.service';
 
 import * as Hammer from 'hammerjs';
 
@@ -60,7 +61,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         provide: HAMMER_GESTURE_CONFIG,
         useClass: MyHammerConfig
     }, SharedDataService,
-        UrlService
+        UrlService,
+        FileSystemElementService
     ],
     bootstrap: [AppComponent]
 })
