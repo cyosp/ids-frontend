@@ -8,6 +8,7 @@ import 'hammerjs';
 import {Subscription} from 'rxjs';
 import {SharedDataService} from '../shared-data.service';
 import {UrlService} from '../url.service';
+import {Constants} from '../constants';
 
 @Component({
     selector: 'app-gallery',
@@ -91,7 +92,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         let directoryCommand = '';
         if (levelUpDirectoryIndex >= 0) {
-            directoryCommand = '/' + directories[levelUpDirectoryIndex].id;
+            directoryCommand = Constants.SLASH_CHARACTER + directories[levelUpDirectoryIndex].id;
         }
         this.router.navigate(['/gallery' + directoryCommand]);
     }
@@ -135,10 +136,10 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
             directoryId = path.replace(/\/gallery\//, '');
         }
         if (directoryId) {
-            directoryId = directoryId.replace(/>/g, '/');
+            directoryId = directoryId.replace(/>/g, Constants.SLASH_CHARACTER);
         }
         if (directoryId) {
-            const directoryIdPipeSplitted = directoryId.split('|');
+            const directoryIdPipeSplitted = directoryId.split(Constants.PIPE_CHARACTER);
             directoryId = directoryIdPipeSplitted[0];
             imageName = directoryIdPipeSplitted[1];
         }
@@ -154,7 +155,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private replacePathSeparators(fileSystemPath: string): string {
-        return fileSystemPath.replace(/\//g, '>');
+        return fileSystemPath.replace(/\//g, Constants.GREATER_THAN_CHARACTER);
     }
 
     getPhotos(directoryId: string, imageName: string): void {
@@ -166,7 +167,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
             queryVariables.directoryId = directoryId;
         }
         this.userListQuery.fetch(queryVariables).subscribe(data => {
-                let overflowValue  = 'hidden';
+                let overflowValue = 'hidden';
                 const directoryCount = (data as any).data.list
                     .filter(fse => fse.__typename === 'Directory')
                     .length;
@@ -199,7 +200,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
                         ));
                 } else {
-                    overflowValue  = 'scroll';
+                    overflowValue = 'scroll';
                     this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
                         .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
                             || fse.__typename === 'Image'

@@ -1,5 +1,6 @@
 import {Directive, ElementRef, HostListener, Input, Renderer2} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Constants} from './constants';
 
 @Directive({
     selector: '[downloadFile]'
@@ -49,6 +50,6 @@ export class DownloadFileDirective {
     }
 
     private getFileName(): string {
-        return this.downloadUrl.substr(this.downloadUrl.lastIndexOf('/'), this.downloadUrl.length);
+        return this.downloadUrl.substr(this.downloadUrl.lastIndexOf(Constants.SLASH_CHARACTER), this.downloadUrl.length);
     }
 }
