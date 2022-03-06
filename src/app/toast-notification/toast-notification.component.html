@@ -1,0 +1,8 @@
+<ngb-toast *ngIf="toastNotificationService.toast"
+           [class]="toastNotificationService.toast.classname"
+           [autohide]="true"
+           [delay]="toastNotificationService.toast.delay || 2000"
+           (hidden)="toastNotificationService.remove()"
+>
+    {{ toastNotificationService.toast.text }}
+</ngb-toast>

@@ -5,6 +5,7 @@ import {LoginComponent} from './login/login.component';
 import {GalleryComponent} from './gallery/gallery.component';
 import {ChangePasswordComponent} from './change-password/change-password.component';
 import {DeleteModalComponent} from './delete-modal/delete-modal.component';
+import {ToastNotificationComponent} from './toast-notification/toast-notification.component';
 
 import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import {AppRoutingModule} from './app-routing.module';
@@ -18,6 +19,7 @@ import {SecurePipe} from './SecurePipe';
 import {SharedDataService} from './shared-data.service';
 import {DownloadFileDirective} from './download-file.directive';
 import {UrlService} from './url.service';
+import {NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
 
 import * as Hammer from 'hammerjs';
 
@@ -35,6 +37,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         GalleryComponent,
         ChangePasswordComponent,
         DeleteModalComponent,
+        ToastNotificationComponent,
         SecurePipe,
         DownloadFileDirective
     ],
@@ -46,7 +49,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         MatGridListModule,
         CommonModule,
         GraphQLModule,
-        HammerModule
+        HammerModule,
+        NgbToastModule
     ],
     providers: [{
         provide: HTTP_INTERCEPTORS,
