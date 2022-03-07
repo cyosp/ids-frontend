@@ -41,3 +41,22 @@
     padding: 8px 9px 8px 11px;
     background: white;
 }
+
+#gallery-preview-delete-button {
+  border: none;
+  outline: none;
+}
+
+#gallery-preview-delete {
+    position: absolute;
+    bottom: 3px;
+    right: 10px;
+
+    color: red;
+
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    padding: 7px 7px 8px 7px;
+    background: white;
+}

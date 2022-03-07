@@ -71,6 +71,13 @@
        <trans-unit id="delete-modal-no" datatype="html">
          <target>Non</target>
        </trans-unit>
+       <!-- gallery-preview -->
+       <trans-unit id="gallery-preview-delete-success" datatype="html">
+         <target>Image effacée avec succès</target>
+       </trans-unit>
+       <trans-unit id="gallery-preview-delete-error" datatype="html">
+         <target>Impossible d'effacer l'image</target>
+       </trans-unit>
     </body>
   </file>
 </xliff>

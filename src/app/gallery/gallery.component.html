@@ -1,3 +1,37 @@
+<div id="gallery-preview"
+     *ngIf="previewImages.length !== 0"
+     (window:resize)="onGalleryPreviewResize()"
+     (swipeleft)="onSwipeLeft()"
+     (swiperight)="onSwipeRight()"
+     [style.height.px]="galleryPreviewHeight"
+     [style.width.px]="galleryPreviewWidth">
+    <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">
+        <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
+    </a>
+    <img *ngIf="previewImages[previewImageIndex].previewImageLoading" src='assets/wait-spinner.svg'>
+    <img [hidden]="!previewImages[previewImageIndex].previewImageLoaded"
+         #img (load)="onPreviewImageLoaded(img, previewImages[previewImageIndex])"
+         [className]="previewImageClassName"
+         [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
+         [alt]="previewImages[previewImageIndex].name">
+    <a *ngIf="previewImageIndex < previewImages.length - 1"
+       routerLink="/gallery/{{ previewImages[previewImageIndex + 1 ].id }}">
+        <em id="gallery-preview-chevron-right" class="fa fa-chevron-right"></em>
+    </a>
+
+    <button id="gallery-preview-delete-button" *ngIf="isAdministrator"
+            (click)="openDeleteModal(previewImages[previewImageIndex])">
+        <em id="gallery-preview-delete" class="fa fa-trash-alt"></em>
+        <span id="gallery-preview-delete-success" style="display: none" i18n="@@gallery-preview-delete-success">Image deleted with success</span>
+        <span id="gallery-preview-delete-error" style="display: none" i18n="@@gallery-preview-delete-error">Impossible to delete image</span>
+    </button>
+
+    <!-- Preload previous and next preview images -->
+    <img hidden *ngIf="previewImageIndex > 0"
+         [src]='previewImages[previewImageIndex - 1 ].previewUrlPath | secure | async'>
+    <img hidden *ngIf="previewImageIndex < previewImages.length - 1"
+         [src]='previewImages[previewImageIndex + 1 ].previewUrlPath | secure | async'>
+</div>
 <div *ngIf="previewImages.length === 0" class="horizontal-gutter">
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
@@ -19,29 +53,5 @@
         </mat-grid-tile>
     </mat-grid-list>
 </div>
-<div id="gallery-preview"
-     *ngIf="previewImages.length !== 0"
-     (window:resize)="onGalleryPreviewResize()"
-     (swipeleft)="onSwipeLeft()"
-     (swiperight)="onSwipeRight()"
-     [style.height.px]="galleryPreviewHeight"
-     [style.width.px]="galleryPreviewWidth">
-    <a *ngIf="previewImageIndex > 0" routerLink="/gallery/{{ previewImages[previewImageIndex - 1 ].id }}">
-        <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
-    </a>
-    <img *ngIf="previewImages[previewImageIndex].previewImageLoading" src='assets/wait-spinner.svg'>
-    <img [hidden]="!previewImages[previewImageIndex].previewImageLoaded"
-         #img (load)="onPreviewImageLoaded(img, previewImages[previewImageIndex])"
-         [className]="previewImageClassName"
-         [src]='previewImages[previewImageIndex].previewUrlPath | secure | async'
-         [alt]="previewImages[previewImageIndex].name">
-    <a *ngIf="previewImageIndex < previewImages.length - 1"
-       routerLink="/gallery/{{ previewImages[previewImageIndex + 1 ].id }}">
-        <em id="gallery-preview-chevron-right" class="fa fa-chevron-right"></em>
-    </a>
-    <!-- Preload previous and next preview images -->
-    <img hidden *ngIf="previewImageIndex > 0"
-         [src]='previewImages[previewImageIndex - 1 ].previewUrlPath | secure | async'>
-    <img hidden *ngIf="previewImageIndex < previewImages.length - 1"
-         [src]='previewImages[previewImageIndex + 1 ].previewUrlPath | secure | async'>
-</div>
+<app-toast-notification></app-toast-notification>
+

@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.0.0 (2022-03-07)
+* Add administrator delete image feature
+
 ##### 5.3.0 (2021-12-31)
 * Build Docker image for Linux ARM v7
 

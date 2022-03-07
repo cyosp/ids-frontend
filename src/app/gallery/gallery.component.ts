@@ -9,6 +9,11 @@ import {Subscription} from 'rxjs';
 import {SharedDataService} from '../shared-data.service';
 import {UrlService} from '../url.service';
 import {Constants} from '../constants';
+import {FileSystemElementService} from '../file-system-element.service'
+import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {DeleteImageMutationService} from '../delete-image-mutation.service';
+import {ToastNotificationService} from '../toast-notification.service';
 
 @Component({
     selector: 'app-gallery',
@@ -22,6 +27,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     readonly RIGHT_DIRECTION = 'Right';
 
     isAuthenticated = false;
+    isAdministrator = false;
     isLoginFailed = false;
     fileSystemElements: any[] = [];
     previewImageIndex: any;
@@ -43,7 +49,11 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 public router: Router,
                 private route: ActivatedRoute,
                 private sharedDataService: SharedDataService,
-                private urlService: UrlService) {
+                private urlService: UrlService,
+                private fileSystemElementService: FileSystemElementService,
+                private ngbModal: NgbModal,
+                private deleteImageMutationService: DeleteImageMutationService,
+                private toastNotificationService: ToastNotificationService) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -102,6 +112,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.breakpoint = (window.innerWidth / this.THUMBNAIL_SIZE);
         this.isAuthenticated = this.userService.hasTokenNonExpired();
+        this.isAdministrator = this.userService.isAdministrator();
 
         this.route.url.subscribe(
             val => {
@@ -275,5 +286,40 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     onThumbnailImageLoaded(fileSystemElement): void {
         fileSystemElement.thumbnailImageLoading = false;
         fileSystemElement.thumbnailImageLoaded = true;
+    }
+
+    openDeleteModal(imageFileSystemElement: any): void {
+        this.ngbModal.open(DeleteModalComponent).result.then(() => {
+            this.deleteImage(imageFileSystemElement);
+        }, (reason) => {
+            // Code/comment here to avoid in console: Error: Uncaught (in promise): no/close
+        });
+    }
+
+    private notifyDeleteSuccess(): void {
+        this.toastNotificationService.show(document.getElementById('gallery-preview-delete-success').textContent, {
+            classname: 'bg-success text-light',
+            delay: 4000
+        });
+    }
+
+    private notifyDeleteError(): void {
+        this.toastNotificationService.show(document.getElementById('gallery-preview-delete-error').textContent, {
+            classname: 'bg-danger text-light',
+            delay: 5000
+        });
+    }
+
+    deleteImage(imageFileSystemElement): void {
+        const mutationVariables: any = {
+            image: this.fileSystemElementService.getSlashedId(imageFileSystemElement)
+        };
+        this.deleteImageMutationService.mutate(mutationVariables).subscribe(() => {
+                this.notifyDeleteSuccess();
+                this.router.navigate(['/gallery/' + this.fileSystemElementService.getParentId(imageFileSystemElement)]);
+            }, () => {
+                this.notifyDeleteError();
+            }
+        );
     }
 }
