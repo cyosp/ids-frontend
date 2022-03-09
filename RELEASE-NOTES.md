@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.1.0 (2022-03-09)
+* Use delete key to ask to delete an image
+
 ##### 6.0.0 (2022-03-07)
 * Add administrator delete image feature
 

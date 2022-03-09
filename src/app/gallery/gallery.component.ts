@@ -68,6 +68,9 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
             case 'ArrowRight':
                 this.changePreview(this.RIGHT_DIRECTION);
                 break;
+            case 'Delete':
+                this.openDeleteModal(this.previewImages[this.previewImageIndex]);
+                break;
         }
     }
 
