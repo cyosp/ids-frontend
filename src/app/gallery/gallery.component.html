@@ -19,12 +19,12 @@
         <em id="gallery-preview-chevron-right" class="fa fa-chevron-right"></em>
     </a>
 
-    <button id="gallery-preview-delete-button" *ngIf="isAdministrator"
+    <span id="gallery-preview-delete-button" *ngIf="isAdministrator"
             (click)="openDeleteModal(previewImages[previewImageIndex])">
         <em id="gallery-preview-delete" class="fa fa-trash-alt"></em>
         <span id="gallery-preview-delete-success" style="display: none" i18n="@@gallery-preview-delete-success">Image deleted with success</span>
         <span id="gallery-preview-delete-error" style="display: none" i18n="@@gallery-preview-delete-error">Impossible to delete image</span>
-    </button>
+    </span>
 
     <!-- Preload previous and next preview images -->
     <img hidden *ngIf="previewImageIndex > 0"

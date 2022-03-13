@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.1.1 (2022-03-13)
+* Fix: Button tag used for delete feature is displayed
+
 ##### 6.1.0 (2022-03-09)
 * Use delete key to ask to delete an image
 
