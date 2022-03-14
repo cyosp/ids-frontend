@@ -1,16 +1,19 @@
 Release notes
 -------------
+##### 6.2.0 (2022-03-14)
+ * Display cursor as pointer on delete icon
+
 ##### 6.1.1 (2022-03-13)
-* Fix: Button tag used for delete feature is displayed
+ * Fix: Button tag used for delete feature is displayed
 
 ##### 6.1.0 (2022-03-09)
-* Use delete key to ask to delete an image
+ * Use delete key to ask to delete an image
 
 ##### 6.0.0 (2022-03-07)
-* Add administrator delete image feature
+ * Add administrator delete image feature
 
 ##### 5.3.0 (2021-12-31)
-* Build Docker image for Linux ARM v7
+ * Build Docker image for Linux ARM v7
 
 ##### 5.2.0 (2021-10-05)
  * Remove home icon from home page
