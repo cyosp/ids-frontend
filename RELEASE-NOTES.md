@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.3.0 (2022-03-17)
+ * Remove maximum size constraint on password field from login page
+
 ##### 6.2.0 (2022-03-14)
  * Display cursor as pointer on delete icon
 
