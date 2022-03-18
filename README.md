@@ -36,6 +36,7 @@ Optional environment variables:
  - `--env DIRECTORY_REVERSED_ORDER="true"`
  - `--env PREVIEW_DIRECTORY_REVERSED_ORDER="false"`
  - `--env MIX_DIRECTORIES_AND_IMAGES="false"`
+ - `--env IS_PUBLIC_SHARING="false"`
 
 ## Running unit tests
 

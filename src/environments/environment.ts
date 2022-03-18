@@ -20,7 +20,9 @@ export const environment = {
   // directories are explored in reversed order to select preview image
   previewDirectoryReversedOrder: valueOrDefault(window["env"]["previewDirectoryReversedOrder"], false),
   // When true, images which are at the same level as directories are displayed
-  mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false)
+  mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false),
+  // Set according to backend configuration: public-share
+  isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false)
 };
 
 /*

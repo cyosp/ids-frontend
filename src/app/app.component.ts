@@ -14,7 +14,9 @@ import {UrlService} from './url.service';
 })
 
 export class AppComponent implements OnInit, OnDestroy {
+    isAuthenticationNeeded = true;
     isAuthenticated = false;
+    displayNavigationIcons = false;
     isGallery = false;
     directories: any[] = [];
     imageName: string;
@@ -37,7 +39,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.router.events.subscribe(
             val => {
+                this.isAuthenticationNeeded = !environment.isPublicSharing;
                 this.isAuthenticated = this.userService.hasTokenNonExpired();
+                this.displayNavigationIcons = environment.isPublicSharing || this.isAuthenticated;
                 this.isGallery = this.router.url.startsWith('/gallery');
                 const decodedInfos = this.urlService.decodePath();
                 this.directories = decodedInfos.directories;

@@ -5,4 +5,5 @@
     window["env"]["directoryReversedOrder"] = true;
     window["env"]["previewDirectoryReversedOrder"] = false;
     window["env"]["mixDirectoriesAndImages"] = false;
+    window["env"]["isPublicSharing"] = false;
 })(this);

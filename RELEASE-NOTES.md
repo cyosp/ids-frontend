@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.4.0 (2022-03-18)
+ * Display navigation icons for public sharing
+
 ##### 6.3.0 (2022-03-17)
  * Remove maximum size constraint on password field from login page
 
