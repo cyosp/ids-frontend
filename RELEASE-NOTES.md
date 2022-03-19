@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.5.0 (2022-03-19)
+ * Display spinner waiting server response
+
 ##### 6.4.0 (2022-03-18)
  * Display navigation icons for public sharing
 

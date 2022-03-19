@@ -29,6 +29,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     isAuthenticated = false;
     isAdministrator = false;
     isLoginFailed = false;
+    displayWaitSpinner = false;
+    hasServerResponded = false;
     fileSystemElements: any[] = [];
     previewImageIndex: any;
     previewImages: any[] = [];
@@ -180,7 +182,16 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         if (directoryId) {
             queryVariables.directoryId = directoryId;
         }
+        this.displayWaitSpinner = false;
+        this.hasServerResponded = false;
+        setTimeout(() => {
+            if (!this.hasServerResponded) {
+                this.displayWaitSpinner = true;
+            }
+        }, 200);
         this.userListQuery.fetch(queryVariables).subscribe(data => {
+                this.hasServerResponded = true;
+                this.displayWaitSpinner = false;
                 let overflowValue = 'hidden';
                 const directoryCount = (data as any).data.list
                     .filter(fse => fse.__typename === 'Directory')
