@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.5.1 (2022-04-06)
+ * Fix: Directory thumbnail preview can be lesser than footer on window resize
+
 ##### 6.5.0 (2022-03-19)
  * Display spinner waiting server response
 
