@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.5.2 (2022-04-07)
+ * Fix: Directory thumbnail preview can be lesser than footer
+
 ##### 6.5.1 (2022-04-06)
  * Fix: Directory thumbnail preview can be lesser than footer on window resize
 

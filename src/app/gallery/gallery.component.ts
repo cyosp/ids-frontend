@@ -21,7 +21,7 @@ import {ToastNotificationService} from '../toast-notification.service';
     styleUrls: ['./gallery.component.scss']
 })
 export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
-    readonly THUMBNAIL_SIZE = 185; // Image thumbnail size - 3 x gutter size
+    readonly THUMBNAIL_SIZE = 200;
 
     readonly LEFT_DIRECTION = 'Left';
     readonly RIGHT_DIRECTION = 'Right';

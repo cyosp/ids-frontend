@@ -38,9 +38,9 @@
 <div *ngIf="previewImages.length === 0" class="horizontal-gutter">
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements'>
-            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'">
+            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'" class="gallery-preview-thumbnail-full-width">
                 <img *ngIf="fse.thumbnailUrl !== null && fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
-                <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailImageLoaded"
+                <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailImageLoaded" class="gallery-preview-thumbnail-full-width"
                      (load)="onThumbnailImageLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
                 <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" [attr.width]="THUMBNAIL_SIZE"
                      [attr.height]="THUMBNAIL_SIZE"></svg>
