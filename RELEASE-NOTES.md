@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 6.6.0 (2022-04-08)
+ * Minimize gutter space between image thumbnails
+
 ##### 6.5.3 (2022-04-07)
  * Fix: Broken image preview
 

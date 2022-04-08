@@ -48,9 +48,9 @@
                     {{ fse.name }}
                 </mat-grid-tile-footer>
             </a>
-            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image'">
+            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image'" class="gallery-preview-thumbnail-full-width">
                 <img *ngIf="fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
-                <img [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)"
+                <img [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)" class="gallery-preview-thumbnail-full-width"
                      [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
             </a>
         </mat-grid-tile>
