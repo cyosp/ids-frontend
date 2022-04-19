@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 7.0.0 (2022-04-19)
+ * Directory prefix can be removed using a regular expression
+
 ##### 6.6.0 (2022-04-08)
  * Minimize gutter space between image thumbnails
 

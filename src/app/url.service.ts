@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Constants} from './constants';
+import {DirectoryService} from './directory.service';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,8 @@ import {Constants} from './constants';
 
 export class UrlService {
 
-    constructor(private router: Router) {
+    constructor(private router: Router,
+                private directoryService: DirectoryService) {
     }
 
     decodePath(): any {
@@ -29,7 +31,7 @@ export class UrlService {
                     directories = directories.concat(
                         {
                             id: directoryId,
-                            name: directoryName
+                            name: this.directoryService.removePrefixOrGet(directoryName)
                         }
                     );
                 }

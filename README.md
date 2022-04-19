@@ -37,6 +37,7 @@ Optional environment variables:
  - `--env PREVIEW_DIRECTORY_REVERSED_ORDER="false"`
  - `--env MIX_DIRECTORIES_AND_IMAGES="false"`
  - `--env IS_PUBLIC_SHARING="false"`
+ - `--env REMOVE_DIRECTORY_PREFIX='^[0-9]*s*-s*([A-Za-z]*s*-s*)?'`
 
 ## Running unit tests
 

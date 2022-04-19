@@ -22,7 +22,15 @@ export const environment = {
   // When true, images which are at the same level as directories are displayed
   mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false),
   // Set according to backend configuration: public-share
-  isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false)
+  isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false),
+  // Remove directory prefix allows to hide 'directory technical information'
+  // Example if "^[0-9]*s*-s*([A-Za-z]*s*-s*)?" regular expression is applied:
+  // | Directory           | Output |
+  // |---------------------|--------|
+  // | 2022                | 2022   |
+  // | 001-April           | April  |
+  // | 001 - April - Paris | Paris  |
+  removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"],  undefined)
 };
 
 /*

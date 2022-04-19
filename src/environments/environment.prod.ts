@@ -9,5 +9,6 @@ export const environment = {
   directoryReversedOrder: valueOrDefault(window["env"]["directoryReversedOrder"], true),
   previewDirectoryReversedOrder: valueOrDefault(window["env"]["previewDirectoryReversedOrder"], false),
   mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false),
-  isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false)
+  isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false),
+  removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"], undefined)
 };

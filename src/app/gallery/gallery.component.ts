@@ -14,6 +14,7 @@ import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DeleteImageMutationService} from '../delete-image-mutation.service';
 import {ToastNotificationService} from '../toast-notification.service';
+import {DirectoryService} from '../directory.service';
 
 @Component({
     selector: 'app-gallery',
@@ -55,7 +56,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 private fileSystemElementService: FileSystemElementService,
                 private ngbModal: NgbModal,
                 private deleteImageMutationService: DeleteImageMutationService,
-                private toastNotificationService: ToastNotificationService) {
+                private toastNotificationService: ToastNotificationService,
+                private directoryService: DirectoryService) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -232,9 +234,11 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                             && (directoryCount > 0 && environment.mixDirectoriesAndImages || directoryCount === 0)
                         )
                         .map(fse => {
+                            let fseName = fse.name;
                             let fseThumbnailUrl = environment.backEndLocation;
                             let id;
                             if (fse.__typename === 'Directory') {
+                                fseName = this.directoryService.removePrefixOrGet(fse.name);
                                 if (fse.preview) {
                                     fseThumbnailUrl += fse.preview.thumbnailUrlPath;
                                 } else {
@@ -248,7 +252,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
                             const fileSystemElement = {
                                 id: this.replacePathSeparators(id),
-                                name: fse.name,
+                                name: fseName,
                                 type: fse.__typename,
                                 thumbnailUrl: fseThumbnailUrl,
                                 thumbnailImageLoading: false,

@@ -6,4 +6,5 @@
     window["env"]["previewDirectoryReversedOrder"] = false;
     window["env"]["mixDirectoriesAndImages"] = false;
     window["env"]["isPublicSharing"] = false;
+    window["env"]["removeDirectoryPrefix"] = undefined;
 })(this);
