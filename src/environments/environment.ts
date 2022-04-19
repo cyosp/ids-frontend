@@ -24,7 +24,7 @@ export const environment = {
   // Set according to backend configuration: public-share
   isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false),
   // Remove directory prefix allows to hide 'directory technical information'
-  // Example if "^[0-9]*s*-s*([A-Za-z]*s*-s*)?" regular expression is applied:
+  // Example if "^[0-9]*\s*-\s*([A-Za-z]*\s*-\s*)?" regular expression is applied:
   // | Directory           | Output |
   // |---------------------|--------|
   // | 2022                | 2022   |

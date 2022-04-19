@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 7.0.1 (2022-04-19)
+ * Fix: Missing double quotes for Docker REMOVE_DIRECTORY_PREFIX variable
+
 ##### 7.0.0 (2022-04-19)
  * Directory prefix can be removed using a regular expression
 
