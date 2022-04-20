@@ -6,6 +6,8 @@ if [ -z "${BACKEND_LOCATION}" ]; then export BACKEND_LOCATION="http://localhost:
 if [ -z "${DIRECTORY_REVERSED_ORDER}" ]; then export DIRECTORY_REVERSED_ORDER=true; fi
 if [ -z "${PREVIEW_DIRECTORY_REVERSED_ORDER}" ]; then export PREVIEW_DIRECTORY_REVERSED_ORDER=false; fi
 if [ -z "${MIX_DIRECTORIES_AND_IMAGES}" ]; then export MIX_DIRECTORIES_AND_IMAGES=false; fi
+if [ -z "${IS_PUBLIC_SHARING}" ]; then export IS_PUBLIC_SHARING=false; fi
+if [ -z "${REMOVE_DIRECTORY_PREFIX}" ]; then export REMOVE_DIRECTORY_PREFIX=""; fi
 
 for APP_TRANSLATED_FOLDER in /var/www/html/*
 do
