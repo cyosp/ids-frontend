@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 7.0.3 (2022-04-23)
+ * Fix: Wait spinner on directory not centered
+
 ##### 7.0.2 (2022-04-20)
  * [Docker] Fix: Missing default values for variables: IS_PUBLIC_SHARING and REMOVE_DIRECTORY_PREFIX
 
