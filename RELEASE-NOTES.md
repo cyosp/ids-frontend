@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 7.0.4 (2022-04-25)
+ * Fix: Downloaded image name was suffixed by character: '_'
+
 ##### 7.0.3 (2022-04-23)
  * Fix: Wait spinner on directory not centered
 

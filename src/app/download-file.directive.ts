@@ -50,6 +50,9 @@ export class DownloadFileDirective {
     }
 
     private getFileName(): string {
-        return this.downloadUrl.substr(this.downloadUrl.lastIndexOf(Constants.SLASH_CHARACTER), this.downloadUrl.length);
+        return this.downloadUrl.substr(
+            this.downloadUrl.lastIndexOf(Constants.SLASH_CHARACTER) + 1,
+            this.downloadUrl.length
+        );
     }
 }
