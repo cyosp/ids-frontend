@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 7.1.0 (2022-05-07)
+ * [Preview image] Use getImage GraphQL query instead of list one
+
 ##### 7.0.4 (2022-04-25)
  * Fix: Downloaded image name was suffixed by character: '_'
 

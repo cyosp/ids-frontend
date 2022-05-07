@@ -2,6 +2,7 @@ import {AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angula
 import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
+import {GetImageQuery} from '../getImage-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import 'hammerjs';
@@ -49,6 +50,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
                 private userListQuery: ListQuery,
+                private getImageQuery: GetImageQuery,
                 public router: Router,
                 private route: ActivatedRoute,
                 private sharedDataService: SharedDataService,
@@ -177,13 +179,6 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getPhotos(directoryId: string, imageName: string): void {
-        const queryVariables: any = {
-            directoryReversedOrder: environment.directoryReversedOrder,
-            previewDirectoryReversedOrder: environment.previewDirectoryReversedOrder,
-        };
-        if (directoryId) {
-            queryVariables.directoryId = directoryId;
-        }
         this.displayWaitSpinner = false;
         this.hasServerResponded = false;
         setTimeout(() => {
@@ -191,44 +186,54 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.displayWaitSpinner = true;
             }
         }, 200);
-        this.userListQuery.fetch(queryVariables).subscribe(data => {
+
+        if (imageName) {
+            this.getImageQuery.fetch({
+                directoryId,
+                imageId: imageName
+            }).subscribe(data => {
                 this.hasServerResponded = true;
                 this.displayWaitSpinner = false;
-                let overflowValue = 'hidden';
-                const directoryCount = (data as any).data.list
-                    .filter(fse => fse.__typename === 'Directory')
-                    .length;
-                if (imageName) {
-                    let imageIndex = 0;
-                    this.previewImages = this.previewImages.concat((data as any).data.list
-                        .filter(fse => fse.__typename === 'Image')
-                        .map(fse => {
-                                if (fse.name === imageName) {
-                                    this.previewImageIndex = imageIndex;
-                                    this.sharedDataService.setImageUrlPath(environment.backEndLocation + fse.urlPath);
-                                }
-                                imageIndex++;
 
-                                const fileSystemElement = {
-                                    id: this.replacePathSeparators(this.getPathAndFileNameSplitted(fse)),
-                                    name: fse.name,
-                                    previewUrlPath: environment.backEndLocation + fse.previewUrlPath,
-                                    previewImageLoading: false,
-                                    previewImageLoaded: false
-                                };
+                const images = (data as any).data.getImage;
+                this.previewImageIndex = images[0] == null ? 0 : 1;
+                this.sharedDataService.setImageUrlPath(environment.backEndLocation + images[1].urlPath);
 
-                                setTimeout(() => {
-                                    if (!fileSystemElement.previewImageLoaded) {
-                                        fileSystemElement.previewImageLoading = true;
-                                    }
-                                }, 200);
+                this.previewImages = this.previewImages.concat(images
+                    .filter(image => image != null)
+                    .map(image => {
+                        const fileSystemElement = {
+                            id: this.replacePathSeparators(this.getPathAndFileNameSplitted(image)),
+                            name: image.name,
+                            previewUrlPath: environment.backEndLocation + image.previewUrlPath,
+                            previewImageLoading: false,
+                            previewImageLoaded: false
+                        };
 
-                                return fileSystemElement;
+                        setTimeout(() => {
+                            if (!fileSystemElement.previewImageLoaded) {
+                                fileSystemElement.previewImageLoading = true;
                             }
-                        ));
-                } else {
-                    overflowValue = 'scroll';
-                    this.fileSystemElements = this.fileSystemElements.concat((data as any).data.list
+                        }, 200);
+
+                        return fileSystemElement;
+                    }));
+                document.body.style.overflow = 'hidden';
+            });
+        } else {
+            const queryVariables: any = {
+                directoryReversedOrder: environment.directoryReversedOrder,
+                previewDirectoryReversedOrder: environment.previewDirectoryReversedOrder,
+            };
+            if (directoryId) {
+                queryVariables.directoryId = directoryId;
+            }
+            this.userListQuery.fetch(queryVariables).subscribe(data => {
+                    this.hasServerResponded = true;
+                    this.displayWaitSpinner = false;
+                    const directories = (data as any).data.list;
+                    const directoryCount = directories.filter(fse => fse.__typename === 'Directory').length;
+                    this.fileSystemElements = this.fileSystemElements.concat(directories
                         .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
                             || fse.__typename === 'Image'
                             && (directoryCount > 0 && environment.mixDirectoriesAndImages || directoryCount === 0)
@@ -267,10 +272,10 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
                             return fileSystemElement;
                         }));
+                    document.body.style.overflow = 'scroll';
                 }
-                document.body.style.overflow = overflowValue;
-            }
-        );
+            );
+        }
     }
 
     onGalleryPreviewResize(): any {
