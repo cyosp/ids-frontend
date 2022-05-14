@@ -4,9 +4,9 @@ import {Query, gql} from 'apollo-angular';
 @Injectable({
     providedIn: 'root'
 })
-export class GetImageQuery extends Query {
+export class GetImagesQuery extends Query {
     document = gql`
-        query getImage($directoryId: ID, $imageId: String!) { getImage(directory: $directoryId, image: $imageId) {
+        query getImages($directoryId: ID, $imageId: String!) { getImages(directory: $directoryId, image: $imageId) {
             id
             urlPath
             name

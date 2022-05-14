@@ -2,7 +2,7 @@ import {AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angula
 import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
-import {GetImageQuery} from '../getImage-query.service';
+import {GetImagesQuery} from '../getImages-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import 'hammerjs';
@@ -50,7 +50,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
                 private userListQuery: ListQuery,
-                private getImageQuery: GetImageQuery,
+                private getImagesQuery: GetImagesQuery,
                 public router: Router,
                 private route: ActivatedRoute,
                 private sharedDataService: SharedDataService,
@@ -188,14 +188,14 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 200);
 
         if (imageName) {
-            this.getImageQuery.fetch({
+            this.getImagesQuery.fetch({
                 directoryId,
                 imageId: imageName
             }).subscribe(data => {
                 this.hasServerResponded = true;
                 this.displayWaitSpinner = false;
 
-                const images = (data as any).data.getImage;
+                const images = (data as any).data.getImages;
                 this.previewImageIndex = images[0] == null ? 0 : 1;
                 this.sharedDataService.setImageUrlPath(environment.backEndLocation + images[1].urlPath);
 
