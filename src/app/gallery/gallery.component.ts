@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
 import {SharedDataService} from '../shared-data.service';
 import {UrlService} from '../url.service';
 import {Constants} from '../constants';
-import {FileSystemElementService} from '../file-system-element.service'
+import {FileSystemElementService} from '../file-system-element.service';
 import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DeleteImageMutationService} from '../delete-image-mutation.service';
@@ -30,7 +30,6 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     isAuthenticated = false;
     isAdministrator = false;
-    isLoginFailed = false;
     displayWaitSpinner = false;
     hasServerResponded = false;
     fileSystemElements: any[] = [];
