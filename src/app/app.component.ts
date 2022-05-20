@@ -6,6 +6,9 @@ import {Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../environments/environment';
 import {UrlService} from './url.service';
+import {Constants} from './constants';
+import {FileSystemElementService} from './file-system-element.service';
+import {GetImageQuery} from './getImage-query.service';
 
 @Component({
     selector: 'app-root',
@@ -20,6 +23,9 @@ export class AppComponent implements OnInit, OnDestroy {
     isGallery = false;
     directories: any[] = [];
     imageName: string;
+    displayImageInfoWaitSpinner = false;
+    hasServerImageInfoResponded = false;
+    imageTakenAt: string;
 
     imageUrlPath: string;
     subscription: Subscription;
@@ -28,8 +34,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 private userService: UserService,
                 private router: Router,
                 private sharedDataService: SharedDataService,
-                private urlService: UrlService
-                ) {
+                private urlService: UrlService,
+                private fileSystemElementService: FileSystemElementService,
+                private getImageQuery: GetImageQuery) {
     }
 
     ngOnInit(): void {
@@ -66,6 +73,33 @@ export class AppComponent implements OnInit, OnDestroy {
             breadcrumbContentDisplay = 'block';
         }
         breadcrumbContentStyle.display = breadcrumbContentDisplay;
+    }
+
+    toggleInfoContent(): void {
+        const infoContentStyle = document.getElementById('info-content').style;
+        const infoContentDisplay = 'none';
+        if (!infoContentStyle.display || infoContentStyle.display === infoContentDisplay) {
+            this.displayImageInfoWaitSpinner = false;
+            this.hasServerImageInfoResponded = false;
+            setTimeout(() => {
+                if (!this.hasServerImageInfoResponded) {
+                    this.displayImageInfoWaitSpinner = true;
+                }
+            }, 200);
+            const fileSystemElement = this.directories[this.directories.length - 1];
+            const imageId = this.fileSystemElementService.getSlashedId(fileSystemElement)
+                + Constants.SLASH_CHARACTER + this.imageName;
+            this.getImageQuery.fetch({
+                imageId
+            }).subscribe(data => {
+                const takenAt = (data as any).data.getImage.metadata.takenAt;
+                this.imageTakenAt = (takenAt !== null ? new Date(takenAt).toLocaleString() : null);
+                this.hasServerImageInfoResponded = true;
+                this.displayImageInfoWaitSpinner = false;
+                infoContentStyle.display = 'block';
+            });
+        }
+        infoContentStyle.display = infoContentDisplay;
     }
 
     hideBreadcrumbContent(): void {

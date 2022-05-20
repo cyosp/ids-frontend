@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### 8.0.0 (2022-05-20)
+ * Update to support ids-backend 6.0.0
+ * Add image taken date and time info
+
 ##### 7.1.0 (2022-05-07)
  * [Preview image] Use getImage GraphQL query instead of list one
 

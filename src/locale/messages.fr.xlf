@@ -58,6 +58,10 @@
       <trans-unit id="change-password-error-passwords-same" datatype="html">
         <target>Les mots de passe sont identiques</target>
       </trans-unit>
+      <!-- navigation-bar -->
+      <trans-unit id="navigation-bar-info-taken-datetime-unavailable" datatype="html">
+        <target>Date indisponible</target>
+      </trans-unit>
       <!-- delete-modal -->
        <trans-unit id="delete-modal-title" datatype="html">
          <target>Suppression</target>

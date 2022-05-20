@@ -11,6 +11,17 @@ if (environment.production) {
 platformBrowserDynamic().bootstrapModule(AppModule)
     .catch(err => console.error(err));
 
+function matchInfoButton(target: any): boolean {
+    return target.matches('#info-button') || target.matches('#info-button span');
+}
+
+function hideInfoContent(): void {
+    const breadcrumbContent = document.getElementById('info-content');
+    if (breadcrumbContent) {
+        breadcrumbContent.style.display = 'none';
+    }
+}
+
 function matchBreadcrumbButton(target: any): boolean {
     return target.matches('#breadcrumb-button') || target.matches('#breadcrumb-button span');
 }
@@ -34,6 +45,9 @@ function hideUserMenuContent(): void {
 }
 
 window.onclick = event => {
+    if (!matchInfoButton(event.target)) {
+        hideInfoContent();
+    }
     if (!matchBreadcrumbButton(event.target)) {
         hideBreadcrumbContent();
     }

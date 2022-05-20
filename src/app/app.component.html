@@ -14,23 +14,35 @@
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
         </span>
-        <span *ngIf="displayNavigationIcons" class="gallery-navigation mx-auto ">
+        <span *ngIf="displayNavigationIcons" class="gallery-navigation ml-auto">
+            <a *ngIf="imageName">
+                <img *ngIf="displayImageInfoWaitSpinner" src="../assets/wait-spinner.svg">
+                <button id="info-button" (click)="toggleInfoContent()">
+                    <span class="fa fa-info-circle"></span>
+                </button>
+                <span id="info-content">
+                    <span>
+                        <span id="info-content-taken-datetime-icon" class="fa fa-calendar-alt"></span>
+                        <span *ngIf="imageTakenAt">{{ imageTakenAt }}</span>
+                        <span *ngIf="!imageTakenAt" i18n="@@navigation-bar-info-taken-datetime-unavailable">Unavailable date</span>
+                    </span>
+                </span>
+            </a>
+        </span>
+        <span *ngIf="displayNavigationIcons" class="gallery-navigation mr-auto">
              <span *ngIf="directories.length >= 1">
                  <button id="breadcrumb-button" (click)="toggleBreadcrumbContent()">
-                     &nbsp;
                      <span class="fa fa-caret-down"></span>
-                     <span>&nbsp;</span>
                      <span *ngIf="!imageName">
                         {{ directories[directories.length - 1].name }}
                      </span>
-                    <span *ngIf="imageName" >
+                    <span *ngIf="imageName">
                         {{ imageName }}
                     </span>
-                    &nbsp;
                 </button>
                 <span id="breadcrumb-content">
                     <span *ngFor="let directory of directories; let directoryIndex = index;">
-                        <a *ngIf="directoryIndex != 0 || imageName" routerLink="/gallery{{ directories[directories.length - 1 - directoryIndex].id }}" (click)="hideBreadcrumbContent()" >
+                        <a *ngIf="directoryIndex != 0 || imageName" routerLink="/gallery{{ directories[directories.length - 1 - directoryIndex].id }}" (click)="hideBreadcrumbContent()">
                             {{ directories[directories.length - 1 - directoryIndex].name }}
                         </a>
                     </span>
@@ -39,7 +51,7 @@
                     </a>
                 </span>
             </span>
-            <a *ngIf="imageName" [downloadFile]="imageUrlPath">
+            <a id="download-icon" *ngIf="imageName" [downloadFile]="imageUrlPath">
                 <em class="fa fa-download"></em>
                 <img style="display: none" src="../assets/wait-spinner.svg">
             </a>
