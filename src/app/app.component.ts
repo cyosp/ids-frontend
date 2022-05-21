@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from './user.service';
 import {Router} from '@angular/router';
 import {SharedDataService} from './shared-data.service';
@@ -37,6 +37,15 @@ export class AppComponent implements OnInit, OnDestroy {
                 private urlService: UrlService,
                 private fileSystemElementService: FileSystemElementService,
                 private getImageQuery: GetImageQuery) {
+    }
+
+    @HostListener('window:keydown', ['$event'])
+    onKeyDown(event: KeyboardEvent): any {
+        switch (event.key) {
+            case 'i':
+                this.toggleInfoContent();
+                break;
+        }
     }
 
     ngOnInit(): void {
