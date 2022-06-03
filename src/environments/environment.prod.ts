@@ -10,5 +10,6 @@ export const environment = {
   previewDirectoryReversedOrder: valueOrDefault(window["env"]["previewDirectoryReversedOrder"], false),
   mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false),
   isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false),
-  removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"], undefined)
+  removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"], undefined),
+  addTakenDateOnThumbnails: valueOrDefault(window["env"]["addTakenDateOnThumbnails"], false)
 };

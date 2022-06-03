@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 8.2.0 (2022-06-03)
+ * Taken date/time can be displayed on thumbnails
+
 ##### 8.1.0 (2022-05-21)
  * Use 'i' keyboard touch to toggle image info
 

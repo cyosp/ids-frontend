@@ -52,6 +52,12 @@
                 <img *ngIf="fse.thumbnailImageLoading" src='assets/wait-spinner.svg'>
                 <img [hidden]="!fse.thumbnailImageLoaded" (load)="onThumbnailImageLoaded(fse)" class="gallery-preview-thumbnail-full-width"
                      [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && fse.takenAt">
+                    {{ fse.takenAt }}
+                </mat-grid-tile-footer>
+                <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && !fse.takenAt" i18n="@@navigation-bar-info-taken-datetime-unavailable">
+                    Unavailable date
+                </mat-grid-tile-footer>
             </a>
         </mat-grid-tile>
     </mat-grid-list>

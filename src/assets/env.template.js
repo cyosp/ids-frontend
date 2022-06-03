@@ -8,4 +8,5 @@
     window["env"]["mixDirectoriesAndImages"] = ${MIX_DIRECTORIES_AND_IMAGES};
     window["env"]["isPublicSharing"] = ${IS_PUBLIC_SHARING};
     window["env"]["removeDirectoryPrefix"] = "${REMOVE_DIRECTORY_PREFIX}";
+    window["env"]["addTakenDateOnThumbnails"] = "${ADD_TAKEN_DATE_ON_THUMBNAILS}";
 })(this);

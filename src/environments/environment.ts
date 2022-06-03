@@ -30,7 +30,9 @@ export const environment = {
   // | 2022                | 2022   |
   // | 001-April           | April  |
   // | 001 - April - Paris | Paris  |
-  removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"],  undefined)
+  removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"],  undefined),
+  // When true, taken date/time is displayed on thumbnails
+  addTakenDateOnThumbnails: valueOrDefault(window["env"]["addTakenDateOnThumbnails"], false),
 };
 
 /*

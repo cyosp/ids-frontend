@@ -8,6 +8,7 @@ if [ -z "${PREVIEW_DIRECTORY_REVERSED_ORDER}" ]; then export PREVIEW_DIRECTORY_R
 if [ -z "${MIX_DIRECTORIES_AND_IMAGES}" ]; then export MIX_DIRECTORIES_AND_IMAGES=false; fi
 if [ -z "${IS_PUBLIC_SHARING}" ]; then export IS_PUBLIC_SHARING=false; fi
 if [ -z "${REMOVE_DIRECTORY_PREFIX}" ]; then export REMOVE_DIRECTORY_PREFIX=""; fi
+if [ -z "${ADD_TAKEN_DATE_ON_THUMBNAILS}" ]; then export ADD_TAKEN_DATE_ON_THUMBNAILS=false; fi
 
 for APP_TRANSLATED_FOLDER in /var/www/html/*
 do

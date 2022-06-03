@@ -2,6 +2,7 @@ import {AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angula
 import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
+import {ListQueryWithMetadata} from '../list-with-metadata-query.service';
 import {GetImagesQuery} from '../getImages-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -37,6 +38,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     previewImages: any[] = [];
     previewImageRatio: number;
     previewImageClassName: string;
+    addTakenDateOnThumbnails: boolean;
     breakpoint: number;
     galleryPreviewWidth: number;
     galleryPreviewHeight: number;
@@ -49,6 +51,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
                 private userListQuery: ListQuery,
+                private userListWithMetadataQuery: ListQueryWithMetadata,
                 private getImagesQuery: GetImagesQuery,
                 public router: Router,
                 private route: ActivatedRoute,
@@ -59,6 +62,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 private deleteImageMutationService: DeleteImageMutationService,
                 private toastNotificationService: ToastNotificationService,
                 private directoryService: DirectoryService) {
+        this.addTakenDateOnThumbnails = environment.addTakenDateOnThumbnails;
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -227,7 +231,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
             if (directoryId) {
                 queryVariables.directoryId = directoryId;
             }
-            this.userListQuery.fetch(queryVariables).subscribe(data => {
+            const listQuery = this.addTakenDateOnThumbnails ? this.userListWithMetadataQuery : this.userListQuery;
+            listQuery.fetch(queryVariables).subscribe(data => {
                     this.hasServerResponded = true;
                     this.displayWaitSpinner = false;
                     const directories = (data as any).data.list;
@@ -241,6 +246,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                             let fseName = fse.name;
                             let fseThumbnailUrl = environment.backEndLocation;
                             let id;
+                            let takenAt = null;
                             if (fse.__typename === 'Directory') {
                                 fseName = this.directoryService.removePrefixOrGet(fse.name);
                                 if (fse.preview) {
@@ -252,6 +258,9 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                             } else {
                                 fseThumbnailUrl += fse.thumbnailUrlPath;
                                 id = this.getPathAndFileNameSplitted(fse);
+                                if (fse.metadata && fse.metadata.takenAt !== null) {
+                                    takenAt = new Date(fse.metadata.takenAt).toLocaleString();
+                                }
                             }
 
                             const fileSystemElement = {
@@ -260,7 +269,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                                 type: fse.__typename,
                                 thumbnailUrl: fseThumbnailUrl,
                                 thumbnailImageLoading: false,
-                                thumbnailImageLoaded: false
+                                thumbnailImageLoaded: false,
+                                takenAt: takenAt
                             };
 
                             setTimeout(() => {
