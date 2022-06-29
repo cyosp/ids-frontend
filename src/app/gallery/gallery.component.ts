@@ -335,6 +335,19 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
+    navigateToNextFileSystemElement(): void {
+        let path;
+        if (this.previewImageIndex < this.previewImages.length - 1) {
+            path = this.previewImages[this.previewImageIndex + 1].id;
+        } else if (this.previewImageIndex > 0) {
+            path = this.previewImages[this.previewImageIndex - 1].id;
+        } else {
+            path = this.fileSystemElementService.getParentId(this.previewImages[this.previewImageIndex]);
+        }
+        this.router.navigate(['/gallery/' + path]);
+    }
+
+
     private notifyDeleteError(): void {
         this.toastNotificationService.show(document.getElementById('gallery-preview-delete-error').textContent, {
             classname: 'bg-danger text-light',
@@ -348,7 +361,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.deleteImageMutationService.mutate(mutationVariables).subscribe(() => {
                 this.notifyDeleteSuccess();
-                this.router.navigate(['/gallery/' + this.fileSystemElementService.getParentId(imageFileSystemElement)]);
+                this.navigateToNextFileSystemElement();
             }, () => {
                 this.notifyDeleteError();
             }

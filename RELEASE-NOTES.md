@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 8.3.0 (2022-06-29)
+ * Display next image after deleted one instead of parent directory
+
 ##### 8.2.0 (2022-06-03)
  * Taken date/time can be displayed on thumbnails
 
