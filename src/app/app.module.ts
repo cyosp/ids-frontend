@@ -23,6 +23,7 @@ import {NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
 import {FileSystemElementService} from './file-system-element.service';
 import {DirectoryService} from './directory.service';
 import * as Hammer from 'hammerjs';
+import {LazyLoadingComponent} from './lazy-loading/lazy-loading.component';
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
@@ -39,6 +40,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         ChangePasswordComponent,
         DeleteModalComponent,
         ToastNotificationComponent,
+        LazyLoadingComponent,
         SecurePipe,
         DownloadFileDirective
     ],

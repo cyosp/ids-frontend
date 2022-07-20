@@ -24,7 +24,7 @@ import {DirectoryService} from '../directory.service';
     styleUrls: ['./gallery.component.scss']
 })
 export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
-    readonly THUMBNAIL_SIZE = 200;
+    readonly THUMBNAIL_SIZE = Constants.THUMBNAIL_SIZE;
 
     readonly LEFT_DIRECTION = 'Left';
     readonly RIGHT_DIRECTION = 'Right';

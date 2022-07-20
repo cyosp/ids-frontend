@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 9.0.0 (2022-07-20)
+ * Thumbnail images are lazy loading
+
 ##### 8.3.0 (2022-06-29)
  * Display next image after deleted one instead of parent directory
 
