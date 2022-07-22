@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 9.1.0 (2022-07-22)
+ * Directory thumbnail images are lazy loading
+
 ##### 9.0.0 (2022-07-20)
  * Thumbnail images are lazy loading
 
