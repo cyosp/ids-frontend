@@ -8,16 +8,21 @@ import {DirectoryService} from './directory.service';
 })
 
 export class UrlService {
+    private readonly queryParamsRegex = /\?.*/;
 
     constructor(private router: Router,
                 private directoryService: DirectoryService) {
+    }
+
+    getUrl(): string {
+        return decodeURI(this.router.url).replace(this.queryParamsRegex, '');
     }
 
     decodePath(): any {
         let directories = [];
         let imageName;
         if (this.router.url.startsWith('/gallery')) {
-            let urlPath = decodeURI(this.router.url).replace(/\/gallery/, '');
+            let urlPath = decodeURI(this.router.url).replace(/\/gallery/, '').replace(this.queryParamsRegex, '');
             if (urlPath.startsWith(Constants.SLASH_CHARACTER)) {
                 urlPath = urlPath.substring(1);
             }

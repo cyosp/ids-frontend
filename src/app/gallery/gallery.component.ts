@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
@@ -17,13 +17,14 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {DeleteImageMutationService} from '../delete-image-mutation.service';
 import {ToastNotificationService} from '../toast-notification.service';
 import {DirectoryService} from '../directory.service';
+import {ViewportScroller} from '@angular/common';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss']
 })
-export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
+export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
     readonly THUMBNAIL_SIZE = Constants.THUMBNAIL_SIZE;
 
     readonly LEFT_DIRECTION = 'Left';
@@ -44,9 +45,11 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     galleryPreviewHeight: number;
     galleryPreviewRatio: number;
     navbarHeight: number;
-
     imageUrlPath: string;
     subscription: Subscription;
+    jumpTo: string;
+    jumpToTryCount = 0;
+    hasJumpedTo = false;
 
     constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
@@ -61,7 +64,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
                 private ngbModal: NgbModal,
                 private deleteImageMutationService: DeleteImageMutationService,
                 private toastNotificationService: ToastNotificationService,
-                private directoryService: DirectoryService) {
+                private directoryService: DirectoryService,
+                private viewportScroller: ViewportScroller) {
         this.addTakenDateOnThumbnails = environment.addTakenDateOnThumbnails;
     }
 
@@ -108,15 +112,25 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
     private previewLevelUp(): any {
         const decodedInfos = this.urlService.decodePath();
         const directories = decodedInfos.directories;
-        let levelUpDirectoryIndex = directories.length - 1;
-        if (decodedInfos.imageName === undefined) {
-            levelUpDirectoryIndex--;
-        }
+        const imageName = decodedInfos.imageName;
+
         let directoryCommand = '';
-        if (levelUpDirectoryIndex >= 0) {
-            directoryCommand = Constants.SLASH_CHARACTER + directories[levelUpDirectoryIndex].id;
+        let jumpTo;
+        const currentDirectoryIndex = directories.length - 1;
+        if (imageName) {
+            directoryCommand = directories[currentDirectoryIndex].id;
+            jumpTo = imageName;
+        } else {
+            const parentDirectoryIndex = currentDirectoryIndex - 1;
+            if (parentDirectoryIndex >= 0) {
+                directoryCommand = directories[parentDirectoryIndex].id;
+            }
+            if (currentDirectoryIndex >= 0) {
+                jumpTo = directories[currentDirectoryIndex].name;
+            }
         }
-        this.router.navigate(['/gallery' + directoryCommand]);
+
+        this.router.navigate(['/gallery' + directoryCommand], {queryParams: {jmp: jumpTo}});
     }
 
     ngOnInit(): void {
@@ -148,15 +162,31 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.navbarHeight = document.getElementById('navbar').offsetHeight;
+        this.viewportScroller.setOffset([0, this.navbarHeight]);
         this.computeGalleryPreviewDimensions();
     }
 
+    ngAfterViewChecked(): void {
+        if (this.jumpTo && !this.hasJumpedTo && this.jumpToTryCount < 3) {
+            const jumpToId = this.jumpTo;
+            this.hasJumpedTo = document.getElementById(jumpToId) !== null;
+            this.jumpToTryCount++;
+            this.viewportScroller.scrollToAnchor(jumpToId);
+        }
+    }
+
     private updateFileSystemElements(): any {
-        const path = decodeURI(this.router.url);
+        this.route.queryParams.subscribe(queryParams => {
+                this.hasJumpedTo = false;
+                this.jumpToTryCount = 0;
+                this.jumpTo = queryParams.jmp;
+            }
+        );
+        const url = this.urlService.getUrl();
         let directoryId = null;
         let imageName = null;
-        if (path !== '/gallery') {
-            directoryId = path.replace(/\/gallery\//, '');
+        if (url !== '/gallery') {
+            directoryId = url.replace(/\/gallery\//, '');
         }
         if (directoryId) {
             directoryId = directoryId.replace(/>/g, Constants.SLASH_CHARACTER);

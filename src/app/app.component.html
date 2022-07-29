@@ -4,13 +4,17 @@
             <a *ngIf="!isGallery" routerLink="/gallery">
                 <em class="fa fa-home"></em>
             </a>
-            <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery">
+            <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery"
+               [queryParams]="{jmp: directories[directories.length - 1].name}">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
-            <a *ngIf="directories.length > 1 && !imageName" routerLink="/gallery{{ directories[directories.length - 2].id }}">
+            <a *ngIf="directories.length > 1 && !imageName"
+               routerLink="/gallery{{ directories[directories.length - 2].id }}"
+               [queryParams]="{jmp: directories[directories.length - 1].name}">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
-            <a *ngIf="imageName" routerLink="/gallery{{ directories[directories.length - 1].id }}">
+            <a *ngIf="imageName" routerLink="/gallery{{ directories[directories.length - 1].id }}"
+               [queryParams]="{jmp: imageName}">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
         </span>

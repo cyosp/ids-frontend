@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 10.0.0 (2022-07-29)
+ * Level up action drives parent thumbnail view to jump to item of current view
+
 ##### 9.1.0 (2022-07-22)
  * Directory thumbnail images are lazy loading
 
