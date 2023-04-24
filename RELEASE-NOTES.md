@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 10.0.2 (2023-04-24)
+ * [Docker] Fix: ADD_TAKEN_DATE_ON_THUMBNAILS always true
+
 ##### 10.0.1 (2023-04-24)
  * Fix: Keyboard key 'i' doesn't work on login page
 
