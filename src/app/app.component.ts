@@ -85,30 +85,33 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     toggleInfoContent(): void {
-        const infoContentStyle = document.getElementById('info-content').style;
-        const infoContentDisplay = 'none';
-        if (!infoContentStyle.display || infoContentStyle.display === infoContentDisplay) {
-            this.displayImageInfoWaitSpinner = false;
-            this.hasServerImageInfoResponded = false;
-            setTimeout(() => {
-                if (!this.hasServerImageInfoResponded) {
-                    this.displayImageInfoWaitSpinner = true;
-                }
-            }, 200);
-            const fileSystemElement = this.directories[this.directories.length - 1];
-            const imageId = this.fileSystemElementService.getSlashedId(fileSystemElement)
-                + Constants.SLASH_CHARACTER + this.imageName;
-            this.getImageQuery.fetch({
-                imageId
-            }).subscribe(data => {
-                const takenAt = (data as any).data.getImage.metadata.takenAt;
-                this.imageTakenAt = (takenAt !== null ? new Date(takenAt).toLocaleString() : null);
-                this.hasServerImageInfoResponded = true;
+        const infoContent = document.getElementById('info-content');
+        if (infoContent) {
+            const infoContentStyle = infoContent.style;
+            const infoContentDisplay = 'none';
+            if (!infoContentStyle.display || infoContentStyle.display === infoContentDisplay) {
                 this.displayImageInfoWaitSpinner = false;
-                infoContentStyle.display = 'block';
-            });
+                this.hasServerImageInfoResponded = false;
+                setTimeout(() => {
+                    if (!this.hasServerImageInfoResponded) {
+                        this.displayImageInfoWaitSpinner = true;
+                    }
+                }, 200);
+                const fileSystemElement = this.directories[this.directories.length - 1];
+                const imageId = this.fileSystemElementService.getSlashedId(fileSystemElement)
+                    + Constants.SLASH_CHARACTER + this.imageName;
+                this.getImageQuery.fetch({
+                    imageId
+                }).subscribe(data => {
+                    const takenAt = (data as any).data.getImage.metadata.takenAt;
+                    this.imageTakenAt = (takenAt !== null ? new Date(takenAt).toLocaleString() : null);
+                    this.hasServerImageInfoResponded = true;
+                    this.displayImageInfoWaitSpinner = false;
+                    infoContentStyle.display = 'block';
+                });
+            }
+            infoContentStyle.display = infoContentDisplay;
         }
-        infoContentStyle.display = infoContentDisplay;
     }
 
     hideBreadcrumbContent(): void {

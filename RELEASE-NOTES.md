@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 10.0.1 (2023-04-24)
+ * Fix: Keyboard key 'i' doesn't work on login page
+
 ##### 10.0.0 (2022-07-29)
  * Level up action drives parent thumbnail view to jump to item of current view
 
