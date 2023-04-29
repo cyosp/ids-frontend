@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 11.0.0 (2023-04-29)
+ * Add an icon to download directory images
+
 ##### 10.0.2 (2023-04-24)
  * [Docker] Fix: ADD_TAKEN_DATE_ON_THUMBNAILS always true
 

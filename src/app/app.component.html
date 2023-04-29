@@ -55,7 +55,7 @@
                     </a>
                 </span>
             </span>
-            <a id="download-icon" *ngIf="imageName" [downloadFile]="imageUrlPath">
+            <a id="download-icon" *ngIf="imageName || !imageName && directories.length > 0" [downloadFile]="imageName ? imageUrlPath : getDirectoryDownloadUrl(directories[directories.length - 1].id)">
                 <em class="fa fa-download"></em>
                 <img style="display: none" src="../assets/wait-spinner.svg">
             </a>

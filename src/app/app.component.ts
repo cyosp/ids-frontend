@@ -126,4 +126,8 @@ export class AppComponent implements OnInit, OnDestroy {
         }
         userMenuContentStyle.display = userMenuContentDisplay;
     }
+
+    getDirectoryDownloadUrl(directoryId: string): string {
+        return environment.backEndLocation + '/download' + directoryId.replace(/>/g, '/') + '.zip';
+    }
 }
