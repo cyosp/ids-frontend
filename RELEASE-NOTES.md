@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 12.0.0 (2023-05-22)
+ * Move Docker exposed port from 80 to 7070
+
 ##### 11.0.0 (2023-04-29)
  * Add an icon to download directory images
 

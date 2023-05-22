@@ -14,7 +14,7 @@ ADD docker/nginx.conf /etc/nginx/conf.d/ids.conf
 
 ADD dist/ids /var/www/html
 
-EXPOSE 80
+EXPOSE 7070
 
 ADD docker/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
