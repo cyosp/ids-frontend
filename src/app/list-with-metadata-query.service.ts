@@ -18,7 +18,7 @@ export class ListQueryWithMetadata extends Query {
                     __typename
                 }
             }
-            ... on Image {
+            ... on Media {
                 thumbnailUrlPath,
                 previewUrlPath,
                 urlPath

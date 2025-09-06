@@ -4,10 +4,10 @@ import {gql, Mutation} from 'apollo-angular';
 @Injectable({
     providedIn: 'root'
 })
-export class DeleteImageMutationService extends Mutation {
+export class DeleteMediaMutationService extends Mutation {
     document = gql`
-        mutation deleteImage($image: ID!) {
-            deleteImage(image: $image) {
+        mutation deleteMedia($media: ID!) {
+            deleteMedia(media: $media) {
                 id
             }
         }`;

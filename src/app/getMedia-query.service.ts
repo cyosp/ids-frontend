@@ -4,9 +4,9 @@ import {Query, gql} from 'apollo-angular';
 @Injectable({
     providedIn: 'root'
 })
-export class GetImageQuery extends Query {
+export class GetMediaQuery extends Query {
     document = gql`
-        query getImage($imageId: ID!) { getImage(image: $imageId) {
+        query getMedia($mediaId: ID!) { getMedia(media: $mediaId) {
             metadata {
                 takenAt
             }

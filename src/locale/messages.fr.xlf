@@ -67,7 +67,7 @@
          <target>Suppression</target>
        </trans-unit>
        <trans-unit id="delete-modal-question" datatype="html">
-         <target>Êtes-vous certain de vouloir supprimer cette image ?</target>
+         <target>Êtes-vous certain de vouloir supprimer ce média ?</target>
        </trans-unit>
        <trans-unit id="delete-modal-yes" datatype="html">
          <target>Oui</target>
@@ -77,10 +77,10 @@
        </trans-unit>
        <!-- gallery-preview -->
        <trans-unit id="gallery-preview-delete-success" datatype="html">
-         <target>Image effacée avec succès</target>
+         <target>Média effacé avec succès</target>
        </trans-unit>
        <trans-unit id="gallery-preview-delete-error" datatype="html">
-         <target>Impossible d'effacer l'image</target>
+         <target>Impossible d'effacer le média</target>
        </trans-unit>
     </body>
   </file>

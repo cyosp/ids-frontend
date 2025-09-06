@@ -1,6 +1,6 @@
 <div id="app">
-    <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary sticky-top">
-        <span *ngIf="displayNavigationIcons" class="gallery-navigation">
+        <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary sticky-top">
+        <span *ngIf="displayNavigationIcons" class="gallery-navigation navbar-left">
             <a *ngIf="!isGallery" routerLink="/gallery">
                 <em class="fa fa-home"></em>
             </a>
@@ -18,7 +18,7 @@
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
         </span>
-        <span *ngIf="displayNavigationIcons" class="gallery-navigation ml-auto">
+        <span *ngIf="displayNavigationIcons" class="gallery-navigation ms-auto">
             <a *ngIf="imageName">
                 <img *ngIf="displayImageInfoWaitSpinner" src="../assets/wait-spinner.svg">
                 <button id="info-button" (click)="toggleInfoContent()">
@@ -33,7 +33,7 @@
                 </span>
             </a>
         </span>
-        <span *ngIf="displayNavigationIcons" class="gallery-navigation mr-auto">
+        <span *ngIf="displayNavigationIcons" class="gallery-navigation me-auto">
              <span *ngIf="directories.length >= 1">
                  <button id="breadcrumb-button" (click)="toggleBreadcrumbContent()">
                      <span class="fa fa-caret-down"></span>
@@ -60,7 +60,7 @@
                 <img style="display: none" src="../assets/wait-spinner.svg">
             </a>
         </span>
-        <span class="navbar-nav" *ngIf="isAuthenticated">
+        <span class="navbar-nav navbar-right" *ngIf="isAuthenticated">
             <button id="user-menu-button" class="nav-link" (click)="toggleUserMenuContent()">
                 <span class="fa fa-user"></span>
             </button>
@@ -74,7 +74,7 @@
             </span>
         </span>
 
-        <ul class="navbar-nav" *ngIf="!isAuthenticated" [ngClass]="{'ml-auto': isAuthenticationNeeded}">
+        <ul class="navbar-nav navbar-right" *ngIf="!isAuthenticated" [ngClass]="{'ms-auto': isAuthenticationNeeded}">
             <li class="nav-item">
                 <a href="login" class="nav-link" routerLink="login">
                     <em class="fa fa-sign-in-alt"></em>

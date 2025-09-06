@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="password" i18n="@@login-password">
+                <label class="label-password" for="password" i18n="@@login-password">
                     Password
                 </label>
                 <div class="input-group">
@@ -41,7 +41,7 @@
                             #password="ngModel"
                     />
                     <div class="input-group-append">
-                        <span class="input-group-text">
+                        <span class="input-group-text icon-display-password">
                             <em class="fa" [ngClass]="{'fa-eye': passwordDisplayed, 'fa-eye-slash': !passwordDisplayed}"
                                 (click)="togglePasswordDisplayed()"></em>
                         </span>
@@ -57,13 +57,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary btn-block" i18n="@@login-login">
+                <button class="btn btn-primary btn-block button-login" i18n="@@login-login">
                     Login
                 </button>
             </div>
             <div class="form-group">
                 <div
-                        class="alert alert-danger"
+                        class="alert alert-danger login-failed"
                         role="alert"
                         *ngIf="f.submitted && isLoginFailed"
                         i18n="@@login-failed"

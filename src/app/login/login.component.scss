@@ -11,5 +11,26 @@
   padding: 40px 40px;
 }
 
+input.form-control, .label-password, .icon-display-password  {
+  margin-top: 10px;
+}
 
+.icon-display-password {
+  height: 40px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 
+.button-login {
+  margin-top: 15px;
+  width: 100%;
+  color: white;
+}
+
+.button-login:hover {
+  color: white;
+}
+
+.login-failed  {
+  margin-top: 15px;
+}

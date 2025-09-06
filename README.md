@@ -35,7 +35,7 @@ Optional environment variables:
  - `--env BACKEND_LOCATION="http://localhost:8080"`
  - `--env DIRECTORY_REVERSED_ORDER="true"`
  - `--env PREVIEW_DIRECTORY_REVERSED_ORDER="false"`
- - `--env MIX_DIRECTORIES_AND_IMAGES="false"`
+ - `--env MIX_DIRECTORIES_AND_MEDIAS="false"`
  - `--env IS_PUBLIC_SHARING="false"`
  - `--env REMOVE_DIRECTORY_PREFIX="^[0-9]*\s*-\s*([A-Za-z]*\s*-\s*)?"`
 

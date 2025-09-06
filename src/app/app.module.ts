@@ -8,9 +8,8 @@ import {DeleteModalComponent} from './delete-modal/delete-modal.component';
 import {ToastNotificationComponent} from './toast-notification/toast-notification.component';
 
 import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
-import {AppRoutingModule} from './app-routing.module';
 import {FormsModule} from '@angular/forms';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
 import {MatGridListModule} from '@angular/material/grid-list';
 import {GraphQLModule} from './graphql.module';
@@ -24,6 +23,8 @@ import {FileSystemElementService} from './file-system-element.service';
 import {DirectoryService} from './directory.service';
 import * as Hammer from 'hammerjs';
 import {LazyLoadingComponent} from './lazy-loading/lazy-loading.component';
+import {Apollo} from 'apollo-angular';
+import {RouterModule} from '@angular/router';
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
@@ -46,23 +47,39 @@ export class MyHammerConfig extends HammerGestureConfig {
     ],
     imports: [
         BrowserModule,
-        AppRoutingModule,
         FormsModule,
-        HttpClientModule,
         MatGridListModule,
         CommonModule,
         GraphQLModule,
         HammerModule,
-        NgbToastModule
+        NgbToastModule,
+        RouterModule.forRoot([{
+            path: 'login', component: LoginComponent,
+        }, {
+            path: 'change-password', component: ChangePasswordComponent,
+        }, {
+            path: 'gallery',
+            component: GalleryComponent,
+            children: [{
+                path: ':directoryId',
+                component: GalleryComponent
+            }]
+        }
+        ])
     ],
-    providers: [{
-        provide: HTTP_INTERCEPTORS,
-        useClass: AuthInterceptorService,
-        multi: true
-    }, {
-        provide: HAMMER_GESTURE_CONFIG,
-        useClass: MyHammerConfig
-    }, SharedDataService,
+    providers: [
+        Apollo,
+        provideHttpClient(
+            withInterceptorsFromDi()
+        ),
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthInterceptorService,
+            multi: true
+        }, {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: MyHammerConfig
+        }, SharedDataService,
         UrlService,
         FileSystemElementService,
         DirectoryService

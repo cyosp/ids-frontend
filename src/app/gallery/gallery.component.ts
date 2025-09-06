@@ -3,7 +3,7 @@ import {UserService} from '../user.service';
 import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {ListQueryWithMetadata} from '../list-with-metadata-query.service';
-import {GetImagesQuery} from '../getImages-query.service';
+import {GetMediasQuery} from '../getMedias-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
 import 'hammerjs';
@@ -14,7 +14,7 @@ import {Constants} from '../constants';
 import {FileSystemElementService} from '../file-system-element.service';
 import {DeleteModalComponent} from '../delete-modal/delete-modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {DeleteImageMutationService} from '../delete-image-mutation.service';
+import {DeleteMediaMutationService} from '../delete-media-mutation.service';
 import {ToastNotificationService} from '../toast-notification.service';
 import {DirectoryService} from '../directory.service';
 import {ViewportScroller} from '@angular/common';
@@ -35,34 +35,35 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     displayWaitSpinner = false;
     hasServerResponded = false;
     fileSystemElements: any[] = [];
-    previewImageIndex: any;
-    previewImages: any[] = [];
-    previewImageRatio: number;
-    previewImageClassName: string;
+    previewMediaIndex: any;
+    previewMedias: any[] = [];
+    previewMediaRatio: number;
+    previewMediaClassName: string;
     addTakenDateOnThumbnails: boolean;
     breakpoint: number;
     galleryPreviewWidth: number;
     galleryPreviewHeight: number;
     galleryPreviewRatio: number;
     navbarHeight: number;
-    imageUrlPath: string;
+    mediaUrlPath: string;
     subscription: Subscription;
     jumpTo: string;
     jumpToTryCount = 0;
     hasJumpedTo = false;
+    previousUrl = '';
 
     constructor(private userService: UserService,
                 private authenticationService: AuthenticationService,
                 private userListQuery: ListQuery,
                 private userListWithMetadataQuery: ListQueryWithMetadata,
-                private getImagesQuery: GetImagesQuery,
+                private getMediasQuery: GetMediasQuery,
                 public router: Router,
                 private route: ActivatedRoute,
                 private sharedDataService: SharedDataService,
                 private urlService: UrlService,
                 private fileSystemElementService: FileSystemElementService,
                 private ngbModal: NgbModal,
-                private deleteImageMutationService: DeleteImageMutationService,
+                private deleteMediaMutationService: DeleteMediaMutationService,
                 private toastNotificationService: ToastNotificationService,
                 private directoryService: DirectoryService,
                 private viewportScroller: ViewportScroller) {
@@ -82,29 +83,29 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                 this.changePreview(this.RIGHT_DIRECTION);
                 break;
             case 'Delete':
-                this.openDeleteModal(this.previewImages[this.previewImageIndex]);
+                this.openDeleteModal(this.previewMedias[this.previewMediaIndex]);
                 break;
         }
     }
 
     private changePreview(direction: string): any {
-        if (this.previewImages.length !== 0) {
+        if (this.previewMedias.length !== 0) {
             const NO_NEW_INDEX = -1;
             let newIndex = NO_NEW_INDEX;
             switch (direction) {
                 case this.LEFT_DIRECTION:
-                    if (this.previewImageIndex > 0) {
-                        newIndex = this.previewImageIndex - 1;
+                    if (this.previewMediaIndex > 0) {
+                        newIndex = this.previewMediaIndex - 1;
                     }
                     break;
                 case this.RIGHT_DIRECTION:
-                    if (this.previewImageIndex < this.previewImages.length - 1) {
-                        newIndex = this.previewImageIndex + 1;
+                    if (this.previewMediaIndex < this.previewMedias.length - 1) {
+                        newIndex = this.previewMediaIndex + 1;
                     }
                     break;
             }
             if (newIndex !== NO_NEW_INDEX) {
-                this.router.navigate(['/gallery/' + this.previewImages[newIndex].id]);
+                this.router.navigate(['/gallery/' + this.previewMedias[newIndex].id]);
             }
         }
     }
@@ -112,14 +113,14 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     private previewLevelUp(): any {
         const decodedInfos = this.urlService.decodePath();
         const directories = decodedInfos.directories;
-        const imageName = decodedInfos.imageName;
+        const mediaName = decodedInfos.mediaName;
 
         let directoryCommand = '';
         let jumpTo;
         const currentDirectoryIndex = directories.length - 1;
-        if (imageName) {
+        if (mediaName) {
             directoryCommand = directories[currentDirectoryIndex].id;
-            jumpTo = imageName;
+            jumpTo = mediaName;
         } else {
             const parentDirectoryIndex = currentDirectoryIndex - 1;
             if (parentDirectoryIndex >= 0) {
@@ -134,18 +135,22 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     }
 
     ngOnInit(): void {
-        this.subscription = this.sharedDataService.imageUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
+        this.subscription = this.sharedDataService.mediaUrlPath.subscribe(mediaUrlPath => this.mediaUrlPath = mediaUrlPath);
 
         this.breakpoint = (window.innerWidth / this.THUMBNAIL_SIZE);
         this.isAuthenticated = this.userService.hasTokenNonExpired();
         this.isAdministrator = this.userService.isAdministrator();
 
-        this.route.url.subscribe(
+        this.router.events.subscribe(
             val => {
-                this.fileSystemElements = [];
-                this.previewImageIndex = null;
-                this.previewImages = [];
-                this.updateFileSystemElements();
+                const url = this.urlService.getUrl();
+                if (this.previousUrl !== url) {
+                    this.previousUrl = url;
+                    this.fileSystemElements = [];
+                    this.previewMediaIndex = null;
+                    this.previewMedias = [];
+                    this.updateFileSystemElements();
+                }
             }
         );
     }
@@ -184,7 +189,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         );
         const url = this.urlService.getUrl();
         let directoryId = null;
-        let imageName = null;
+        let mediaName = null;
         if (url !== '/gallery') {
             directoryId = url.replace(/\/gallery\//, '');
         }
@@ -194,9 +199,9 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         if (directoryId) {
             const directoryIdPipeSplitted = directoryId.split(Constants.PIPE_CHARACTER);
             directoryId = directoryIdPipeSplitted[0];
-            imageName = directoryIdPipeSplitted[1];
+            mediaName = directoryIdPipeSplitted[1];
         }
-        this.getPhotos(directoryId, imageName);
+        this.getPhotos(directoryId, mediaName);
     }
 
     onResize(event): any {
@@ -211,7 +216,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         return fileSystemPath.replace(/\//g, Constants.GREATER_THAN_CHARACTER);
     }
 
-    getPhotos(directoryId: string, imageName: string): void {
+    getPhotos(directoryId: string, mediaName: string): void {
         this.displayWaitSpinner = false;
         this.hasServerResponded = false;
         setTimeout(() => {
@@ -220,32 +225,33 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
             }
         }, 200);
 
-        if (imageName) {
-            this.getImagesQuery.fetch({
+        if (mediaName) {
+            this.getMediasQuery.fetch({
                 directoryId,
-                imageId: imageName
+                mediaId: mediaName
             }).subscribe(data => {
                 this.hasServerResponded = true;
                 this.displayWaitSpinner = false;
 
-                const images = (data as any).data.getImages;
-                this.previewImageIndex = images[0] == null ? 0 : 1;
-                this.sharedDataService.setImageUrlPath(environment.backEndLocation + images[1].urlPath);
+                const medias = (data as any).data.getMedias;
+                this.previewMediaIndex = medias[0] == null ? 0 : 1;
+                this.sharedDataService.setMediaUrlPath(environment.backEndLocation + medias[1].urlPath);
 
-                this.previewImages = this.previewImages.concat(images
-                    .filter(image => image != null)
-                    .map(image => {
+                this.previewMedias = this.previewMedias.concat(medias
+                    .filter(media => media != null)
+                    .map(media => {
                         const fileSystemElement = {
-                            id: this.replacePathSeparators(this.getPathAndFileNameSplitted(image)),
-                            name: image.name,
-                            previewUrlPath: environment.backEndLocation + image.previewUrlPath,
-                            previewImageLoading: false,
-                            previewImageLoaded: false
+                            id: this.replacePathSeparators(this.getPathAndFileNameSplitted(media)),
+                            name: media.name,
+                            type: media.__typename,
+                            previewUrlPath: environment.backEndLocation + media.previewUrlPath,
+                            previewMediaLoading: false,
+                            previewMediaLoaded: false
                         };
 
                         setTimeout(() => {
-                            if (!fileSystemElement.previewImageLoaded) {
-                                fileSystemElement.previewImageLoading = true;
+                            if (!fileSystemElement.previewMediaLoaded) {
+                                fileSystemElement.previewMediaLoading = true;
                             }
                         }, 200);
 
@@ -270,7 +276,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                     this.fileSystemElements = this.fileSystemElements.concat(directories
                         .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
                             || fse.__typename === 'Image'
-                            && (directoryCount > 0 && environment.mixDirectoriesAndImages || directoryCount === 0)
+                            && (directoryCount > 0 && environment.mixDirectoriesAndMedias || directoryCount === 0)
                         )
                         .map(fse => {
                             let fseName = fse.name;
@@ -298,14 +304,14 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                                 name: fseName,
                                 type: fse.__typename,
                                 thumbnailUrl: fseThumbnailUrl,
-                                thumbnailImageLoading: false,
-                                thumbnailImageLoaded: false,
+                                thumbnailMediaLoading: false,
+                                thumbnailMediaLoaded: false,
                                 takenAt: takenAt
                             };
 
                             setTimeout(() => {
-                                if (!fileSystemElement.thumbnailImageLoaded) {
-                                    fileSystemElement.thumbnailImageLoading = true;
+                                if (!fileSystemElement.thumbnailMediaLoaded) {
+                                    fileSystemElement.thumbnailMediaLoading = true;
                                 }
                             }, 200);
 
@@ -319,7 +325,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
 
     onGalleryPreviewResize(): any {
         this.computeGalleryPreviewDimensions();
-        this.computePreviewImageClassName();
+        this.computePreviewMediaClassName();
     }
 
     onSwipeLeft(): void {
@@ -330,29 +336,29 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         this.changePreview(this.LEFT_DIRECTION);
     }
 
-    onPreviewImageLoaded(previewImageElement, fileSystemElement): void {
-        fileSystemElement.previewImageLoading = false;
-        fileSystemElement.previewImageLoaded = true;
-        this.previewImageRatio = previewImageElement.naturalWidth / previewImageElement.naturalHeight;
-        this.computePreviewImageClassName();
+    onPreviewMediaLoaded(previewMediaElement, fileSystemElement): void {
+        fileSystemElement.previewMediaLoading = false;
+        fileSystemElement.previewMediaLoaded = true;
+        this.previewMediaRatio = previewMediaElement.naturalWidth / previewMediaElement.naturalHeight;
+        this.computePreviewMediaClassName();
     }
 
-    computePreviewImageClassName(): void {
+    computePreviewMediaClassName(): void {
         let classNameSuffix = 'height';
-        if (this.previewImageRatio > this.galleryPreviewRatio) {
+        if (this.previewMediaRatio > this.galleryPreviewRatio) {
             classNameSuffix = 'width';
         }
-        this.previewImageClassName = 'gallery-preview-full-' + classNameSuffix;
+        this.previewMediaClassName = 'gallery-preview-full-' + classNameSuffix;
     }
 
-    onThumbnailImageLoaded(fileSystemElement): void {
-        fileSystemElement.thumbnailImageLoading = false;
-        fileSystemElement.thumbnailImageLoaded = true;
+    onThumbnailMediaLoaded(fileSystemElement): void {
+        fileSystemElement.thumbnailMediaLoading = false;
+        fileSystemElement.thumbnailMediaLoaded = true;
     }
 
-    openDeleteModal(imageFileSystemElement: any): void {
+    openDeleteModal(mediaFileSystemElement: any): void {
         this.ngbModal.open(DeleteModalComponent).result.then(() => {
-            this.deleteImage(imageFileSystemElement);
+            this.deleteMedia(mediaFileSystemElement);
         }, (reason) => {
             // Code/comment here to avoid in console: Error: Uncaught (in promise): no/close
         });
@@ -367,12 +373,12 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
 
     navigateToNextFileSystemElement(): void {
         let path;
-        if (this.previewImageIndex < this.previewImages.length - 1) {
-            path = this.previewImages[this.previewImageIndex + 1].id;
-        } else if (this.previewImageIndex > 0) {
-            path = this.previewImages[this.previewImageIndex - 1].id;
+        if (this.previewMediaIndex < this.previewMedias.length - 1) {
+            path = this.previewMedias[this.previewMediaIndex + 1].id;
+        } else if (this.previewMediaIndex > 0) {
+            path = this.previewMedias[this.previewMediaIndex - 1].id;
         } else {
-            path = this.fileSystemElementService.getParentId(this.previewImages[this.previewImageIndex]);
+            path = this.fileSystemElementService.getParentId(this.previewMedias[this.previewMediaIndex]);
         }
         this.router.navigate(['/gallery/' + path]);
     }
@@ -385,11 +391,11 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         });
     }
 
-    deleteImage(imageFileSystemElement): void {
+    deleteMedia(mediaFileSystemElement): void {
         const mutationVariables: any = {
-            image: this.fileSystemElementService.getSlashedId(imageFileSystemElement)
+            media: this.fileSystemElementService.getSlashedId(mediaFileSystemElement)
         };
-        this.deleteImageMutationService.mutate(mutationVariables).subscribe(() => {
+        this.deleteMediaMutationService.mutate(mutationVariables).subscribe(() => {
                 this.notifyDeleteSuccess();
                 this.navigateToNextFileSystemElement();
             }, () => {

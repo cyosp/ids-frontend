@@ -18,7 +18,7 @@ export class ListQuery extends Query {
                     __typename
                 }
             }
-            ... on Image {
+            ... on Media {
                 thumbnailUrlPath,
                 previewUrlPath,
                 urlPath

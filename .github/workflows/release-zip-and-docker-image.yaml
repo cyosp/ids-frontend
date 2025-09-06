@@ -14,8 +14,7 @@ jobs:
         id: tag
         run: echo "NAME=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
 
-      - name: Checkout code
-        uses: actions/checkout@v2.3.4
+      - uses: actions/checkout@v3.5.3
 
       - name: Use tag name as IDS frontend version and Docker tag name
         uses: jacobtomlinson/gha-find-replace@0.1.2
@@ -24,22 +23,40 @@ jobs:
           find: '"0.0.0"'
           replace: '"${{ steps.tag.outputs.NAME }}"'
 
-      - name: Install Node 15
+      - name: Install Node 18
         uses: actions/setup-node@v2.1.4
         with:
-          node-version: 15
+          node-version: 18
 
-      - name: Install Angular CLI 10
-        run: sudo npm install -g @angular/cli@10.2.1
+      - name: Install Angular CLI 18
+        run: sudo npm install -g @angular/cli@18.2.20
 
       - name: Component versions
-        run: node -v && npm -v && ng --version
+        run: node -v && npm -v
 
+      # --force to solve:
+      #
+      # Found: @angular-devkit/build-angular@0.1002.1
+      # node_modules/@angular-devkit/build-angular
+      #   dev @angular-devkit/build-angular@"^18.2.20" from the root project
+      #
+      # Could not resolve dependency:
+      # dev @angular-devkit/build-angular@"^18.2.20" from the root project
+      #
+      # Conflicting peer dependency: typescript@5.5.4
+      # node_modules/typescript
+      #   peer typescript@">=5.4 <5.6" from @angular-devkit/build-angular@18.2.20
+      #   node_modules/@angular-devkit/build-angular
+      #     dev @angular-devkit/build-angular@"^18.2.20" from the root project
+      #
+      # Fix the upstream dependency conflict, or retry
+      # this command with --force or --legacy-peer-deps
+      # to accept an incorrect (and potentially broken) dependency resolution.
       - name: Install dependencies
-        run: npm install
+        run: npm i --force
 
       - name: Build IDS frontend
-        run: ng build --prod --localize
+        run: ng build --configuration production --localize
 
       - name: Remove node modules directory
         run: rm -r node_modules
@@ -83,7 +100,7 @@ jobs:
           asset_content_type: text/plain
 
       - name: Publish release with notes
-        uses: cyosp/publish-release-with-notes@1.0.0
+        uses: cyosp/publish-release-with-notes@2.0.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -98,7 +115,7 @@ jobs:
       - name: Setup Docker QEMU
         uses: docker/setup-qemu-action@v1.2.0
         with:
-          platforms: linux/amd64,linux/arm/v7
+          platforms: linux/amd64,linux/arm/v7,linux/arm/v8
 
       - name: Setup Docker Buildx
         id: buildx
@@ -111,11 +128,11 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build and push Docker image to registry
-        uses: docker/build-push-action@v2.7.0
+        uses: docker/build-push-action@v6.18.0
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: Dockerfile
-          platforms: linux/amd64,linux/arm/v7
+          platforms: linux/amd64,linux/arm/v7,linux/arm/v8
           push: true
           tags: cyosp/${{ github.event.repository.name }}:${{ steps.tag.outputs.NAME }}

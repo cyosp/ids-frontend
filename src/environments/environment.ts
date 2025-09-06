@@ -19,8 +19,8 @@ export const environment = {
   // When true and a directory doesn't contain an image,
   // directories are explored in reversed order to select preview image
   previewDirectoryReversedOrder: valueOrDefault(window["env"]["previewDirectoryReversedOrder"], false),
-  // When true, images which are at the same level as directories are displayed
-  mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false),
+  // When true, medias which are at the same level as directories are displayed
+  mixDirectoriesAndMedias: valueOrDefault(window["env"]["mixDirectoriesAndMedias"], false),
   // Set according to backend configuration: public-share
   isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false),
   // Remove directory prefix allows to hide 'directory technical information'

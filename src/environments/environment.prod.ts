@@ -8,7 +8,7 @@ export const environment = {
   backEndLocation: valueOrDefault(window["env"]["backEndLocation"], "http://localhost:8080"),
   directoryReversedOrder: valueOrDefault(window["env"]["directoryReversedOrder"], true),
   previewDirectoryReversedOrder: valueOrDefault(window["env"]["previewDirectoryReversedOrder"], false),
-  mixDirectoriesAndImages: valueOrDefault(window["env"]["mixDirectoriesAndImages"], false),
+  mixDirectoriesAndMedias: valueOrDefault(window["env"]["mixDirectoriesAndMedias"], false),
   isPublicSharing: valueOrDefault(window["env"]["isPublicSharing"], false),
   removeDirectoryPrefix: valueOrDefault(window["env"]["removeDirectoryPrefix"], undefined),
   addTakenDateOnThumbnails: valueOrDefault(window["env"]["addTakenDateOnThumbnails"], false)

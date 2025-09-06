@@ -8,7 +8,7 @@ import {environment} from '../environments/environment';
 import {UrlService} from './url.service';
 import {Constants} from './constants';
 import {FileSystemElementService} from './file-system-element.service';
-import {GetImageQuery} from './getImage-query.service';
+import {GetMediaQuery} from './getMedia-query.service';
 
 @Component({
     selector: 'app-root',
@@ -36,7 +36,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 private sharedDataService: SharedDataService,
                 private urlService: UrlService,
                 private fileSystemElementService: FileSystemElementService,
-                private getImageQuery: GetImageQuery) {
+                private getMediaQuery: GetMediaQuery) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.titleService.setTitle(environment.sharingTitle);
 
-        this.subscription = this.sharedDataService.imageUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
+        this.subscription = this.sharedDataService.mediaUrlPath.subscribe(imageUrlPath => this.imageUrlPath = imageUrlPath);
 
         this.router.events.subscribe(
             val => {
@@ -98,12 +98,12 @@ export class AppComponent implements OnInit, OnDestroy {
                     }
                 }, 200);
                 const fileSystemElement = this.directories[this.directories.length - 1];
-                const imageId = this.fileSystemElementService.getSlashedId(fileSystemElement)
+                const mediaId = this.fileSystemElementService.getSlashedId(fileSystemElement)
                     + Constants.SLASH_CHARACTER + this.imageName;
-                this.getImageQuery.fetch({
-                    imageId
+                this.getMediaQuery.fetch({
+                    mediaId
                 }).subscribe(data => {
-                    const takenAt = (data as any).data.getImage.metadata.takenAt;
+                    const takenAt = (data as any).data.getMedia.metadata.takenAt;
                     this.imageTakenAt = (takenAt !== null ? new Date(takenAt).toLocaleString() : null);
                     this.hasServerImageInfoResponded = true;
                     this.displayImageInfoWaitSpinner = false;

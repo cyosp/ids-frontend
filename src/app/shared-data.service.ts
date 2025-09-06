@@ -3,14 +3,14 @@ import {BehaviorSubject} from 'rxjs';
 
 @Injectable()
 export class SharedDataService {
-    private imageUrlPathSource = new BehaviorSubject(null);
+    private mediaUrlPathSource = new BehaviorSubject(null);
 
-    imageUrlPath = this.imageUrlPathSource.asObservable();
+    mediaUrlPath = this.mediaUrlPathSource.asObservable();
 
     constructor() {
     }
 
-    setImageUrlPath(imageUrlPath: string): void {
-        this.imageUrlPathSource.next(imageUrlPath);
+    setMediaUrlPath(mediaUrlPath: string): void {
+        this.mediaUrlPathSource.next(mediaUrlPath);
     }
 }

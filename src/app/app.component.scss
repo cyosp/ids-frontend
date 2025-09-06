@@ -4,6 +4,14 @@ nav .fa {
     color: $navBarTextColor;
 }
 
+.navbar-left {
+    margin-left: 10px;
+}
+
+.navbar-right {
+    margin-right: 10px;
+}
+
 .gallery-navigation a:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -55,6 +63,11 @@ nav .fa {
     padding: 8px 15px;
     color: $navBarTextColor;
     text-align: center;
+    text-decoration: none;
+}
+
+#breadcrumb-content a:hover {
+    text-decoration: underline;
 }
 
 #download-icon {
