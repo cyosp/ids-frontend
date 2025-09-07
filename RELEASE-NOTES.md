@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### 13.0.0 (2025-09-07)
+ * ids-backend support: 9.0.0 without video - Breaking change: configuration
+ * Angular upgrade: 18
+
 ##### 12.0.0 (2023-05-22)
  * Move Docker exposed port from 80 to 7070
 
