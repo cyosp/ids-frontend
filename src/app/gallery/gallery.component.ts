@@ -1,6 +1,14 @@
-import {AfterViewChecked, AfterViewInit, Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {
+    AfterViewChecked,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostListener,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {UserService} from '../user.service';
-import {AuthenticationService} from '../authentication.service';
 import {ListQuery} from '../list-query.service';
 import {ListQueryWithMetadata} from '../list-with-metadata-query.service';
 import {GetMediasQuery} from '../getMedias-query.service';
@@ -18,17 +26,23 @@ import {DeleteMediaMutationService} from '../delete-media-mutation.service';
 import {ToastNotificationService} from '../toast-notification.service';
 import {DirectoryService} from '../directory.service';
 import {ViewportScroller} from '@angular/common';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
     styleUrls: ['./gallery.component.scss']
 })
+
 export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
     readonly THUMBNAIL_SIZE = Constants.THUMBNAIL_SIZE;
 
     readonly LEFT_DIRECTION = 'Left';
     readonly RIGHT_DIRECTION = 'Right';
+
+    readonly MIME_CODEC = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+
+    @ViewChild('videoElement') videoElement: ElementRef;
 
     isAuthenticated = false;
     isAdministrator = false;
@@ -51,9 +65,10 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     jumpToTryCount = 0;
     hasJumpedTo = false;
     previousUrl = '';
+    isVideoVisible = false;
 
     constructor(private userService: UserService,
-                private authenticationService: AuthenticationService,
+                private http: HttpClient,
                 private userListQuery: ListQuery,
                 private userListWithMetadataQuery: ListQueryWithMetadata,
                 private getMediasQuery: GetMediasQuery,
@@ -171,6 +186,42 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         this.computeGalleryPreviewDimensions();
     }
 
+    ngAfterContentChecked(): void {
+        if (this.isVideoVisible === false && this.videoElement != null) {
+            this.isVideoVisible = true;
+            this.loadVideo();
+        } else if (this.isVideoVisible === true && this.videoElement == null) {
+            this.isVideoVisible = false;
+        }
+    }
+
+    public loadVideo(): void {
+        if ('MediaSource' in window && MediaSource.isTypeSupported(this.MIME_CODEC)) {
+            const mediaSource = new MediaSource();
+            (this.videoElement.nativeElement as HTMLVideoElement).src = URL.createObjectURL(mediaSource);
+            mediaSource.addEventListener('sourceopen', () => this.loadVideoMediaSource(mediaSource));
+        } else {
+            console.error('Unsupported MIME type or codec: ', this.MIME_CODEC);
+        }
+    }
+
+    loadVideoMediaSource(mediaSource: MediaSource): void {
+        const sourceBuffer = mediaSource.addSourceBuffer(this.MIME_CODEC);
+        const token = this.userService.getToken();
+        const headers = new HttpHeaders({Authorization: `Bearer ${token}`});
+        this.http
+            .get(this.previewMedias[this.previewMediaIndex].previewUrlPath, {headers, responseType: 'blob'})
+            .subscribe(blob => {
+                sourceBuffer.addEventListener('updateend', () => {
+                    mediaSource.endOfStream();
+                    (this.videoElement.nativeElement as HTMLVideoElement).play();
+                });
+                blob.arrayBuffer().then(x => {
+                    sourceBuffer.appendBuffer(x);
+                });
+            });
+    }
+
     ngAfterViewChecked(): void {
         if (this.jumpTo && !this.hasJumpedTo && this.jumpToTryCount < 3) {
             const jumpToId = this.jumpTo;
@@ -276,6 +327,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                     this.fileSystemElements = this.fileSystemElements.concat(directories
                         .filter(fse => fse.__typename === 'Directory' && fse.elements.length > 0
                             || fse.__typename === 'Image'
+                            || fse.__typename === 'Video'
                             && (directoryCount > 0 && environment.mixDirectoriesAndMedias || directoryCount === 0)
                         )
                         .map(fse => {
@@ -339,7 +391,11 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     onPreviewMediaLoaded(previewMediaElement, fileSystemElement): void {
         fileSystemElement.previewMediaLoading = false;
         fileSystemElement.previewMediaLoaded = true;
-        this.previewMediaRatio = previewMediaElement.naturalWidth / previewMediaElement.naturalHeight;
+        if (fileSystemElement.type === 'Image') {
+            this.previewMediaRatio = previewMediaElement.naturalWidth / previewMediaElement.naturalHeight;
+        } else if (fileSystemElement.type === 'Video') {
+            this.previewMediaRatio = previewMediaElement.videoWidth / previewMediaElement.videoHeight;
+        }
         this.computePreviewMediaClassName();
     }
 
