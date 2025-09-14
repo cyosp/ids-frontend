@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 13.1.0 (2025-09-14)
+ * Add video support for Firefox
+
 ##### 13.0.0 (2025-09-07)
  * ids-backend support: 9.0.0 without video - Breaking change: configuration
  * Angular upgrade: 18
