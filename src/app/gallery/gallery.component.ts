@@ -40,7 +40,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     readonly LEFT_DIRECTION = 'Left';
     readonly RIGHT_DIRECTION = 'Right';
 
-    readonly MIME_CODEC = 'video/mp4; codecs="avc1.42E01E, mp4a.40.2"';
+    readonly MIME_CODEC = 'video/webm; codecs="vorbis,vp9"';
 
     @ViewChild('videoElement') videoElement: ElementRef;
 
