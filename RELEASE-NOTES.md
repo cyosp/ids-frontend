@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 14.0.0 (2025-09-18)
+ * ids-backend support: 10.0.0 with preview video for browsers - Breaking change: preview video format
+
 ##### 13.1.0 (2025-09-14)
  * Add video support for Firefox
 
