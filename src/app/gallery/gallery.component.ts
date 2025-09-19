@@ -41,6 +41,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     readonly RIGHT_DIRECTION = 'Right';
 
     readonly MIME_CODEC = 'video/webm; codecs="vorbis,vp9"';
+    readonly CHUNK_SIZE = 1_048_576;
 
     @ViewChild('videoElement') videoElement: ElementRef;
 
@@ -66,6 +67,9 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     hasJumpedTo = false;
     previousUrl = '';
     isVideoVisible = false;
+    videoSourceBuffer: SourceBuffer;
+    videoChunkNumber;
+    currentVideoChunk;
 
     constructor(private userService: UserService,
                 private http: HttpClient,
@@ -205,20 +209,35 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         }
     }
 
+    private loadVideoBlob(blob: Blob): void {
+        const startChunk = this.currentVideoChunk * this.CHUNK_SIZE;
+        const chunk = blob.slice(startChunk, startChunk + this.CHUNK_SIZE);
+        chunk.arrayBuffer().then(data => {
+            this.videoSourceBuffer.appendBuffer(data);
+        });
+    }
+
     loadVideoMediaSource(mediaSource: MediaSource): void {
-        const sourceBuffer = mediaSource.addSourceBuffer(this.MIME_CODEC);
+        this.videoSourceBuffer = mediaSource.addSourceBuffer(this.MIME_CODEC);
         const token = this.userService.getToken();
         const headers = new HttpHeaders({Authorization: `Bearer ${token}`});
         this.http
             .get(this.previewMedias[this.previewMediaIndex].previewUrlPath, {headers, responseType: 'blob'})
             .subscribe(blob => {
-                sourceBuffer.addEventListener('updateend', () => {
-                    mediaSource.endOfStream();
-                    (this.videoElement.nativeElement as HTMLVideoElement).play();
+                this.videoSourceBuffer.addEventListener('updateend', () => {
+                    this.currentVideoChunk++;
+                    if (this.currentVideoChunk < this.videoChunkNumber) {
+                        this.loadVideoBlob(blob);
+                    } else {
+                        mediaSource.endOfStream();
+                        (this.videoElement.nativeElement as HTMLVideoElement).play()
+                            .catch(e => console.log('Play video is not authorized, probably because user has never interacts with video player'));
+                    }
                 });
-                blob.arrayBuffer().then(x => {
-                    sourceBuffer.appendBuffer(x);
-                });
+
+                this.currentVideoChunk = 0;
+                this.videoChunkNumber = Math.ceil(blob.size / this.CHUNK_SIZE);
+                this.loadVideoBlob(blob);
             });
     }
 
