@@ -26,12 +26,13 @@ import {DeleteMediaMutationService} from '../delete-media-mutation.service';
 import {ToastNotificationService} from '../toast-notification.service';
 import {DirectoryService} from '../directory.service';
 import {ViewportScroller} from '@angular/common';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
+import Player from 'video.js/dist/types/player';
 
 @Component({
     selector: 'app-gallery',
     templateUrl: './gallery.component.html',
-    styleUrls: ['./gallery.component.scss']
+    styleUrls: ['./gallery.component.scss'],
 })
 
 export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
@@ -53,7 +54,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     previewMediaIndex: any;
     previewMedias: any[] = [];
     previewMediaRatio: number;
-    previewMediaClassName: string;
+    previewImageClassName: string;
     addTakenDateOnThumbnails: boolean;
     breakpoint: number;
     galleryPreviewWidth: number;
@@ -66,10 +67,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     jumpToTryCount = 0;
     hasJumpedTo = false;
     previousUrl = '';
-    isVideoVisible = false;
-    videoSourceBuffer: SourceBuffer;
-    videoChunkNumber;
-    currentVideoChunk;
+    videoPlayer: Player;
 
     constructor(private userService: UserService,
                 private http: HttpClient,
@@ -85,7 +83,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                 private deleteMediaMutationService: DeleteMediaMutationService,
                 private toastNotificationService: ToastNotificationService,
                 private directoryService: DirectoryService,
-                private viewportScroller: ViewportScroller) {
+                private viewportScroller: ViewportScroller
+    ) {
         this.addTakenDateOnThumbnails = environment.addTakenDateOnThumbnails;
     }
 
@@ -190,55 +189,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         this.computeGalleryPreviewDimensions();
     }
 
-    ngAfterContentChecked(): void {
-        if (this.isVideoVisible === false && this.videoElement != null) {
-            this.isVideoVisible = true;
-            this.loadVideo();
-        } else if (this.isVideoVisible === true && this.videoElement == null) {
-            this.isVideoVisible = false;
-        }
-    }
-
-    public loadVideo(): void {
-        if ('MediaSource' in window && MediaSource.isTypeSupported(this.MIME_CODEC)) {
-            const mediaSource = new MediaSource();
-            (this.videoElement.nativeElement as HTMLVideoElement).src = URL.createObjectURL(mediaSource);
-            mediaSource.addEventListener('sourceopen', () => this.loadVideoMediaSource(mediaSource));
-        } else {
-            console.error('Unsupported MIME type or codec: ', this.MIME_CODEC);
-        }
-    }
-
-    private loadVideoBlob(blob: Blob): void {
-        const startChunk = this.currentVideoChunk * this.CHUNK_SIZE;
-        const chunk = blob.slice(startChunk, startChunk + this.CHUNK_SIZE);
-        chunk.arrayBuffer().then(data => {
-            this.videoSourceBuffer.appendBuffer(data);
-        });
-    }
-
-    loadVideoMediaSource(mediaSource: MediaSource): void {
-        this.videoSourceBuffer = mediaSource.addSourceBuffer(this.MIME_CODEC);
-        const token = this.userService.getToken();
-        const headers = new HttpHeaders({Authorization: `Bearer ${token}`});
-        this.http
-            .get(this.previewMedias[this.previewMediaIndex].previewUrlPath, {headers, responseType: 'blob'})
-            .subscribe(blob => {
-                this.videoSourceBuffer.addEventListener('updateend', () => {
-                    this.currentVideoChunk++;
-                    if (this.currentVideoChunk < this.videoChunkNumber) {
-                        this.loadVideoBlob(blob);
-                    } else {
-                        mediaSource.endOfStream();
-                        (this.videoElement.nativeElement as HTMLVideoElement).play()
-                            .catch(e => console.log('Play video is not authorized, probably because user has never interacts with video player'));
-                    }
-                });
-
-                this.currentVideoChunk = 0;
-                this.videoChunkNumber = Math.ceil(blob.size / this.CHUNK_SIZE);
-                this.loadVideoBlob(blob);
-            });
+    public onVideoLoaded(player: Player): void {
+        this.videoPlayer = player;
     }
 
     ngAfterViewChecked(): void {
@@ -394,9 +346,18 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         }
     }
 
+    resizeMedia(): void {
+        const mediaType = this.previewMedias[this.previewMediaIndex].type;
+        if (mediaType === 'Image') {
+            this.computePreviewImageClassName();
+        } else if (mediaType === 'Video') {
+            this.resizeVideo();
+        }
+    }
+
     onGalleryPreviewResize(): any {
         this.computeGalleryPreviewDimensions();
-        this.computePreviewMediaClassName();
+        this.resizeMedia();
     }
 
     onSwipeLeft(): void {
@@ -407,23 +368,35 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
         this.changePreview(this.LEFT_DIRECTION);
     }
 
+    resizeVideo(): void {
+        if (this.videoPlayer) {
+            if (this.previewMediaRatio > this.galleryPreviewRatio) {
+                this.videoPlayer.width(this.galleryPreviewWidth);
+            } else {
+                this.videoPlayer.height(this.galleryPreviewHeight);
+            }
+        }
+    }
+
     onPreviewMediaLoaded(previewMediaElement, fileSystemElement): void {
         fileSystemElement.previewMediaLoading = false;
         fileSystemElement.previewMediaLoaded = true;
-        if (fileSystemElement.type === 'Image') {
+        const mediaType = fileSystemElement.type;
+        if (mediaType === 'Image') {
             this.previewMediaRatio = previewMediaElement.naturalWidth / previewMediaElement.naturalHeight;
-        } else if (fileSystemElement.type === 'Video') {
-            this.previewMediaRatio = previewMediaElement.videoWidth / previewMediaElement.videoHeight;
+        } else if (mediaType === 'Video') {
+            const currentDimensions = this.videoPlayer.currentDimensions();
+            this.previewMediaRatio = +currentDimensions.width / +currentDimensions.height;
         }
-        this.computePreviewMediaClassName();
+        this.resizeMedia();
     }
 
-    computePreviewMediaClassName(): void {
+    computePreviewImageClassName(): void {
         let classNameSuffix = 'height';
         if (this.previewMediaRatio > this.galleryPreviewRatio) {
             classNameSuffix = 'width';
         }
-        this.previewMediaClassName = 'gallery-preview-full-' + classNameSuffix;
+        this.previewImageClassName = 'gallery-preview-full-' + classNameSuffix;
     }
 
     onThumbnailMediaLoaded(fileSystemElement): void {

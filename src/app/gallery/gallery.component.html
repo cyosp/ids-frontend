@@ -8,22 +8,23 @@
      (swiperight)="onSwipeRight()"
      [style.height.px]="galleryPreviewHeight"
      [style.width.px]="galleryPreviewWidth">
+    <img *ngIf="previewMedias[previewMediaIndex].type == 'Image' && previewMedias[previewMediaIndex].previewMediaLoading" src='assets/wait-spinner.svg'>
+    <img *ngIf="previewMedias[previewMediaIndex].type == 'Image'"
+         [hidden]="!previewMedias[previewMediaIndex].previewMediaLoaded"
+         #img (load)="onPreviewMediaLoaded(img, previewMedias[previewMediaIndex])"
+         [className]="previewImageClassName"
+         [src]='previewMedias[previewMediaIndex].previewUrlPath | secure | async'
+         [alt]="previewMedias[previewMediaIndex].name">
+    <video-player [options]="{fill:false, autoplay: true, muted: false, controls: true}"
+                  *ngIf="previewMedias[previewMediaIndex].type == 'Video'"
+                  [videoUrl]="previewMedias[previewMediaIndex].previewUrlPath"
+                  #videoElement
+                  (videoLoaded)="onVideoLoaded($event); onPreviewMediaLoaded(videoElement, previewMedias[previewMediaIndex])">
+    </video-player>
+
     <a *ngIf="previewMediaIndex > 0" routerLink="/gallery/{{ previewMedias[previewMediaIndex - 1 ].id }}">
         <em id="gallery-preview-chevron-left" class="fa fa-chevron-left"></em>
     </a>
-    <img *ngIf="previewMedias[previewMediaIndex].previewMediaLoading" src='assets/wait-spinner.svg'>
-    <img *ngIf="previewMedias[previewMediaIndex].type == 'Image'" [hidden]="!previewMedias[previewMediaIndex].previewMediaLoaded"
-         #img (load)="onPreviewMediaLoaded(img, previewMedias[previewMediaIndex])"
-         [className]="previewMediaClassName"
-         [src]='previewMedias[previewMediaIndex].previewUrlPath | secure | async'
-         [alt]="previewMedias[previewMediaIndex].name">
-    <video *ngIf="previewMedias[previewMediaIndex].type == 'Video'" [hidden]="!previewMedias[previewMediaIndex].previewMediaLoaded"
-           #video (loadeddata)="onPreviewMediaLoaded(video, previewMedias[previewMediaIndex])"
-           [className]="previewMediaClassName"
-           controls #videoElement>
-        <source/>
-    </video>
-
     <a *ngIf="previewMediaIndex < previewMedias.length - 1"
        routerLink="/gallery/{{ previewMedias[previewMediaIndex + 1 ].id }}">
         <em id="gallery-preview-chevron-right" class="fa fa-chevron-right"></em>
@@ -45,11 +46,14 @@
 <div *ngIf="previewMedias.length === 0" class="horizontal-gutter">
     <mat-grid-list [cols]="breakpoint" rowHeight="1:1" gutterSize="5px" (window:resize)="onResize($event)">
         <mat-grid-tile *ngFor='let fse of fileSystemElements' id="{{ fse.name }}">
-            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'" class="gallery-preview-thumbnail-full-width">
+            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Directory'"
+               class="gallery-preview-thumbnail-full-width">
                 <img *ngIf="fse.thumbnailUrl !== null && fse.thumbnailMediaLoading" src='assets/wait-spinner.svg'>
                 <app-lazy-loading>
-                    <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailMediaLoaded" class="gallery-preview-thumbnail-full-width"
-                         (load)="onThumbnailMediaLoaded(fse)" [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
+                    <img *ngIf="fse.thumbnailUrl !== null" [hidden]="!fse.thumbnailMediaLoaded"
+                         class="gallery-preview-thumbnail-full-width"
+                         (load)="onThumbnailMediaLoaded(fse)" [src]='fse.thumbnailUrl | secure | async'
+                         [alt]="fse.name">
                 </app-lazy-loading>
                 <svg *ngIf="fse.thumbnailUrl === null" xmlns="http://www.w3.org/2000/svg" [attr.width]="THUMBNAIL_SIZE"
                      [attr.height]="THUMBNAIL_SIZE"></svg>
@@ -57,21 +61,26 @@
                     {{ fse.name }}
                 </mat-grid-tile-footer>
             </a>
-            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image' || fse.type === 'Video'" class="gallery-preview-thumbnail-full-width">
+            <a routerLink="/gallery/{{ fse.id }}" *ngIf="fse.type === 'Image' || fse.type === 'Video'"
+               class="gallery-preview-thumbnail-full-width">
                 <img *ngIf="fse.thumbnailMediaLoading" src='assets/wait-spinner.svg'>
-                <svg *ngIf="fse.type === 'Video'" class="gallery-preview-thumbnail-play-video-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="25%">
+                <svg *ngIf="fse.type === 'Video'" class="gallery-preview-thumbnail-play-video-icon"
+                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" width="25%">
                     <circle cx="12" cy="12" r="11" stroke-width="1.5" stroke="white"></circle>
-                    <path d="M9 17V7L17 12L9 17Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" stroke="white"></path>
+                    <path d="M9 17V7L17 12L9 17Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                          stroke="white"></path>
                 </svg>
                 <app-lazy-loading>
                     <img *ngIf
-                         [hidden]="!fse.thumbnailMediaLoaded" (load)="onThumbnailMediaLoaded(fse)" class="gallery-preview-thumbnail-full-width"
+                         [hidden]="!fse.thumbnailMediaLoaded" (load)="onThumbnailMediaLoaded(fse)"
+                         class="gallery-preview-thumbnail-full-width"
                          [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
                 </app-lazy-loading>
                 <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && fse.takenAt">
                     {{ fse.takenAt }}
                 </mat-grid-tile-footer>
-                <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && !fse.takenAt" i18n="@@navigation-bar-info-taken-datetime-unavailable">
+                <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && !fse.takenAt"
+                                      i18n="@@navigation-bar-info-taken-datetime-unavailable">
                     Unavailable date
                 </mat-grid-tile-footer>
             </a>

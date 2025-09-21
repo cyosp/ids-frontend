@@ -1,4 +1,4 @@
-import {Injectable, NgModule} from '@angular/core';
+import {APP_INITIALIZER, Injectable, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {LoginComponent} from './login/login.component';
@@ -25,6 +25,9 @@ import * as Hammer from 'hammerjs';
 import {LazyLoadingComponent} from './lazy-loading/lazy-loading.component';
 import {Apollo} from 'apollo-angular';
 import {RouterModule} from '@angular/router';
+import {VideoPlayerComponent} from './video-player/video-player.component';
+import {SwCommunicationService} from './sw-communication.service';
+import {ServiceWorkerModule} from '@angular/service-worker';
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
@@ -43,9 +46,11 @@ export class MyHammerConfig extends HammerGestureConfig {
         ToastNotificationComponent,
         LazyLoadingComponent,
         SecurePipe,
-        DownloadFileDirective
+        DownloadFileDirective,
+        VideoPlayerComponent
     ],
     imports: [
+        ServiceWorkerModule.register('sw.js', {enabled: true, registrationStrategy: 'registerImmediately'}),
         BrowserModule,
         FormsModule,
         MatGridListModule,
@@ -68,6 +73,16 @@ export class MyHammerConfig extends HammerGestureConfig {
         ])
     ],
     providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: (swCommunicationService: SwCommunicationService) => {
+                return () => {
+                    return swCommunicationService;
+                };
+            },
+            multi: true,
+            deps: [SwCommunicationService],
+        },
         Apollo,
         provideHttpClient(
             withInterceptorsFromDi()
