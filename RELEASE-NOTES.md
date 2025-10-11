@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 15.0.0 (2025-10-11)
+ * ids-backend support: 11.0.0 - Breaking change: preview video format
+
 ##### 14.1.0 (2025-09-19)
  * Load preview video via chunks
 
