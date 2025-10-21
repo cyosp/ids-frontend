@@ -4,22 +4,22 @@
             <a *ngIf="!isGallery" routerLink="/gallery">
                 <em class="fa fa-home"></em>
             </a>
-            <a *ngIf="directories.length == 1 && !imageName" routerLink="/gallery"
+            <a *ngIf="directories.length == 1 && !mediaName" routerLink="/gallery"
                [queryParams]="{jmp: directories[directories.length - 1].name}">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
-            <a *ngIf="directories.length > 1 && !imageName"
+            <a *ngIf="directories.length > 1 && !mediaName"
                routerLink="/gallery{{ directories[directories.length - 2].id }}"
                [queryParams]="{jmp: directories[directories.length - 1].name}">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
-            <a *ngIf="imageName" routerLink="/gallery{{ directories[directories.length - 1].id }}"
-               [queryParams]="{jmp: imageName}">
+            <a *ngIf="mediaName" routerLink="/gallery{{ directories[directories.length - 1].id }}"
+               [queryParams]="{jmp: mediaName}">
                 <em class="fa fa-level-up-alt fa-flip-horizontal"></em>
             </a>
         </span>
         <span *ngIf="displayNavigationIcons" class="gallery-navigation ms-auto">
-            <a *ngIf="imageName">
+            <a *ngIf="mediaName">
                 <img *ngIf="displayImageInfoWaitSpinner" src="../assets/wait-spinner.svg">
                 <button id="info-button" (click)="toggleInfoContent()">
                     <span class="fa fa-info-circle"></span>
@@ -37,16 +37,16 @@
              <span *ngIf="directories.length >= 1">
                  <button id="breadcrumb-button" (click)="toggleBreadcrumbContent()">
                      <span class="fa fa-caret-down"></span>
-                     <span *ngIf="!imageName">
+                     <span *ngIf="!mediaName">
                         {{ directories[directories.length - 1].name }}
                      </span>
-                    <span *ngIf="imageName">
-                        {{ imageName }}
+                    <span *ngIf="mediaName">
+                        {{ mediaName }}
                     </span>
                 </button>
                 <span id="breadcrumb-content">
                     <span *ngFor="let directory of directories; let directoryIndex = index;">
-                        <a *ngIf="directoryIndex != 0 || imageName" routerLink="/gallery{{ directories[directories.length - 1 - directoryIndex].id }}" (click)="hideBreadcrumbContent()">
+                        <a *ngIf="directoryIndex != 0 || mediaName" routerLink="/gallery{{ directories[directories.length - 1 - directoryIndex].id }}" (click)="hideBreadcrumbContent()">
                             {{ directories[directories.length - 1 - directoryIndex].name }}
                         </a>
                     </span>
@@ -55,7 +55,7 @@
                     </a>
                 </span>
             </span>
-            <a id="download-icon" *ngIf="imageName || !imageName && directories.length > 0" [downloadFile]="imageName ? imageUrlPath : getDirectoryDownloadUrl(directories[directories.length - 1].id)">
+            <a id="download-icon" *ngIf="mediaName || !mediaName && directories.length > 0" [downloadFile]="mediaName ? imageUrlPath : getDirectoryDownloadUrl(directories[directories.length - 1].id)">
                 <em class="fa fa-download"></em>
                 <img style="display: none" src="../assets/wait-spinner.svg">
             </a>

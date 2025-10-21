@@ -20,7 +20,7 @@ export class UrlService {
 
     decodePath(): any {
         let directories = [];
-        let imageName;
+        let mediaName;
         if (this.router.url.startsWith('/gallery')) {
             let urlPath = decodeURI(this.router.url).replace(/\/gallery/, '').replace(this.queryParamsRegex, '');
             if (urlPath.startsWith(Constants.SLASH_CHARACTER)) {
@@ -40,13 +40,13 @@ export class UrlService {
                         }
                     );
                 }
-                imageName = urlPathPipeSplitted[1];
+                mediaName = urlPathPipeSplitted[1];
             }
         }
 
         return {
             directories,
-            imageName
+            mediaName
         };
     }
 }

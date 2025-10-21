@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
     displayNavigationIcons = false;
     isGallery = false;
     directories: any[] = [];
-    imageName: string;
+    mediaName: string;
     displayImageInfoWaitSpinner = false;
     hasServerImageInfoResponded = false;
     imageTakenAt: string;
@@ -61,7 +61,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.isGallery = this.router.url.startsWith('/gallery');
                 const decodedInfos = this.urlService.decodePath();
                 this.directories = decodedInfos.directories;
-                this.imageName = decodedInfos.imageName;
+                this.mediaName = decodedInfos.mediaName;
             }
         );
     }
@@ -99,7 +99,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 }, 200);
                 const fileSystemElement = this.directories[this.directories.length - 1];
                 const mediaId = this.fileSystemElementService.getSlashedId(fileSystemElement)
-                    + Constants.SLASH_CHARACTER + this.imageName;
+                    + Constants.SLASH_CHARACTER + this.mediaName;
                 this.getMediaQuery.fetch({
                     mediaId
                 }).subscribe(data => {
