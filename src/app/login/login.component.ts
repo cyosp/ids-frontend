@@ -54,7 +54,20 @@ export class LoginComponent implements OnInit, AfterViewInit {
                 this.isAuthenticated = true;
                 this.isLoginFailed = false;
                 if (this.view) {
-                    this.router.navigate([this.view]);
+                    const url = this.view;
+                    const questionMarkPosition = url.indexOf('?');
+                    let path: string;
+                    const queryParameter = {};
+                    if (questionMarkPosition > 0) {
+                        path = url.substring(0, questionMarkPosition);
+                        url.substring(questionMarkPosition + 1).split('&').forEach((item: string) => {
+                            const keyValue = item.split('=');
+                            queryParameter[keyValue[0]] = keyValue[1];
+                        });
+                    } else {
+                        path = this.view;
+                    }
+                    this.router.navigate([path], {queryParams: Object.assign(queryParameter)});
                 } else {
                     this.navigateToGallery();
                 }

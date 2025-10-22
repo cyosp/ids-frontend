@@ -70,7 +70,6 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     videoPlayer: Player;
 
     constructor(private userService: UserService,
-                private http: HttpClient,
                 private userListQuery: ListQuery,
                 private userListWithMetadataQuery: ListQueryWithMetadata,
                 private getMediasQuery: GetMediasQuery,
