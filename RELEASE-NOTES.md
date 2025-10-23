@@ -1,5 +1,9 @@
 Release notes
 -------------
+##### 15.0.1 (2025-10-23)
+ * Fix: Redirect after login
+ * Fix: Arrow up goes one level too far from preview
+
 ##### 15.0.0 (2025-10-11)
  * ids-backend support: 11.0.0 - Breaking change: preview video format
 
