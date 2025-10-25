@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 15.1.0 (2025-10-25)
+ * Move taken date on lazy loading
+
 ##### 15.0.1 (2025-10-23)
  * Fix: Redirect after login
  * Fix: Arrow up goes one level too far from preview
