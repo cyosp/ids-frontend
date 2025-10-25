@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import {UserService} from '../user.service';
 import {ListQuery} from '../list-query.service';
-import {ListQueryWithMetadata} from '../list-with-metadata-query.service';
 import {GetMediasQuery} from '../getMedias-query.service';
 import {environment} from '../../environments/environment';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -26,8 +25,8 @@ import {DeleteMediaMutationService} from '../delete-media-mutation.service';
 import {ToastNotificationService} from '../toast-notification.service';
 import {DirectoryService} from '../directory.service';
 import {ViewportScroller} from '@angular/common';
-import {HttpClient} from '@angular/common/http';
 import Player from 'video.js/dist/types/player';
+import {GetMediaQuery} from '../getMedia-query.service';
 
 @Component({
     selector: 'app-gallery',
@@ -71,7 +70,6 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
 
     constructor(private userService: UserService,
                 private userListQuery: ListQuery,
-                private userListWithMetadataQuery: ListQueryWithMetadata,
                 private getMediasQuery: GetMediasQuery,
                 public router: Router,
                 private route: ActivatedRoute,
@@ -82,7 +80,8 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                 private deleteMediaMutationService: DeleteMediaMutationService,
                 private toastNotificationService: ToastNotificationService,
                 private directoryService: DirectoryService,
-                private viewportScroller: ViewportScroller
+                private viewportScroller: ViewportScroller,
+                private getMediaQuery: GetMediaQuery
     ) {
         this.addTakenDateOnThumbnails = environment.addTakenDateOnThumbnails;
     }
@@ -288,8 +287,7 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
             if (directoryId) {
                 queryVariables.directoryId = directoryId;
             }
-            const listQuery = this.addTakenDateOnThumbnails ? this.userListWithMetadataQuery : this.userListQuery;
-            listQuery.fetch(queryVariables).subscribe(data => {
+            this.userListQuery.fetch(queryVariables).subscribe(data => {
                     this.hasServerResponded = true;
                     this.displayWaitSpinner = false;
                     const directories = (data as any).data.list;
@@ -449,5 +447,18 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
                 this.notifyDeleteError();
             }
         );
+    }
+
+    addTakenDate(fileSystemElement: any): void {
+        if (!fileSystemElement.hasTakenDateResponse) {
+            const mediaId = this.fileSystemElementService.getSlashedId(fileSystemElement);
+            this.getMediaQuery.fetch({
+                mediaId
+            }).subscribe(data => {
+                fileSystemElement.hasTakenDateResponse = true;
+                const takenAt = (data as any).data.getMedia.metadata.takenAt;
+                fileSystemElement.takenAt = (takenAt !== null ? new Date(takenAt).toLocaleString() : null);
+            });
+        }
     }
 }

@@ -8,7 +8,8 @@
      (swiperight)="onSwipeRight()"
      [style.height.px]="galleryPreviewHeight"
      [style.width.px]="galleryPreviewWidth">
-    <img *ngIf="previewMedias[previewMediaIndex].type == 'Image' && previewMedias[previewMediaIndex].previewMediaLoading" src='assets/wait-spinner.svg'>
+    <img *ngIf="previewMedias[previewMediaIndex].type == 'Image' && previewMedias[previewMediaIndex].previewMediaLoading"
+         src='assets/wait-spinner.svg'>
     <img *ngIf="previewMedias[previewMediaIndex].type == 'Image'"
          [hidden]="!previewMedias[previewMediaIndex].previewMediaLoaded"
          #img (load)="onPreviewMediaLoaded(img, previewMedias[previewMediaIndex])"
@@ -76,13 +77,19 @@
                          class="gallery-preview-thumbnail-full-width"
                          [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
                 </app-lazy-loading>
-                <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && fse.takenAt">
-                    {{ fse.takenAt }}
-                </mat-grid-tile-footer>
-                <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails && !fse.takenAt"
-                                      i18n="@@navigation-bar-info-taken-datetime-unavailable">
-                    Unavailable date
-                </mat-grid-tile-footer>
+                <app-lazy-loading (inView)="addTakenDate(fse)">
+                    <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails">
+                        @if (fse.takenAt) {
+                            <span>
+                                {{ fse.takenAt }}
+                            </span>
+                        } @else {
+                            <span i18n="@@navigation-bar-info-taken-datetime-unavailable">
+                                Unavailable date
+                            </span>
+                        }
+                    </mat-grid-tile-footer>
+                </app-lazy-loading>
             </a>
         </mat-grid-tile>
     </mat-grid-list>
