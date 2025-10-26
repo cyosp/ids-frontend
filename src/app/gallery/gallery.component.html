@@ -79,14 +79,16 @@
                 </app-lazy-loading>
                 <app-lazy-loading (inView)="addTakenDate(fse)">
                     <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails">
-                        @if (fse.takenAt) {
-                            <span>
+                        @if (fse.hasTakenDateResponse) {
+                            @if (fse.takenAt) {
+                                <span>
                                 {{ fse.takenAt }}
                             </span>
-                        } @else {
-                            <span i18n="@@navigation-bar-info-taken-datetime-unavailable">
+                            } @else {
+                                <span i18n="@@navigation-bar-info-taken-datetime-unavailable">
                                 Unavailable date
                             </span>
+                            }
                         }
                     </mat-grid-tile-footer>
                 </app-lazy-loading>
