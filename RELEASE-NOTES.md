@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 15.2.0 (2025-10-26)
+ * Display taken date only if server has respond
+
 ##### 15.1.0 (2025-10-25)
  * Move taken date on lazy loading
 
