@@ -77,7 +77,7 @@
                          class="gallery-preview-thumbnail-full-width"
                          [src]='fse.thumbnailUrl | secure | async' [alt]="fse.name">
                 </app-lazy-loading>
-                <app-lazy-loading (inView)="addTakenDate(fse)">
+                <app-lazy-loading (inView)="addTakenDate(fse)" *ngIf="addTakenDateOnThumbnails">
                     <mat-grid-tile-footer *ngIf="addTakenDateOnThumbnails">
                         @if (fse.hasTakenDateResponse) {
                             @if (fse.takenAt) {
