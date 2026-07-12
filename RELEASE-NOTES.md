@@ -1,5 +1,10 @@
 Release notes
 -------------
+##### 16.0.0 (2026-07-12)
+ * Display curent downloaded size
+ * Add guest user support
+ * Fix taken date on thumbnails always displayed
+
 ##### 15.2.0 (2025-10-26)
  * Display taken date only if server has respond
 
