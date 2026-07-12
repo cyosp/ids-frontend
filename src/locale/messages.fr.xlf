@@ -62,6 +62,15 @@
       <trans-unit id="navigation-bar-info-taken-datetime-unavailable" datatype="html">
         <target>Date indisponible</target>
       </trans-unit>
+      <trans-unit id="navigation-bar-download-unit-kilo" datatype="html">
+        <target>Ko</target>
+      </trans-unit>
+      <trans-unit id="navigation-bar-download-unit-mega" datatype="html">
+        <target>Mo</target>
+      </trans-unit>
+      <trans-unit id="navigation-bar-download-unit-giga" datatype="html">
+        <target>Go</target>
+      </trans-unit>
       <!-- delete-modal -->
        <trans-unit id="delete-modal-title" datatype="html">
          <target>Suppression</target>

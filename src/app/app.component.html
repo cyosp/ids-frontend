@@ -1,5 +1,5 @@
 <div id="app">
-        <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary sticky-top">
+    <nav id="navbar" class="navbar navbar-expand navbar-dark bg-primary sticky-top">
         <span *ngIf="displayNavigationIcons" class="gallery-navigation navbar-left">
             <a *ngIf="!isGallery" routerLink="/gallery">
                 <em class="fa fa-home"></em>
@@ -59,10 +59,24 @@
                     </a>
                 </span>
             </span>
-            <a id="download-icon" *ngIf="mediaName || !mediaName && directories.length > 0" [downloadFile]="mediaName ? imageUrlPath : getDirectoryDownloadUrl(directories[directories.length - 1].id)">
+            <a id="download-icon" *ngIf="mediaName || !mediaName && directories.length > 0" (click)="download()">
                 <em class="fa fa-download"></em>
-                <img style="display: none" src="../assets/wait-spinner.svg">
             </a>
+            <span>
+                <img *ngIf="download$" src="../assets/wait-spinner.svg">
+                <span *ngIf="download$ | async as download">
+                    {{ download.loaded }}
+                    <span *ngIf="download.suffix == 'K'" i18n="@@navigation-bar-download-unit-kilo">
+                        KiB
+                    </span>
+                    <span *ngIf="download.suffix == 'M'" i18n="@@navigation-bar-download-unit-mega">
+                        MiB
+                    </span>
+                    <span *ngIf="download.suffix == 'G'" i18n="@@navigation-bar-download-unit-giga">
+                        GiB
+                    </span>
+                </span>
+            </span>
         </span>
         <span class="navbar-nav navbar-right" *ngIf="isAuthenticated">
             <button id="user-menu-button" class="nav-link" (click)="toggleUserMenuContent()">

@@ -2,13 +2,16 @@ import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
 import {UserService} from './user.service';
 import {Router} from '@angular/router';
 import {SharedDataService} from './shared-data.service';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {Title} from '@angular/platform-browser';
 import {environment} from '../environments/environment';
 import {UrlService} from './url.service';
 import {Constants} from './constants';
 import {FileSystemElementService} from './file-system-element.service';
 import {GetMediaQuery} from './getMedia-query.service';
+import {download, Download} from './download';
+import {HttpClient} from '@angular/common/http';
+import {saveAs} from 'file-saver';
 
 @Component({
     selector: 'app-root',
@@ -32,13 +35,16 @@ export class AppComponent implements OnInit, OnDestroy {
     imageUrlPath: string;
     subscription: Subscription;
 
+    download$: Observable<Download>;
+
     constructor(private titleService: Title,
                 private userService: UserService,
                 private router: Router,
                 private sharedDataService: SharedDataService,
                 private urlService: UrlService,
                 private fileSystemElementService: FileSystemElementService,
-                private getMediaQuery: GetMediaQuery) {
+                private getMediaQuery: GetMediaQuery,
+                private http: HttpClient) {
     }
 
     @HostListener('window:keydown', ['$event'])
@@ -139,5 +145,28 @@ export class AppComponent implements OnInit, OnDestroy {
 
     getDirectoryDownloadUrl(directoryId: string): string {
         return environment.backEndLocation + '/download' + directoryId.replace(/>/g, '/') + '.zip';
+    }
+
+    private getFileName(downloadUrl: string): string {
+        return downloadUrl.substr(
+            downloadUrl.lastIndexOf(Constants.SLASH_CHARACTER) + 1,
+            downloadUrl.length
+        );
+    }
+
+    stopDownloadAndSaveAs(blob: Blob, fileName: string): any {
+        this.download$ = null;
+        return saveAs(blob, fileName);
+    }
+
+    download(): void {
+        const downloadUrl = this.mediaName ? this.imageUrlPath
+            : this.getDirectoryDownloadUrl(this.directories[this.directories.length - 1].id);
+        const fileName = this.getFileName(downloadUrl);
+        this.download$ = this.http.get(downloadUrl, {
+            reportProgress: true,
+            observe: 'events',
+            responseType: 'blob'
+        }).pipe(download(blob => this.stopDownloadAndSaveAs(blob, fileName)));
     }
 }

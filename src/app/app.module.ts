@@ -16,7 +16,6 @@ import {GraphQLModule} from './graphql.module';
 import {AuthInterceptorService} from './authInterceptor.service';
 import {SecurePipe} from './SecurePipe';
 import {SharedDataService} from './shared-data.service';
-import {DownloadFileDirective} from './download-file.directive';
 import {UrlService} from './url.service';
 import {NgbToastModule} from '@ng-bootstrap/ng-bootstrap';
 import {FileSystemElementService} from './file-system-element.service';
@@ -48,7 +47,6 @@ export class MyHammerConfig extends HammerGestureConfig {
         ToastNotificationComponent,
         LazyLoadingComponent,
         SecurePipe,
-        DownloadFileDirective,
         VideoPlayerComponent
     ],
     imports: [

@@ -25,6 +25,7 @@
     "@fortawesome/fontawesome-free": "^7.0.1",
     "apollo-angular": "^10.0.3",
     "bootstrap": "^5.3.8",
+    "file-saver": "^2.0.5",
     "graphql": "^16.11.0",
     "hammerjs": "^2.0.8",
     "rxjs": "~7.8.2",
