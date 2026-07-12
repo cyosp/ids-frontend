@@ -28,6 +28,7 @@ import {RouterModule} from '@angular/router';
 import {VideoPlayerComponent} from './video-player/video-player.component';
 import {SwCommunicationService} from './sw-communication.service';
 import {ServiceWorkerModule} from '@angular/service-worker';
+import {SharedLinkComponent} from './shared-link/shared-link.component';
 
 @Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
@@ -39,6 +40,7 @@ export class MyHammerConfig extends HammerGestureConfig {
 @NgModule({
     declarations: [
         AppComponent,
+        SharedLinkComponent,
         LoginComponent,
         GalleryComponent,
         ChangePasswordComponent,
@@ -68,6 +70,12 @@ export class MyHammerConfig extends HammerGestureConfig {
             children: [{
                 path: ':directoryId',
                 component: GalleryComponent
+            }]
+        }, {
+            path: 'shared-link', component: SharedLinkComponent,
+            children: [{
+                path: ':linkId',
+                component: SharedLinkComponent
             }]
         }
         ])

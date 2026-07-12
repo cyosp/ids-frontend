@@ -19,7 +19,9 @@ import {GetMediaQuery} from './getMedia-query.service';
 export class AppComponent implements OnInit, OnDestroy {
     isAuthenticationNeeded = true;
     isAuthenticated = false;
+    isGuestUser = false;
     displayNavigationIcons = false;
+    userHomeLevel = 0;
     isGallery = false;
     directories: any[] = [];
     mediaName: string;
@@ -58,10 +60,18 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.isAuthenticationNeeded = !environment.isPublicSharing;
                 this.isAuthenticated = this.userService.hasTokenNonExpired();
                 this.displayNavigationIcons = environment.isPublicSharing || this.isAuthenticated;
+                this.isGuestUser = this.userService.isGuest();
                 this.isGallery = this.router.url.startsWith('/gallery');
                 const decodedInfos = this.urlService.decodePath();
                 this.directories = decodedInfos.directories;
                 this.mediaName = decodedInfos.mediaName;
+
+                const userHome = this.userService.getUserHome();
+                if (userHome) {
+                    this.userHomeLevel = userHome.split(Constants.SLASH_CHARACTER).length;
+                } else {
+                    this.userHomeLevel = 0;
+                }
             }
         );
     }
