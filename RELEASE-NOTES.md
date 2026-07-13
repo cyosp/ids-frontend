@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 16.1.0 (2026-07-13)
+ * Add wait spinner before redirection on shared-link
+
 ##### 16.0.0 (2026-07-12)
  * Display curent downloaded size
  * Add guest user support
