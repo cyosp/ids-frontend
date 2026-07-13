@@ -6,7 +6,8 @@ import {Constants} from '../constants';
 
 @Component({
     selector: 'app-login',
-    templateUrl: './shared-link.component.html'
+    templateUrl: './shared-link.component.html',
+    styleUrls: ['./shared-link.component.scss']
 })
 export class SharedLinkComponent implements OnInit {
     constructor(private userService: UserService,
@@ -14,7 +15,13 @@ export class SharedLinkComponent implements OnInit {
                 private router: Router) {
     }
 
+     displayWaitSpinner = false;
+
     ngOnInit(): void {
+        setTimeout(() => {
+                this.displayWaitSpinner = true;
+        }, 200);
+
         const key = decodeURI(this.router.url).replace(/\/shared-link\//, '') + '@guest.local';
         this.authenticationService.login({
             email: key,
