@@ -40,9 +40,6 @@ export class GalleryComponent implements OnInit, OnDestroy, AfterViewInit, After
     readonly LEFT_DIRECTION = 'Left';
     readonly RIGHT_DIRECTION = 'Right';
 
-    readonly MIME_CODEC = 'video/webm; codecs="vorbis,vp9"';
-    readonly CHUNK_SIZE = 1_048_576;
-
     @ViewChild('videoElement') videoElement: ElementRef;
 
     isAuthenticated = false;
