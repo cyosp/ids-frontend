@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 16.2.0 (2026-10-30)
+ * Build for linux/arm64/v8
+
 ##### 16.1.0 (2026-07-13)
  * Add wait spinner before redirection on shared-link
 
