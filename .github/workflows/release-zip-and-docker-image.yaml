@@ -1,4 +1,4 @@
-name: Release Jar and Docker image
+name: Release app and Docker image
 
 on:
   push:
@@ -115,7 +115,7 @@ jobs:
       - name: Setup Docker QEMU
         uses: docker/setup-qemu-action@v1.2.0
         with:
-          platforms: linux/amd64,linux/arm/v7,linux/arm/v8
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
 
       - name: Setup Docker Buildx
         id: buildx
@@ -133,6 +133,6 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
           file: Dockerfile
-          platforms: linux/amd64,linux/arm/v7,linux/arm/v8
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           push: true
           tags: cyosp/${{ github.event.repository.name }}:${{ steps.tag.outputs.NAME }}
