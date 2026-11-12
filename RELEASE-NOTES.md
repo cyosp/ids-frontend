@@ -1,5 +1,8 @@
 Release notes
 -------------
+##### 16.3.0 (2026-11-12)
+ * Add time zone support and Bash to Docker image
+
 ##### 16.2.0 (2026-10-30)
  * Build for linux/arm64/v8
 
