@@ -4,7 +4,9 @@ MAINTAINER CYOSP <cyosp@cyosp.com>
 RUN apk upgrade \
     && apk add \
       nginx \
-      gettext
+      gettext \
+      tzdata \
+      bash
 
 RUN mkdir -p /run/nginx /var/www/html
 RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
